@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accessories">Accesorios</string>
+    <string name="gallery">Galeria</string>
+    <string name="filter">Filtrar</string>
+    <string name="colors">Colores</string>
+    <string name="black">Negro</string>
+    <string name="white">Blanco</string>
+    <string name="grey">Gris</string>
+    <string name="beige">Desnuda</string>
+    <string name="red">rojo</string>
+    <string name="pink">Rosado</string>
+    <string name="silver">Plata</string>
+    <string name="gold">Oro</string>
+    <string name="green">Verde</string>
+    <string name="orange">Naranja</string>
+    <string name="brown">Marrón</string>
+    <string name="blue">Azul</string>
+    <string name="purple">Purpura</string>
+    <string name="yellow">Amarillo</string>
+    <string name="apply">Aplicar</string>
+    <string name="clear_all">Claro</string>
+    <string name="bottom">Pantalón</string>
+    <string name="footwear">Calzado</string>
+    <string name="save">Salvar</string>
+    <string name="top" translatable="true">Top</string>
+    <string name="special">Especial</string>
+    <string name="party">Fiesta</string>
+    <string name="formal">Formal</string>
+    <string name="caution">Seleccione una Categoría, Estilo y Colores</string>
+    <string name="casual">Casual</string>
+    <string name="deletequery">Quieres borrar ?</string>
+    <string name="filtered">Filtré</string>
+    <string name="delete">Borrar</string>
+    <string name="edit">Editar</string>
+    <string name="select_category">Selecciona una categoría</string>
+    <string name="select_colors">Seleccionar colores</string>
+    <string name="select_styles">Seleccionar estilos</string>
+    <string name="dialog_delete">Borrar</string>
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="filter_style">Estilo</string>
+    <string name="app_name">Mi armario</string>
+    <string name="camera">Cámara</string>
+    <string name="no_match">No hay resultados</string>
+    <string name="exit">Haga clic de nuevo para salir</string>
+    <string name="scrcropservive">Cultivos de pantalla Activado</string>
+    <string name="screencrop">cultivos pantalla</string>
+
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="appintro_first">An Easy way to Organize your Clothes,Accessories and Footwear</string>
+    <string name="appintro_second">Upload Apparel Pictures and Create Outfits</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+    <string name="appintro_third">Get Inspired and Find Matching Appareal from your Closet</string>
+    <string name="signin_hint">Sign in for better app experience</string>
+    <string name="google">Google</string>
+    <string name="facebook">Facebook</string>
+    <string name="signin_hint_two">By signing in,you agree to our Terms and Privacy Policy</string>
+    <string name="name">User Name</string>
+    <string name="gmail">Gmail</string>
+    <string name="website">Webside</string>
+    <string name="bio">Bio</string>
+
+    <string name="no_location_detected">
+        No location detected. Make sure location is enabled on the device.
+    </string>
+
+    <string name="permission_rationale">Location permission is needed for core functionality</string>
+    <string name="permission_denied_explanation">Permission was denied, but is needed for core
+        functionality.</string>
+    <string name="settings">Settings</string>
+    <string name="outerwear">OuterWear</string>
+    <string name="home">Home</string>
+    <string name="closet">Closet</string>
+    <string name="lookbook">Lookbook</string>
+    <string name="help">Help</string>
+    <string name="feedback">Feedback</string>
+    <string name="rateapp">Rate App</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="username">Username</string>
+    <string name="destription">Write Description Here</string>
+</resources>

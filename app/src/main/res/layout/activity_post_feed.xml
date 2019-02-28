@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bitmap_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+
+    <LinearLayout
+        android:id="@+id/selection_color"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:weightSum="2.63">
+
+        <RelativeLayout
+            android:id="@+id/back_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/colorPrimary"
+            android:layout_alignParentTop="true"
+            android:layout_weight="0.23">
+
+            <ImageView
+                android:id="@+id/back_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:src="@drawable/ic_arrowback"
+                tools:ignore="VectorDrawableCompat" />
+
+
+            <TextView
+                android:id="@+id/done_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_gravity="end"
+                android:layout_margin="5dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp"
+                android:text="Post"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                android:textSize="17dp" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_above="@+id/background_recycleview"
+            android:layout_below="@+id/back_layout"
+            android:layout_weight="2.1"
+            android:layout_height="0dp">
+
+            <ja.burhanrashid52.photoeditor.PhotoEditorView
+                android:id="@+id/photoEditorView"
+                android:layout_width="match_parent"
+                android:layout_margin="5dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                />
+        </RelativeLayout>
+
+
+        <EditText
+            android:id="@+id/description_text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="start"
+            android:textSize="@dimen/text_size"
+            android:layout_above="@+id/clicking_layout"
+            android:layout_weight="0.3"
+            android:background="@drawable/hint_text_border"
+            android:hint="@string/destription"
+            android:paddingBottom="4dp"
+            android:paddingLeft="5dp"
+            android:layout_margin="10dp"
+            android:paddingTop="4dp"
+             />
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

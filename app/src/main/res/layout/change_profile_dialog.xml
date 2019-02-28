@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:textStyle="bold"
+                android:layout_centerHorizontal="true"
+                android:text="Edit Profile"
+                android:textColor="@color/black"
+                android:textSize="@dimen/title_size" />
+
+            <ImageButton
+                android:id="@+id/close_btn"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_delete_black"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="end"
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="VectorDrawableCompat" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content">
+
+
+            <Button
+                android:id="@+id/camera_button"
+                android:layout_width="match_parent"
+                android:text="Open Camera"
+                android:padding="5dp"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_margin="10dp"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:background="@drawable/save_btn"
+                android:layout_height="35dp" />
+
+            <Button
+                android:id="@+id/gallery_button"
+                android:layout_width="match_parent"
+                android:text="Pick from Gallery"
+                style="?android:attr/borderlessButtonStyle"
+                android:padding="5dp"
+                android:layout_margin="10dp"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:background="@drawable/save_btn"
+                android:layout_height="35dp" />
+
+
+
+
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

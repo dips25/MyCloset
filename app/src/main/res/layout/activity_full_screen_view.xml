@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:id="@+id/profile_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:orientation="horizontal">
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_pic"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:src="@drawable/ic_user_profile"
+                    app:civ_border_color="@color/white"
+                    app:civ_border_width="1dp"
+                    tools:ignore="VectorDrawableCompat" />
+
+
+                <TextView
+                    android:id="@+id/username_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textAllCaps="false"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                    android:textColor="@color/selected_tab"
+                    android:textSize="@dimen/text_small_size"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/follow_btn"
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/follow_btn"
+                android:text="Follow"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <ProgressBar
+                android:id="@+id/connectProgress"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/follow_btn"
+                app:layout_constraintEnd_toEndOf="@+id/follow_btn"
+                app:layout_constraintStart_toStartOf="@+id/follow_btn"
+                app:layout_constraintTop_toTopOf="@+id/follow_btn" />
+
+
+
+        </LinearLayout>
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginLeft="16dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp">
+
+                    <my.closet.fashion.style.customs.AspectRatioImageView
+                        android:id="@+id/fullimage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/sample_pic" />
+                </android.support.v7.widget.CardView>
+
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp">
+
+
+
+                    <LinearLayout
+                        android:id="@+id/like_layout"
+                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_alignParentLeft="true"
+                        android:layout_height="wrap_content">
+
+                        <xyz.hanks.library.bang.SmallBangView
+                            android:id="@+id/like_heart"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:layout_gravity="center_horizontal"
+                            app:circle_end_color="#f0616d"
+                            app:circle_start_color="#EF505d"
+                            app:dots_primary_color="#EF505d"
+                            app:dots_secondary_color="#f0616d">
+
+                            <ImageView
+                                android:id="@+id/blog_like_btn"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/like_selector"
+                                />
+                        </xyz.hanks.library.bang.SmallBangView>
+
+
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/no_of_likes"
+                        android:layout_width="wrap_content"
+                        android:text="0 Likes"
+                        android:layout_centerInParent="true"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/like_layout"
+                        android:gravity="center" />
+
+
+                    <ImageView
+                        android:id="@+id/blog_comment_btn"
+                        android:layout_toRightOf="@+id/no_of_likes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_baseline_share" />
+
+
+                    <xyz.hanks.library.bang.SmallBangView
+                        android:id="@+id/bookmark_anim"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="center"
+                        android:layout_centerInParent="true"
+                        app:circle_end_color="#60b4fe"
+                        app:circle_start_color="#4facfe"
+                        app:dots_primary_color="#4facfe"
+                        app:dots_secondary_color="#60b4fe">
+
+                        <ImageView
+                            android:id="@+id/blog_bookmark_btn"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/bookmark_selector"
+                            />
+                    </xyz.hanks.library.bang.SmallBangView>
+
+
+                </RelativeLayout>
+
+
+
+                <TextView
+                    android:id="@+id/tags_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:padding="5dp"
+                    android:textAllCaps="false"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/title_size" />
+
+
+                <co.lujun.androidtagview.TagContainerLayout
+                    android:id="@+id/selectedTags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="15dp"
+                    app:container_background_color="#00000000"
+                    app:container_border_color="#33666666"
+                    app:container_border_radius="0dp"
+                    app:container_gravity="left"
+                    app:horizontal_interval="4dp"
+                    app:tag_background_color="#00000000"
+                    app:tag_border_color="#FFFFFF"
+                    app:tag_border_width="1dp"
+                    app:tag_clickable="false"
+                    app:tag_corner_radius="6dp"
+                    app:tag_enable_cross="false"
+                    app:tag_horizontal_padding="0dp"
+                    app:tag_max_length="18"
+                    app:tag_text_color="@color/blue"
+                    app:tag_text_size="@dimen/text_small_size"
+                    app:tag_theme="none"
+                    app:vertical_interval="2dp" />
+
+            </LinearLayout>
+
+        </ScrollView>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
+

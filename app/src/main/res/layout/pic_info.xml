@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/picinfobackground"
+    >
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tool1"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/secondarycolor">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+        <RelativeLayout
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="14dp">
+
+        <ImageView
+            android:id="@+id/crtxt1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_check_black_24dp"
+            android:clickable="true"
+            android:text="@string/save"
+            android:textColor="@color/colorAccent"
+            android:textSize="24dp" />
+
+        </RelativeLayout>
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/crd2"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_below="@+id/tool1"
+
+        >
+
+        <ImageView
+            android:id="@+id/userimage"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:background="@color/toolbar"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+
+
+            />
+
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/crd2"
+        android:layout_marginTop="5dp">
+
+        <include layout="@layout/card_colors" />
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+</RelativeLayout>
+
+

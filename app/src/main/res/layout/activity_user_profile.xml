@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".activities.UserProfileActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:titleTextColor="@color/black">
+
+            <ImageView
+                android:id="@+id/menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_setting"
+                tools:ignore="VectorDrawableCompat" />
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:gravity="center">
+
+                    <RelativeLayout
+                        android:id="@+id/user_profile_lyt"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_centerHorizontal="true">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/profile_image"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_user_profile"
+                            app:civ_border_color="#CCCCCC"
+                            app:civ_border_width="0.5dp"
+                            tools:ignore="VectorDrawableCompat" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/edit_profile_pic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/user_profile_lyt"
+                        android:layout_marginLeft="-33dp"
+                        android:layout_marginTop="-10dp"
+                        android:layout_toRightOf="@+id/user_profile_lyt"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_edit_profile"
+                            tools:ignore="VectorDrawableCompat" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/username_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/edit_profile_pic"
+                        android:layout_gravity="center"
+                        android:layout_margin="3dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="user name"
+                        android:textAllCaps="false"
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                        android:textColor="@color/profile_color"
+                        android:textSize="@dimen/user_text"
+                        android:textStyle="bold" />
+
+
+                </RelativeLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:textColor="@color/selected_tab"
+                    android:textColorHint="@color/colorPrimaryDark">
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/penname_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/name"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:textColor="@color/selected_tab"
+                        android:textColorHint="@color/colorPrimaryDark"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/user_text"
+                        app:backgroundTint="@android:color/black" />
+                </android.support.design.widget.TextInputLayout>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="6dp"
+                    android:padding="5dp"
+                    android:visibility="gone"
+                    android:text="Languages "
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="13dp" />
+
+                <LinearLayout
+                    android:id="@+id/language_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:visibility="gone"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <co.lujun.androidtagview.TagContainerLayout
+                        android:id="@+id/language_Text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp"
+                        app:tag_enable_cross="false"
+                        android:layout_weight="2"
+                        android:padding="2dp"
+                        app:container_background_color="#00000000"
+                        app:container_border_color="#33666666"
+                        app:container_border_radius="0dp"
+                        app:container_gravity="left"
+                        app:horizontal_interval="4dp"
+                        app:tag_background_color="#519CE9"
+                        app:tag_border_color="#519CE9"
+                        app:tag_border_width="1dp"
+                        app:tag_clickable="false"
+                        app:tag_corner_radius="6dp"
+                        app:tag_horizontal_padding="7dp"
+                        app:tag_max_length="18"
+                        app:tag_text_color="@color/white"
+                        app:tag_text_size="14sp"
+                        app:tag_theme="none"
+                        app:vertical_interval="5dp" />
+
+
+                    <ImageView
+                        android:id="@+id/edit_language"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|end"
+                        android:src="@drawable/ic_baseline_navigate_next" />
+
+
+                </LinearLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:textColor="@color/selected_tab"
+                    android:textColorHint="@color/colorPrimaryDark">
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/email_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/gmail"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:textColor="@color/selected_tab"
+                        android:textColorHint="@color/colorPrimaryDark"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/user_text"
+                        app:backgroundTint="@android:color/black" />
+                </android.support.design.widget.TextInputLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:layout_margin="10dp"
+                    android:textColor="@color/selected_tab"
+                    android:textColorHint="@color/colorPrimaryDark">
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/link_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/website"
+                        android:imeOptions="actionNext"
+                        android:inputType="textNoSuggestions"
+                        android:textColor="@color/selected_tab"
+                        android:textColorHint="@color/colorPrimaryDark"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/user_text"
+                        app:backgroundTint="@android:color/black" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:textColor="@color/selected_tab"
+                    android:textColorHint="@color/colorPrimaryDark">
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/bio_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/bio"
+                        android:imeOptions="actionDone"
+                        android:inputType="textMultiLine"
+                        android:maxLength="150"
+                        android:maxLines="10"
+                        android:minLines="1"
+                        android:textColor="@color/selected_tab"
+                        android:textColorHint="@color/colorPrimaryDark"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/user_text"
+                        app:backgroundTint="@android:color/black" />
+                </android.support.design.widget.TextInputLayout>
+
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/login_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center"
+                android:layout_margin="20dp"
+                android:background="@drawable/follow_btn"
+                android:padding="5dp"
+                android:text="@string/save"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/title_size" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

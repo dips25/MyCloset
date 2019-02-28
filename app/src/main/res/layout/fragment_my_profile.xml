@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+      >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/search_AppBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/user_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                app:layout_scrollFlags="scroll|enterAlways">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="3dp"
+                        android:orientation="horizontal"
+                        android:weightSum="1">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:id="@+id/edit_profile_layout"
+                                android:layout_width="85dp"
+                                android:layout_height="85dp"
+                                android:layout_gravity="left"
+                                android:layout_marginLeft="5dp">
+
+                                <de.hdodenhof.circleimageview.CircleImageView
+                                    android:id="@+id/profile_pic"
+                                    android:layout_width="80dp"
+                                    android:layout_height="80dp"
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_margin="1dp"
+                                    android:src="@drawable/ic_user_profile"
+                                    app:civ_border_color="@color/white"
+                                    app:civ_border_width="1dp"
+                                    tools:ignore="VectorDrawableCompat" />
+                            </RelativeLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.7"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:orientation="vertical">
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:weightSum="2">
+
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/post_count_txt"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:gravity="center"
+                                        android:padding="2dp"
+                                        android:text="0"
+                                        android:textAllCaps="false"
+                                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                                        android:textColor="@color/black"
+                                        android:textSize="@dimen/post_title" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:textSize="@dimen/post_text"
+                                        android:text="Posts" />
+
+
+                                </LinearLayout>
+
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/follower_count_txt"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:gravity="center"
+                                        android:padding="2dp"
+                                        android:text="0"
+                                        android:textAllCaps="false"
+                                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                                        android:textColor="@color/black"
+                                        android:textSize="@dimen/post_title" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:textSize="@dimen/post_text"
+                                        android:text="Followings" />
+
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+
+                            <Button
+                                android:id="@+id/edit_profile_btn"
+                                style="?android:attr/borderlessButtonStyle"
+                                android:layout_width="200dp"
+                                android:layout_height="28dp"
+                                android:layout_margin="5dp"
+                                android:background="@drawable/editprofile_btn"
+                                android:padding="5dp"
+                                android:text="Edit Profile"
+                                android:textAllCaps="false"
+                                android:textColor="@color/selected_tab"
+                                android:textSize="10dp" />
+
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:id="@+id/username_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:padding="3dp"
+                        android:text=""
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_small_size"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/bio_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:padding="3dp"
+                        android:text=""
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_small_size" />
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:background="@color/colorPrimary" />
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/user_header"
+                    android:background="@color/white"
+                    android:textAllCaps="false"
+                    app:layout_anchor="@id/search_AppBarLayout"
+                    app:layout_anchorGravity="bottom"
+                    app:tabIndicatorColor="@color/black"
+                    app:tabIndicatorHeight="1dp"
+                    app:tabMode="fixed"
+                    app:tabSelectedTextColor="@color/black"
+                    app:tabTextAppearance="@style/TabLayoutTextStyle"
+                    app:tabTextColor="@color/colorPrimaryDark">
+
+                </android.support.design.widget.TabLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

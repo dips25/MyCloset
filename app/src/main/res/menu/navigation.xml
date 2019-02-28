@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="Home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:id="@+id/home"
+        >
+    </item>
+
+    <item
+        android:title="Add"
+        android:icon="@drawable/ic_add_box_black_24dp"
+        android:id="@+id/plus"
+        >
+    </item>
+
+    <item
+        android:title="Lookbook"
+        android:icon="@drawable/ic_favorite_black_24dp"
+        android:id="@+id/lookbook"
+        />
+
+
+</menu>

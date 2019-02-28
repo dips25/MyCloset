@@ -1,0 +1,33 @@
+<resources>
+    <dimen name="fab_horizintal_margin">16dp</dimen>
+    <dimen name="fab_vertical_margin">16dp</dimen>
+    <dimen name="picinfoheadingfont">14dp</dimen>
+    <dimen name="stylespacing_picinfo">30dp</dimen>
+
+    <dimen name="btn_corner_radius">30dip</dimen>
+    <dimen name="cardview_corner_radius">2dp</dimen>
+    <dimen name="text_small_size">11sp</dimen>
+    <dimen name="dots_height">30dp</dimen>
+    <dimen name="dots_margin_bottom">20dp</dimen>
+    <dimen name="title_size">16dp</dimen>
+    <dimen name="splash_header">27dp</dimen>
+    <dimen name="text_size">15dp</dimen>
+    <dimen name="medium_text_size">13dp</dimen>
+    <dimen name="bottom">-135dp</dimen>
+    <dimen name="user_text">17dp</dimen>
+    <dimen name="cover_width">120dp</dimen>
+    <dimen name="cover_height">180dp</dimen>
+    <dimen name="corner_radius">30dp</dimen>
+    <dimen name="pager_margin">-10dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">10dp</dimen>
+    <dimen name="activity_vertical_margin">10dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">130dp</dimen>
+    <dimen name="big_text">24sp</dimen>
+    <dimen name="editor_size">35dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="image_loader_post_width">450dp</dimen>
+    <dimen name="post_text">15sp</dimen>
+    <dimen name="post_title">16sp</dimen>
+</resources>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:titleTextColor="@color/black">
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="end"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/share_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:padding="5dp"
+                android:src="@drawable/ic_baseline_share"
+                tools:ignore="VectorDrawableCompat" />
+
+
+            <ImageView
+                android:id="@+id/menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:padding="5dp"
+                android:src="@drawable/ic_setting"
+                tools:ignore="VectorDrawableCompat" />
+
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="6dp"
+                android:padding="5dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp">
+
+                <my.closet.fashion.style.customs.AspectRatioImageView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/sample_pic" />
+            </android.support.v7.widget.CardView>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp">
+
+
+
+                <LinearLayout
+                    android:id="@+id/like_layout"
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentLeft="true"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/blog_like_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_like_unselected" />
+
+                    <TextView
+                        android:id="@+id/no_of_likes"
+                        android:layout_width="wrap_content"
+                        android:text="0 Likes"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/blog_comment_btn"
+                    android:layout_toRightOf="@+id/like_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_baseline_share" />
+
+                <ImageView
+
+                    android:id="@+id/blog_bookmark_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_bookmark" />
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/tags_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:padding="5dp"
+                android:textAllCaps="false"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:textColor="@color/black"
+                android:textSize="@dimen/title_size" />
+
+
+            <co.lujun.androidtagview.TagContainerLayout
+                android:id="@+id/selectedTags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="15dp"
+                app:container_background_color="#00000000"
+                app:container_border_color="#33666666"
+                app:container_border_radius="0dp"
+                app:container_gravity="left"
+                app:horizontal_interval="4dp"
+                app:tag_background_color="#00000000"
+                app:tag_border_color="#FFFFFF"
+                app:tag_border_width="1dp"
+                app:tag_clickable="false"
+                app:tag_corner_radius="6dp"
+                app:tag_enable_cross="false"
+                app:tag_horizontal_padding="0dp"
+                app:tag_max_length="18"
+                app:tag_text_color="@color/blue"
+                app:tag_text_size="@dimen/text_small_size"
+                app:tag_theme="none"
+                app:vertical_interval="2dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

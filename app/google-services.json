@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "121115420809",
+    "firebase_url": "https://my-closet-fashion-style.firebaseio.com",
+    "project_id": "my-closet-fashion-style",
+    "storage_bucket": "my-closet-fashion-style.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:121115420809:android:207d699761ba80a5",
+        "android_client_info": {
+          "package_name": "my.closet.fashion.style"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "121115420809-behd6a37ko8ur55eqtki7diepgpg7m9t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGYiUILZa-9XP_TQ1RLHB7YUjzCn7UyJU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

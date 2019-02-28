@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FEDBD0</color>
+    <color name="colorPrimaryDark">#f2b39f</color>
+    <color name="colorAccent">#442C2E</color>
+    <color name="secondarycolor">#FEEAE6</color>
+    <color name="black">#000000</color>
+    <color name="toolbar">#ffffff</color>
+    <color name="applyback">#fff</color>
+    <color name="backgrnd">#eeeeee</color>
+    <color name="grey">#eeeeee</color>
+    <color name="blue">#20318e</color>
+    <color name="fab_color">#d6d6d6</color>
+    <color name="picinfobackground">#eceff1</color>
+    <color name="categorybackground">#FEFEFE</color>
+
+    <color name="textfontcolor">#808080</color>
+    <color name="textfontcolorlight">#c2c2c2</color>
+    <color name="cardviewheadingtext">#212121</color>
+    <color name="cardviewheading">#FEFEFE</color>
+    <color name="filtertextstyles">#545555</color>
+    <color name="cardheadingfilter">#95000000</color>
+    <color name="white">#ffffff</color>
+    <color name="filterstyle">#6B6B6B</color>
+    <color name="green">#00ff00</color>
+    <color name="hexblue">#0e148c</color>
+    <color name="orange">#FFA500</color>
+    <color name="brown">#795548</color>
+    <color name="purple">#9932CC</color>
+    <color name="yellow">#ffeb3b</color>
+    <color name="gold">#D4AF37</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="pink">#FF69B4</color>
+    <color name="red">#FF0000</color>
+    <color name="nude">#CA9F7F</color>
+    <color name="hexgrey">#607d8b</color>
+    <color name="transparent">#00000000</color>
+    <color name="tutolayout">#95009688</color>
+    <color name="chatheadcolor">#FFF9C4</color>
+
+
+    <color name="dot_inactive_screen1">#EFCEC4</color>
+    <color name="dot_inactive_screen2">#FEEBE7</color>
+    <color name="dot_inactive_screen3">#EFCEC4</color>
+
+    <!-- dots active colors -->
+    <color name="dot_active_screen1">#442C2E</color>
+    <color name="dot_active_screen2">#442C2E</color>
+    <color name="dot_active_screen3">#442C2E</color>
+
+    <array name="array_dot_active">
+        <item>@color/dot_active_screen1</item>
+        <item>@color/dot_active_screen2</item>
+        <item>@color/dot_active_screen3</item>
+    </array>
+
+    <array name="array_dot_inactive">
+        <item>@color/dot_inactive_screen1</item>
+        <item>@color/dot_inactive_screen2</item>
+        <item>@color/dot_inactive_screen3</item>
+    </array>
+
+    <color name="selected_tab">#442C2E</color>
+    <color name="profile_color">#262626</color>
+
+    <color name="demo_light_transparent">#E1F5FE</color>
+    <color name="demo_dark_transparent">#B5B5B5</color>
+    <color name="tool_bg">#151414</color>
+</resources>

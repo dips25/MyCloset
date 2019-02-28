@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">내 옷장</string>
+    <string name="apply">대다</string>
+    <string name="beige">베이지 / 누드</string>
+    <string name="black">검은</string>
+    <string name="blue">푸른</string>
+    <string name="brown">갈색</string>
+    <string name="camera">카메라</string>
+    <string name="clear_all">명확한</string>
+    <string name="colors">그림 물감</string>
+    <string name="filter">거르는</string>
+    <string name="gallery">갱도</string>
+    <string name="gold">금</string>
+    <string name="green">녹색</string>
+    <string name="grey">회색</string>
+    <string name="orange">주황색</string>
+    <string name="pink">담홍색</string>
+    <string name="purple">자</string>
+    <string name="red">빨간</string>
+    <string name="silver">은</string>
+    <string name="white">화이트</string>
+    <string name="yellow">노랑</string>
+    <string name="accessories">액세서리</string>
+    <string name="bottom">바지</string>
+    <string name="footwear">신발류</string>
+    <string name="save">구하다</string>
+    <string name="top">티셔츠</string>
+    <string name="special">특별한</string>
+    <string name="party">파티</string>
+    <string name="formal">정식</string>
+    <string name="caution">카테고리, 스타일 및 색상 선택</string>
+    <string name="casual">평상복</string>
+    <string name="exit">종료하려면 뒤로 클릭하십시오.</string>
+    <string name="deletequery">삭제 하시겠습니까?</string>
+    <string name="filtered">거르는</string>
+    <string name="no_match">일치하는 항목 없음</string>
+    <string name="delete">지우다</string>
+    <string name="edit">편집하다</string>
+    <string name="select_category">스타일 선택</string>
+    <string name="select_colors">색상 선택</string>
+    <string name="select_styles">색상 선택</string>
+    <string name="dialog_delete">지우다</string>
+    <string name="dialog_cancel">취소</string>
+    <string name="filter_style">스타일</string>
+    <string name="scrcropservive">화면 자르기 사용</string>
+    <string name="screencrop">화면 자르기</string>
+
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="appintro_first">An Easy way to Organize your Clothes,Accessories and Footwear</string>
+    <string name="appintro_second">Upload Apparel Pictures and Create Outfits</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+    <string name="appintro_third">Get Inspired and Find Matching Appareal from your Closet</string>
+    <string name="signin_hint">Sign in for better app experience</string>
+    <string name="google">Google</string>
+    <string name="facebook">Facebook</string>
+    <string name="signin_hint_two">By signing in,you agree to our Terms and Privacy Policy</string>
+    <string name="name">User Name</string>
+    <string name="gmail">Gmail</string>
+    <string name="website">Webside</string>
+    <string name="bio">Bio</string>
+
+    <string name="no_location_detected">
+        No location detected. Make sure location is enabled on the device.
+    </string>
+
+    <string name="permission_rationale">Location permission is needed for core functionality</string>
+    <string name="permission_denied_explanation">Permission was denied, but is needed for core
+        functionality.</string>
+    <string name="settings">Settings</string>
+    <string name="outerwear">OuterWear</string>
+    <string name="home">Home</string>
+    <string name="closet">Closet</string>
+    <string name="lookbook">Lookbook</string>
+    <string name="help">Help</string>
+    <string name="feedback">Feedback</string>
+    <string name="rateapp">Rate App</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="username">Username</string>
+    <string name="destription">Write Description Here</string>
+
+
+</resources>
