@@ -32,6 +32,7 @@ public class CustomView extends AppCompatActivity {
 
 
     int i;
+    String u = "Universal";
     Realm realm;
     int id;
 
