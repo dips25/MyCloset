@@ -16,19 +16,17 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -90,7 +88,6 @@ import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import my.closet.fashion.style.BuildConfig;
-import my.closet.fashion.style.MainActivity;
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
 import my.closet.fashion.style.customs.IconizedMenu;
@@ -777,7 +774,7 @@ public class UserProfileActivity extends AppCompatActivity implements
                                     if (task.isComplete()) {
                                         Utilities.hideLoading();
 
-                                        Utilities.showToast(UserProfileActivity.this, "Profile Updated");
+                                        Utilities.showToast(UserProfileActivity.this, getString(R.string.profile_updated));
                                         Utilities.savebooleanPref(UserProfileActivity.this, "HasLogged_In", true);
                                         Utilities.savePref(UserProfileActivity.this, "Profile_Pic", url.toString());
                                         Utilities.savePref(UserProfileActivity.this, "Pen_Name", penname_edittext.getText().toString());

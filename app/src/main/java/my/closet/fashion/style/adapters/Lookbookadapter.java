@@ -10,20 +10,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import my.closet.fashion.style.R;
 import my.closet.fashion.style.customs.ImageSaver;
 import my.closet.fashion.style.modesl.Looks;
-import my.closet.fashion.style.R;
 
 public class Lookbookadapter extends ArrayAdapter {
 
     ArrayList<Looks> dresses;
     Context context;
     ImageView grid_image;
-    TextView look_name;
+
 
 
     public Lookbookadapter(@NonNull Context context, int resource,ArrayList<Looks> dressesArrayList) {
@@ -48,12 +47,12 @@ public class Lookbookadapter extends ArrayAdapter {
         LayoutInflater inflater=(LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v=inflater.inflate(R.layout.single_gridview,null );
         grid_image=(ImageView) v.findViewById(R.id.grid_image);
-        look_name=(TextView) v.findViewById(R.id.look_name);
+
 
         //grid_image.setLayoutParams(new Gallery.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         Bitmap bmp=new ImageSaver(context).setFileName(dresses.get(position).getImage_name()).setDirectoryName("mycloset").load();
         grid_image.setImageBitmap(bmp);
-        look_name.setText(" " + dresses.get(position).getStyle_name());
+
 
         return v;
 

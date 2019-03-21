@@ -1,5 +1,6 @@
 package my.closet.fashion.style.customs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,6 +27,7 @@ import my.closet.fashion.style.EraserActivity;
 import my.closet.fashion.style.Pic_info;
 import my.closet.fashion.style.R;
 
+@SuppressLint("ViewConstructor")
 public class HoverView extends View {
 
     public Context mContext;
@@ -84,7 +86,11 @@ public class HoverView extends View {
         bmWidth = w;
         bmHeight = h;
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        init(bm, w, h);
+
+        if (w>0 && h>0) {
+
+            init(bm, w, h);
+        }
     }
 
     public void switchMode(int _mode) {

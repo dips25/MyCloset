@@ -8,6 +8,7 @@ package my.closet.fashion.style;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,6 +37,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import my.closet.fashion.style.customs.HoverView;
+import smartdevelop.ir.eram.showcaseviewlib.GuideView;
+import smartdevelop.ir.eram.showcaseviewlib.config.DismissType;
+import smartdevelop.ir.eram.showcaseviewlib.listener.GuideListener;
 
 
 public class EraserActivity extends AppCompatActivity implements OnClickListener {
@@ -80,9 +84,9 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eraser);
         mContentResolver = getContentResolver();
+        mixpanelAPI= MixpanelAPI.getInstance(EraserActivity.this,"257c7d2e1c44d7d1ab6105af372f65a6");
 
-        String projectToken="257c7d2e1c44d7d1ab6105af372f65a6";
-        mixpanelAPI=MixpanelAPI.getInstance(this,projectToken);
+
 
 
 
@@ -153,9 +157,15 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
         }
 
 
+        if (bmWidth!=0) {
+            if (bmHeight != 0) {
+                mHoverView = new HoverView(this, mBitmap, bmWidth, bmHeight, viewWidth, viewHeight);
 
-            mHoverView = new HoverView(this, mBitmap, bmWidth, bmHeight, viewWidth, viewHeight);
-            if (mHoverView!=null) {
+            }
+        }
+
+        if (mHoverView!=null) {
+
             mHoverView.setLayoutParams(new LayoutParams(viewWidth, viewHeight));
         }
 
@@ -180,6 +190,18 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
         mirrorButton.setOnClickListener(this);
         positionButton = (ImageButton) findViewById(R.id.positionButton);
         positionButton.setOnClickListener(this);
+
+        SharedPreferences preferences = getSharedPreferences("preference",MODE_PRIVATE);
+        boolean first = preferences.getBoolean("first",true);
+
+
+        if (first){
+
+            showtutorial();
+        }
+
+
+
 
         if (mHoverView!=null) {
 
@@ -261,6 +283,55 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
 
         colorButton = (ImageView) findViewById(R.id.colorButton);
         colorButton.setOnClickListener(this);
+    }
+
+    private void showtutorial() {
+
+        new GuideView.Builder(EraserActivity.this)
+                .setContentText(getString(R.string.eraser_hint))
+                .setTargetView(eraserMainButton)
+                .setDismissType(DismissType.anywhere)
+                .setContentTextSize(16)
+                .setGuideListener(new GuideListener() {
+                    @Override
+                    public void onDismiss(View view) {
+
+                        new GuideView.Builder(EraserActivity.this)
+                                .setContentText(getString(R.string.magicwand_hint))
+                                .setTargetView(magicWandMainButton)
+                                .setDismissType(DismissType.anywhere)
+                                .setContentTextSize(16)
+                                .setGuideListener(new GuideListener() {
+                                    @Override
+                                    public void onDismiss(View view) {
+
+
+                                        new GuideView.Builder(EraserActivity.this)
+                                                .setContentText(getString(R.string.position_hint))
+                                                .setTargetView(positionButton)
+                                                .setDismissType(DismissType.anywhere)
+                                                .setContentTextSize(16)
+                                                .build()
+                                                .show();
+
+
+                                    }
+                                })
+                                .build()
+                                .show();
+
+                    }
+                })
+                .build()
+                .show();
+
+
+
+        SharedPreferences preferences = getSharedPreferences("preference",MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("first",false);
+        editor.apply();
+
     }
 
     private Bitmap getBitmap(Uri uri) {
@@ -413,13 +484,14 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
     }
 
     public void updateRedoButton() {
-        if(mHoverView.checkRedoEnable()) {
-            redoButton.setEnabled(true);
-            redoButton.setAlpha(1.0f);
-        }
-        else {
-            redoButton.setEnabled(false);
-            redoButton.setAlpha(0.3f);
+        if (mHoverView!=null) {
+            if (mHoverView.checkRedoEnable()) {
+                redoButton.setEnabled(true);
+                redoButton.setAlpha(1.0f);
+            } else {
+                redoButton.setEnabled(false);
+                redoButton.setAlpha(0.3f);
+            }
         }
     }
 

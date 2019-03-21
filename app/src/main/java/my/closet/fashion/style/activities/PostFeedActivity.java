@@ -1,13 +1,13 @@
 package my.closet.fashion.style.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,15 +22,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -39,6 +41,7 @@ import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
+import my.closet.fashion.style.customs.ImageSaver;
 
 public class PostFeedActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -57,6 +60,10 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
     EditText description_text;
     private String My_DbKey="";
     private FirebaseFirestore profCollection;
+    ByteArrayOutputStream baos;
+    byte[] data;
+    Bundle b;
+    private String bitmap_lookbook_obj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +78,11 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
 
         profCollection = FirebaseFirestore.getInstance();
         i = getIntent();
-        if (i != null) {
-            bitmap_obj = i.getStringExtra("Bitmap");
+        b = getIntent().getExtras();
+
+
+        if (i != null ) {
+
         }
 
         My_DbKey=Utilities.loadPref(PostFeedActivity.this, "My_DbKey", "");
@@ -99,17 +109,37 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
                 .setPinchTextScalable(true)
                 .build();
 
-        if (bitmap_obj != null && !bitmap_obj.equalsIgnoreCase("")) {
+        if (b!=null && b.containsKey("Bitmap")){
 
-            Glide.with(PostFeedActivity.this)
-                    .asBitmap()
-                    .load(bitmap_obj.toString()).into(new SimpleTarget<Bitmap>() {
-                @Override
-                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                    mPhotoEditorView.getSource().setImageBitmap(resource);
-                }
-            });
+            bitmap_obj = i.getStringExtra("Bitmap");
+
+            if (bitmap_obj != null && !bitmap_obj.equalsIgnoreCase("")) {
+
+                Glide.with(PostFeedActivity.this)
+                        .asBitmap()
+                        .load(bitmap_obj.toString()).into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        mPhotoEditorView.getSource().setImageBitmap(resource);
+                    }
+                });
+            }
+
+        }else {
+
+            bitmap_lookbook_obj = i.getStringExtra("Lookbook");
+            if (bitmap_lookbook_obj!=null) {
+                Bitmap bmp = new ImageSaver(PostFeedActivity.this).setFileName(bitmap_lookbook_obj).setDirectoryName("mycloset").load();
+                mPhotoEditorView.getSource().setImageBitmap(bmp);
+               // bitmap_obj = getFilePath(bitmap_obj);
+                baos = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.PNG,100,baos);
+                data = baos.toByteArray();
+
+
+            }
         }
+
 
 
     }
@@ -125,6 +155,7 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
                 break;
 
             case R.id.done_txt:
+                mixpanelAPI.track("Post");
                 if (My_DbKey != null && !My_DbKey.equalsIgnoreCase("")) {
                     SendPicturetoDB();
                 }
@@ -136,8 +167,12 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
 
         Utilities.showLoading(PostFeedActivity.this, "Uploading...");
         final StorageReference ref = storageRef.child(new StringBuilder("images/").append(UUID.randomUUID().toString()).toString());
-        uploadTask = ref.putFile(Uri.parse(bitmap_obj));
+        if (bitmap_obj!=null) {
+            uploadTask = ref.putFile(Uri.parse(bitmap_obj));
+        }else {
 
+            uploadTask = ref.putBytes(data);
+        }
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -161,7 +196,7 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
                         String timestamp = tsLong.toString();
 
                         Map<String, Object> data = new HashMap<>();
-                        String id = UUID.randomUUID().toString();
+                        final String id = UUID.randomUUID().toString();
 
                         data.put("id", id);
                         data.put("image", downloaded_url);
@@ -175,6 +210,8 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
 
+                               // profCollection.collection("CommonFeed").document(id);
+
                             }
                         });
 
@@ -184,9 +221,12 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
 
+                                    if (bitmap_obj!=null) {
 
-                                    if (new File(bitmap_obj).exists()) {
-                                        new File(bitmap_obj).delete();
+
+                                        if (new File(bitmap_obj).exists()) {
+                                            new File(bitmap_obj).delete();
+                                        }
                                     }
                                     Utilities.showToast(PostFeedActivity.this, "Posted...");
 
@@ -215,6 +255,58 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
         });
+    }
+
+    private String getFilePath(String bitmap_obj){
+
+        File directory;
+        directory=this.getDir("mycloset",Context.MODE_PRIVATE);
+        return new File(directory,bitmap_obj).getPath();
+
+
+    }
+
+    private Uri getUrifromBitmap(Bitmap bitmap) {
+
+        File tempdirectory = getExternalFilesDir(null);
+        File tempname = null;
+        if (tempdirectory != null) {
+            tempname = new File(tempdirectory.getAbsolutePath() + "/tempuri/");
+        }
+        File directory = null;
+        try {
+            directory = File.createTempFile(bitmap_obj, ".png", tempname);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (directory != null && !directory.exists()) {
+
+            directory.mkdirs();
+        }
+
+        FileOutputStream fileOutputStream = null;
+        try {
+            if (directory != null) {
+                fileOutputStream = new FileOutputStream(directory);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+
+            try {
+                if (fileOutputStream != null) {
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return Uri.fromFile(directory);
+
+
+        }
     }
 
 

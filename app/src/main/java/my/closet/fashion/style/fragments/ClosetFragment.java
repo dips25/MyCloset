@@ -1,9 +1,11 @@
 package my.closet.fashion.style.fragments;
 
 
-
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -48,7 +51,12 @@ import my.closet.fashion.style.adapters.FootWearAdapter;
 import my.closet.fashion.style.adapters.TopAdapter;
 import my.closet.fashion.style.modesl.Dresses;
 
-import static my.closet.fashion.style.activities.HomeActivity.drawerLayout;
+import static android.content.Context.MODE_PRIVATE;
+import static my.closet.fashion.style.R.id.upload_menu;
+import static my.closet.fashion.style.adapters.AccessoryAdapter.mcontext;
+import static my.closet.fashion.style.adapters.BottomAdapter.mbcontext;
+import static my.closet.fashion.style.adapters.FootWearAdapter.mfcontext;
+import static my.closet.fashion.style.adapters.TopAdapter.ccontext;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,7 +81,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
     public RecyclerView.LayoutManager bottomlayoutmanager;
     public RecyclerView.LayoutManager footlayout;
 
-    Realm realm;
+    static Realm realm;
     RealmResults<Dresses> r1;
     RealmResults<Dresses> r2;
     RealmResults<Dresses> r3;
@@ -96,6 +104,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
     private final int CAMERA_REQUEST = 100;
     private TextView apply;
     private LinearLayout clearall;
+    private MixpanelAPI mixpanelAPI;
 
     int nblack;
     int nwhite;
@@ -203,12 +212,25 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
     private DrawerLayout mdr;
     private ActionBarDrawerToggle toogle;
 
+    RelativeLayout upload_tutorial;
+    View menuitemview;
+
+    Uri imguri;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        mixpanelAPI= MixpanelAPI.getInstance(getContext(),"257c7d2e1c44d7d1ab6105af372f65a6");
         view = inflater.inflate(R.layout.fragment_closet, container, false);
+
+        String[] PERMISSIONS = {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.CAMERA,
+        };
 
         Realm.init(getContext());
         realm = Realm.getDefaultInstance();
@@ -224,6 +246,17 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         toolbar_title = (TextView) Objects.requireNonNull(getActivity()).findViewById(R.id.title);
         if (toolbar_title!=null) {
             toolbar_title.setText(R.string.closet);
+        }
+
+        upload_tutorial = (RelativeLayout)v.findViewById(R.id.upload_tutorial);
+        upload_tutorial.setVisibility(View.GONE);
+
+        SharedPreferences preferences = getContext().getSharedPreferences("prefs",MODE_PRIVATE);
+        boolean firstlaunch = preferences.getBoolean("firsttime",true);
+
+        if (firstlaunch){
+
+            createtutorial();
         }
 
         nblack = 0;
@@ -274,14 +307,14 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         mdr.addDrawerListener(toogle);
 
 
-        scrntst = (TextView) v.findViewById(R.id.scrntst);
+       // scrntst = (TextView) v.findViewById(R.id.scrntst);
         camertst = (TextView) v.findViewById(R.id.camertst);
         glrytst = (TextView) v.findViewById(R.id.glrytst);
         add_layout = (RelativeLayout) v.findViewById(R.id.add_layout);
 
         fab_camera = (FloatingActionButton) v.findViewById(R.id.fab_camera);
         fab_gallery = (FloatingActionButton) v.findViewById(R.id.fab_gallery);
-        fab_scrnshot = (FloatingActionButton) v.findViewById(R.id.scrnshot);
+       // fab_scrnshot = (FloatingActionButton) v.findViewById(R.id.scrnshot);
 
         apply = (TextView) v.findViewById(R.id.applybutton);
         clearall = (LinearLayout) v.findViewById(R.id.clear);
@@ -289,10 +322,10 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         add_layout.setVisibility(View.GONE);
         fab_camera.setVisibility(View.INVISIBLE);
         fab_gallery.setVisibility(View.INVISIBLE);
-        fab_scrnshot.setVisibility(View.INVISIBLE);
+       // fab_scrnshot.setVisibility(View.INVISIBLE);
         camertst.setVisibility(View.INVISIBLE);
         glrytst.setVisibility(View.INVISIBLE);
-        scrntst.setVisibility(View.INVISIBLE);
+       // scrntst.setVisibility(View.INVISIBLE);
 
         flblack = (ImageView) v.findViewById(R.id.blacksq);
         flwhite = (ImageView) v.findViewById(R.id.whitesq);
@@ -391,6 +424,20 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         if (spartys!=null) {
             spartys.setVisibility(View.INVISIBLE);
         }
+
+        upload_tutorial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (upload_tutorial.getVisibility() == View.VISIBLE){
+
+                    upload_tutorial.setVisibility(View.GONE);
+                }
+
+            }
+        });
+
+
         if (formals!=null) {
             formals.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
@@ -813,7 +860,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         clearall.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
 
-               // mixpanel.track("Clear All Clicked");
+               mixpanelAPI.track("Clear All");
 
                 cblack = null;
                 cwhite = null;
@@ -920,10 +967,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
 
             public void onClick(View view) {
 
-                //mixpanel.track("Apply Button Clicked");
-
-
-                //fab_plus.setVisibility(View.VISIBLE);
+                mixpanelAPI.track("Apply");
 
                 if ((nblack == 0 && nwhite == 0 && ngrey == 0 && nred == 0 && nbeige == 0 && npink == 0 && nsilver == 0 && ngreen == 0 && nblue == 0 && nyellow == 0 && norange == 0 && nbrown == 0 && npurple == 0 && ngold == 0) && (nformalss == 0 && ncasualss == 0 && npartyss == 0 && nspecialss == 0)) {
 
@@ -1018,26 +1062,26 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         accrecycler = (RecyclerView) v.findViewById(R.id.recycler);
         mlayoutmanager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         accrecycler.setLayoutManager(mlayoutmanager);
-        madapter = new AccessoryAdapter(AccessoryAdapter.mcontext, getAccessories());
+        madapter = new AccessoryAdapter(mcontext, getAccessories());
         accrecycler.setAdapter(madapter);
 
 
         toprecycler = (RecyclerView) v.findViewById(R.id.toprecycle);
         toplayout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         toprecycler.setLayoutManager(toplayout);
-        mtopadapter = new TopAdapter(TopAdapter.ccontext, setTop());
+        mtopadapter = new TopAdapter(ccontext, setTop());
         toprecycler.setAdapter(mtopadapter);
 
         bottomrecycler = (RecyclerView) v.findViewById(R.id.bottomrecycle);
-        bottomlayoutmanager = new LinearLayoutManager(BottomAdapter.mbcontext, LinearLayoutManager.HORIZONTAL, false);
+        bottomlayoutmanager = new LinearLayoutManager(mbcontext, LinearLayoutManager.HORIZONTAL, false);
         bottomrecycler.setLayoutManager(bottomlayoutmanager);
-        mbottomadapter = new BottomAdapter(BottomAdapter.mbcontext, getBottom());
+        mbottomadapter = new BottomAdapter(mbcontext, getBottom());
         bottomrecycler.setAdapter(mbottomadapter);
 
         footrecycler = (RecyclerView) v.findViewById(R.id.footrecycler);
         footlayout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         footrecycler.setLayoutManager(footlayout);
-        mfootwearadapter = new FootWearAdapter(FootWearAdapter.mfcontext, getFoot());
+        mfootwearadapter = new FootWearAdapter(mfcontext, getFoot());
         footrecycler.setAdapter(mfootwearadapter);
 
     }
@@ -1086,14 +1130,14 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         return accdresss;
     }
 
-    private void clearrefresh() {
+    public static void clearrefresh() {
 
         ArrayList<Dresses> accdresss = new ArrayList<>();
         RealmResults<Dresses> accdressesresults = realm.where(Dresses.class).contains("category", "Accessories").findAllSorted("id", Sort.DESCENDING);
         for (Dresses dresses : accdressesresults) {
             accdresss.add(dresses);
         }
-        madapter = new AccessoryAdapter(getActivity(), accdresss);
+        madapter = new AccessoryAdapter(mcontext, accdresss);
         accrecycler.setAdapter(madapter);
 
 
@@ -1102,7 +1146,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         for (Dresses dresses : topdressesresults) {
             topdresss.add(dresses);
         }
-        mtopadapter = new TopAdapter(getActivity(), topdresss);
+        mtopadapter = new TopAdapter(ccontext, topdresss);
         toprecycler.setAdapter(mtopadapter);
 
 
@@ -1111,7 +1155,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         for (Dresses dresses : bottomdressesresults) {
             bottomdresss.add(dresses);
         }
-        mbottomadapter = new BottomAdapter(getActivity(), bottomdresss);
+        mbottomadapter = new BottomAdapter(mbcontext, bottomdresss);
         bottomrecycler.setAdapter(mbottomadapter);
 
 
@@ -1120,7 +1164,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         for (Dresses dresses : footdressesresults) {
             footdresss.add(dresses);
         }
-        mfootwearadapter = new FootWearAdapter(getActivity(), footdresss);
+        mfootwearadapter = new FootWearAdapter(mfcontext, footdresss);
         footrecycler.setAdapter(mfootwearadapter);
 
     }
@@ -1216,6 +1260,17 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.findItem(R.id.action_search).setVisible(false);
+
+    }
+
+    private void createtutorial() {
+
+       upload_tutorial.setVisibility(View.VISIBLE);
+
+        SharedPreferences preferences = Objects.requireNonNull(getContext()).getSharedPreferences("prefs",MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("firsttime",false);
+        editor.apply();
     }
 
     @Override
@@ -1224,45 +1279,48 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
 
             case R.id.filter:
 
+                mixpanelAPI.track("Filter");
+
                 if (mdr.isDrawerOpen(Gravity.END)) {
-                    drawerLayout.closeDrawer(Gravity.END);
+                    mdr.closeDrawer(Gravity.END);
                     //fab_plus.setVisibility(View.VISIBLE);
 
-                    return true;
+
                 } else {
                     mdr.openDrawer(Gravity.END);
                     //fab_plus.setVisibility(View.INVISIBLE);
-                    return true;
-                }
-
-            case R.id.upload_menu:
-
-                if (fab_camera.getVisibility() == View.VISIBLE &&
-                        fab_gallery.getVisibility() == View.VISIBLE &&
-                        fab_scrnshot.getVisibility() == View.VISIBLE &&
-                        scrntst.getVisibility() == View.VISIBLE &&
-                        camertst.getVisibility() == View.VISIBLE &&
-                        glrytst.getVisibility() == View.VISIBLE) {
-
-                    fab_camera.setVisibility(View.INVISIBLE);
-                    fab_gallery.setVisibility(View.INVISIBLE);
-                    fab_scrnshot.setVisibility(View.INVISIBLE);
-                    scrntst.setVisibility(View.INVISIBLE);
-                    glrytst.setVisibility(View.INVISIBLE);
-                    camertst.setVisibility(View.INVISIBLE);
-                    add_layout.setVisibility(View.GONE);
-
-                } else {
-
-                    add_layout.setVisibility(View.VISIBLE);
-                    fab_camera.setVisibility(View.VISIBLE);
-                    fab_gallery.setVisibility(View.VISIBLE);
-                    fab_scrnshot.setVisibility(View.VISIBLE);
-                    scrntst.setVisibility(View.VISIBLE);
-                    glrytst.setVisibility(View.VISIBLE);
-                    camertst.setVisibility(View.VISIBLE);
 
                 }
+                return true;
+
+            case upload_menu:
+
+
+                    if (fab_camera.getVisibility() == View.VISIBLE &&
+                            fab_gallery.getVisibility() == View.VISIBLE &&
+                            camertst.getVisibility() == View.VISIBLE &&
+                            glrytst.getVisibility() == View.VISIBLE) {
+
+                        fab_camera.setVisibility(View.INVISIBLE);
+                        fab_gallery.setVisibility(View.INVISIBLE);
+                       // fab_scrnshot.setVisibility(View.INVISIBLE);
+                       // scrntst.setVisibility(View.INVISIBLE);
+                        glrytst.setVisibility(View.INVISIBLE);
+                        camertst.setVisibility(View.INVISIBLE);
+                        add_layout.setVisibility(View.GONE);
+
+                    } else {
+
+                        add_layout.setVisibility(View.VISIBLE);
+                        fab_camera.setVisibility(View.VISIBLE);
+                        fab_gallery.setVisibility(View.VISIBLE);
+                       // fab_scrnshot.setVisibility(View.VISIBLE);
+                       // scrntst.setVisibility(View.VISIBLE);
+                        glrytst.setVisibility(View.VISIBLE);
+                        camertst.setVisibility(View.VISIBLE);
+
+                    }
+
                 return true;
 
             case R.id.action_search:
@@ -1285,6 +1343,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
             case R.id.fab_camera:
 
 
+                mixpanelAPI.track("Camera");
 
                 Intent cameraintent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (cameraintent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -1307,7 +1366,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
 
             case R.id.fab_gallery:
 
-
+                mixpanelAPI.track("Gallery");
 
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -1367,8 +1426,10 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
                 if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
 
 
-                    Uri imguri = data.getData();
-                    Bundle bundle = new Bundle();
+                    imguri = data.getData();
+                    String imagepath = getPath(imguri, "Photo");
+                    imguri = Uri.fromFile(new File(imagepath));
+                   // Bundle bundle = new Bundle();
                     Intent i = new Intent(getActivity(), EraserActivity.class);
                     i.putExtra("source", "add");
                     i.putExtra("image", "gallery");
@@ -1379,5 +1440,43 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
         }
+    }
+
+
+
+    public String getPath(Uri uri, String type) {
+        String document_id = null;
+        Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            document_id = cursor.getString(0);
+            document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
+        }
+
+        String path = "";
+        if (type.equalsIgnoreCase("Photo")) {
+
+            cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
+            if (cursor.moveToFirst()) {
+
+                path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+                cursor.close();
+            }
+        } else {
+
+            cursor = getActivity().getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    null, MediaStore.Video.Media._ID + " = ? ", new String[]{document_id}, null);
+            if (cursor.moveToFirst()) {
+
+                path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+                cursor.close();
+            }
+        }
+
+        if (path.equalsIgnoreCase("")) {
+            path = document_id;
+        }
+
+        return path;
     }
 }

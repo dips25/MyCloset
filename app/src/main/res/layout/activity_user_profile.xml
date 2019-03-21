@@ -103,7 +103,7 @@
                         android:layout_margin="3dp"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:text="user name"
+                        android:text="@string/user_name"
                         android:textAllCaps="false"
                         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                         android:textColor="@color/profile_color"
@@ -289,7 +289,7 @@
                 android:padding="5dp"
                 android:text="@string/save"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/colorAccent"
                 android:textSize="@dimen/title_size" />
 
 

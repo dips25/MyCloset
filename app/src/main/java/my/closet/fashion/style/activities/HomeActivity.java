@@ -1,11 +1,16 @@
 package my.closet.fashion.style.activities;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +23,7 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,9 +48,9 @@ import my.closet.fashion.style.fragments.ClosetFragment;
 import my.closet.fashion.style.fragments.HomeFragment;
 import my.closet.fashion.style.fragments.LookbookFragment;
 import my.closet.fashion.style.fragments.MyProfileFragment;
-import my.closet.fashion.style.fragments.NotificationFragment;
 import my.closet.fashion.style.modesl.Dresses;
 
+import static my.closet.fashion.style.fragments.ClosetFragment.clearrefresh;
 import static my.closet.fashion.style.fragments.ClosetFragment.madapter;
 import static my.closet.fashion.style.fragments.ClosetFragment.mbottomadapter;
 import static my.closet.fashion.style.fragments.ClosetFragment.mfootwearadapter;
@@ -52,6 +58,7 @@ import static my.closet.fashion.style.fragments.ClosetFragment.mtopadapter;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private static final int PERMISSION_ALL = 1111;
     Realm realm;
     private File rootDir;
     private DisplayMetrics dm;
@@ -63,6 +70,8 @@ public class HomeActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
     public TextView title;
+    Intent i;
+    ImageView cross;
 
     private LinearLayout looktext;
 
@@ -72,6 +81,13 @@ public class HomeActivity extends AppCompatActivity {
     ArrayList<String> footnames = new ArrayList<>();
     public static RelativeLayout look_tab;
 
+    String[] PERMISSIONS = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.CAMERA,
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +95,12 @@ public class HomeActivity extends AppCompatActivity {
 
         Realm.init(this);
         realm = Realm.getDefaultInstance();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!hasPermissions(this, PERMISSIONS)) {
+                ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+            }
+        }
 
 
 
@@ -88,6 +110,19 @@ public class HomeActivity extends AppCompatActivity {
         displayActionBar();
         ActionBar avy = getSupportActionBar();
         Objects.requireNonNull(avy).setTitle(null);
+
+        cross = (ImageView) findViewById(R.id.cross);
+
+        cross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                clearrefresh();
+                look_tab.setVisibility(View.GONE);
+                bottomnav.setVisibility(View.VISIBLE);
+            }
+        });
 
 
         mixpanelAPI= MixpanelAPI.getInstance(HomeActivity.this,"257c7d2e1c44d7d1ab6105af372f65a6");
@@ -168,12 +203,15 @@ public class HomeActivity extends AppCompatActivity {
         manager = getSupportFragmentManager();
 
         bottomnav = (BottomNavigationView) findViewById(R.id.bnve_icon_selector);
+
         look_tab = (RelativeLayout) findViewById(R.id.linear);
         looktext = (LinearLayout) findViewById(R.id.create_lay);
 
         looktext.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
+
+                                            mixpanelAPI.track("Create Look Tab");
 
                                             names = madapter.getItems();
                                             topnames = mtopadapter.getItems();
@@ -228,17 +266,6 @@ public class HomeActivity extends AppCompatActivity {
                                 transaction = manager.beginTransaction();
                                 transaction.replace(R.id.container, lookbookFragment);
                                 transaction.addToBackStack("LookbookFragment");
-                                transaction.commit();
-                                closeDrawer();
-                                return true;
-
-                            } else if (position == R.id.notification) {
-
-                                mixpanelAPI.track("Notifications");
-                                NotificationFragment notificationFragment = new NotificationFragment();
-                                transaction = manager.beginTransaction();
-                                transaction.replace(R.id.container, notificationFragment);
-                                transaction.addToBackStack("NotificationFragment");
                                 transaction.commit();
                                 closeDrawer();
                                 return true;
@@ -347,6 +374,23 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    private boolean hasPermissions(Context context, String[] permissions) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED) {
+
+                }
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+
+                } else {
+
+                }
+                return false;
+            }
+        }
+        return true;
     }
 
    }

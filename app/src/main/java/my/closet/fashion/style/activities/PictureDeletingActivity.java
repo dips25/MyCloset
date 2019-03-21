@@ -107,6 +107,7 @@ public class PictureDeletingActivity extends AppCompatActivity implements View.O
         selectedTags.setBorderColor(Color.TRANSPARENT);
 
         share_icon = (ImageView) findViewById(R.id.share_icon);
+
         share_icon.setOnClickListener(this);
 
         if (picture_path != null) {
@@ -219,8 +220,8 @@ public class PictureDeletingActivity extends AppCompatActivity implements View.O
                             final AlertDialog.Builder alert_Dialog = new AlertDialog.Builder(PictureDeletingActivity.this);
                             alert_Dialog.setCancelable(false);
                             alert_Dialog.setTitle("Alert");
-                            alert_Dialog.setMessage("Do you want to delete ?");
-                            alert_Dialog.setPositiveButton("Delete", new DialogInterface.OnClickListener(){
+                            alert_Dialog.setMessage(R.string.deletequery);
+                            alert_Dialog.setPositiveButton(R.string.dialog_delete, new DialogInterface.OnClickListener(){
 
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -235,7 +236,7 @@ public class PictureDeletingActivity extends AppCompatActivity implements View.O
                                 }
                             } );
 
-                            alert_Dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                            alert_Dialog.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener(){
 
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

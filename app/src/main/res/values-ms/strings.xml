@@ -47,17 +47,17 @@
     <string name="screencrop">Tanaman skrin</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="appintro_first">An Easy way to Organize your Clothes,Accessories and Footwear</string>
-    <string name="appintro_second">Upload Apparel Pictures and Create Outfits</string>
+    <string name="appintro_first">简单 的 方法 来 Organsize 服装, 饰品 和 鞋类</string>
+    <string name="appintro_second">上传 照片 和 创建 服装</string>
     <string name="next">NEXT</string>
-    <string name="skip">SKIP</string>
-    <string name="start">GOT IT</string>
+    <string name="skip">跳跃</string>
+    <string name="start">Got It</string>
     <string name="appintro_third">Get Inspired and Find Matching Appareal from your Closet</string>
-    <string name="signin_hint">Sign in for better app experience</string>
+    <string name="signin_hint">登录 更好 的 应用 体验</string>
     <string name="google">Google</string>
     <string name="facebook">Facebook</string>
-    <string name="signin_hint_two">By signing in,you agree to our Terms and Privacy Policy</string>
-    <string name="name">User Name</string>
+    <string name="signin_hint_two">通过 在 您 签署 同意 我们 的 条款 和 隐私权 政策</string>
+    <string name="name">Nama pengguna</string>
     <string name="gmail">Gmail</string>
     <string name="website">Webside</string>
     <string name="bio">Bio</string>
@@ -71,13 +71,29 @@
         functionality.</string>
     <string name="settings">Settings</string>
     <string name="outerwear">OuterWear</string>
-    <string name="home">Home</string>
-    <string name="closet">Closet</string>
-    <string name="lookbook">Lookbook</string>
+    <string name="home">家</string>
+    <string name="closet">almari</string>
+    <string name="lookbook">Tengok buku</string>
     <string name="help">Help</string>
     <string name="feedback">Feedback</string>
     <string name="rateapp">Rate App</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="username">Username</string>
     <string name="destription">Write Description Here</string>
+    <string name="magicwand_hint">删除 / 通过 滑动 杆 还原 相似 的 颜色</string>
+    <string name="eraser_hint">通过 选择 尺寸 刷 擦 / 取消 擦除</string>
+    <string name="position_hint">画面 的 增加 / 减少 尺寸</string>
+    <string name="click_here_to_add_clothes">点击 添加 衣服</string>
+    <string name="name_the_look">名称 查找</string>
+    <string name="profile">轮廓</string>
+    <string name="describe_with_tags">与 标签</string>
+    <string name="post">ENVIAR</string>
+    <string name="create_look">Mewujudkan kelihatan</string>
+    <string name="background_color">warna latar belakang</string>
+    <string name="my_uploads">Post saya</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="user_name">Nama pengguna</string>
+    <string name="profile_updated">Profil dikemaskini</string>
+    <string name="select_pictures_to_create_a_look_in_closet">Pilih gambar untuk mencipta pandangan di Closet</string>
+    <string name="coming_soon">Akan datang</string>
 </resources>

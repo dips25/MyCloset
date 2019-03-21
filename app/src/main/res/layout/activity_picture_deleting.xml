@@ -32,7 +32,8 @@
                 android:layout_gravity="center"
                 android:padding="5dp"
                 android:src="@drawable/ic_baseline_share"
-                tools:ignore="VectorDrawableCompat" />
+                tools:ignore="VectorDrawableCompat"
+                android:visibility="gone"/>
 
 
             <ImageView
@@ -122,7 +123,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:src="@drawable/ic_baseline_share" />
+                    android:src="@drawable/ic_baseline_share"
+                    />
 
                 <ImageView
 

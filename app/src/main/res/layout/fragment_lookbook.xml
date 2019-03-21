@@ -3,8 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/secondarycolor"
+    android:background="@color/whitepink"
    >
+
+    <TextView
+        android:id="@+id/lookbook_tutorial_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/select_pictures_to_create_a_look_in_closet"
+        android:gravity="center"
+        android:textSize="16dp"
+        android:textColor="@color/colorAccent"/>
 
     <GridView
         android:id="@+id/grid"

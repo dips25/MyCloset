@@ -39,7 +39,8 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:orientation="horizontal"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/profile_layout"
@@ -58,14 +59,16 @@
                     android:src="@drawable/ic_user_profile"
                     app:civ_border_color="@color/white"
                     app:civ_border_width="1dp"
-                    tools:ignore="VectorDrawableCompat" />
+                    tools:ignore="VectorDrawableCompat"
+                    android:visibility="gone"/>
 
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:orientation="vertical"
                     android:layout_gravity="center"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/username_txt"
@@ -109,7 +112,8 @@
                     android:id="@+id/like_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <xyz.hanks.library.bang.SmallBangView
                         android:id="@+id/like_heart"
@@ -119,7 +123,8 @@
                         app:circle_end_color="#f0616d"
                         app:circle_start_color="#EF505d"
                         app:dots_primary_color="#EF505d"
-                        app:dots_secondary_color="#f0616d">
+                        app:dots_secondary_color="#f0616d"
+                        >
 
                         <ImageView
                             android:id="@+id/blog_like_btn"

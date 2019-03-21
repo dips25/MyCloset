@@ -19,6 +19,36 @@
         <include layout="@layout/drag_mainactivity"/>
 
         <RelativeLayout
+            android:id="@+id/upload_tutorial"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#66000000">
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="2dp"
+                android:layout_height="80dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="70dp"
+                android:background="@color/white">
+
+            </View>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/click_here_to_add_clothes"
+                android:background="@color/white"
+                android:layout_below="@id/view"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="3dp"/>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/add_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -29,9 +59,10 @@
                 android:id="@+id/scrnshot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="160dp"
+                android:layout_below="@id/fab_gallery"
+                android:layout_alignStart="@id/fab_gallery"
+                android:layout_alignEnd="@id/fab_gallery"
+                android:layout_marginTop="56dp"
                 android:clickable="true"
                 android:elevation="6dp"
                 android:focusable="true"
@@ -40,79 +71,99 @@
                 app:fab_colorPressed="@color/toolbar"
                 app:fab_colorRipple="@color/backgrnd"
                 app:fab_label="@string/screencrop"
-                app:fab_size="mini"
-                app:pressedTranslationZ="12dp" />
+                app:fab_size="normal"
+                app:pressedTranslationZ="12dp"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/scrntst"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="135dp"
+                android:layout_toStartOf="@id/scrnshot"
+                android:layout_alignTop="@id/scrnshot"
+                android:layout_alignBottom="@id/scrnshot"
+                android:gravity="center_vertical"
+                android:layout_marginEnd="3dp"
                 android:text="Screen Shot"
+                android:visibility="gone"
                 android:textColor="@color/colorAccent"
-
                 android:textSize="14dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fab_camera"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignTop="@+id/scrnshot"
-                android:layout_marginStart="39dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="46dp"
                 android:elevation="6dp"
                 android:src="@drawable/ic_photo_camera_black_24dp"
                 app:fab_colorNormal="@color/toolbar"
-                app:fab_colorPressed="@color/toolbar"
-                app:fab_colorRipple="@color/backgrnd"
+                app:fab_colorPressed="@color/colorAccent"
                 app:fab_label="@string/camera"
-                app:fab_size="mini"
+                app:fab_size="normal"
                 app:pressedTranslationZ="12dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Camera"
+                android:background="@drawable/follow_btn"
+                android:layout_toLeftOf="@id/fab_camera"
+                android:layout_alignTop="@id/fab_camera"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/camertst"
                 android:layout_width="64dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignTop="@+id/scrntst"
-                android:layout_marginStart="31dp"
-                android:text="Camera"
-                android:gravity="start"
+                android:layout_toLeftOf="@id/fab_camera"
+                android:layout_alignBottom="@id/fab_camera"
+                android:layout_alignTop="@id/fab_camera"
+                android:text="@string/camera"
+                android:gravity="center_vertical|center_horizontal"
                 android:textColor="@color/colorAccent"
                 android:textSize="14dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginEnd="3dp"
+
+                />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fab_gallery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/fab_camera"
-                android:layout_marginEnd="40dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignStart="@id/fab_camera"
+                android:layout_alignEnd="@id/fab_camera"
+                android:layout_marginTop="56dp"
+                android:layout_below="@id/fab_camera"
                 android:elevation="6dp"
-
                 android:src="@drawable/ic_photo_black_24dp_gallery"
                 app:fab_colorNormal="@color/toolbar"
-                app:fab_colorPressed="@color/toolbar"
+                app:fab_colorPressed="@color/colorAccent"
                 app:fab_label="@string/gallery"
-                app:fab_size="mini"
+                app:fab_size="normal"
                 app:pressedTranslationZ="12dp" />
 
             <TextView
                 android:id="@+id/glrytst"
                 android:layout_width="54dp"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/fab_gallery"
-                android:layout_alignTop="@id/scrntst"
-                android:gravity="start"
-
-                android:text="Gallery"
+                android:layout_toLeftOf="@id/fab_gallery"
+                android:layout_alignTop="@id/fab_gallery"
+                android:layout_alignBottom="@id/fab_gallery"
+                android:layout_alignStart="@id/camertst"
+                android:layout_alignEnd="@id/camertst"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_marginEnd="3dp"
+                android:text="@string/gallery"
                 android:textColor="@color/colorAccent"
                 android:textSize="14dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                />
 
         </RelativeLayout>
 

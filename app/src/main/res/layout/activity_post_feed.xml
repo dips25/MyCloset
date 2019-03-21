@@ -51,7 +51,7 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingTop="10dp"
-                android:text="Post"
+                android:text="@string/post"
                 android:textStyle="bold"
                 android:textColor="@color/colorAccent"
                 android:textSize="17dp" />
@@ -82,6 +82,7 @@
             android:layout_height="0dp"
             android:gravity="start"
             android:textSize="@dimen/text_size"
+            android:text="@string/describe_with_tags"
             android:layout_above="@+id/clicking_layout"
             android:layout_weight="0.3"
             android:background="@drawable/hint_text_border"

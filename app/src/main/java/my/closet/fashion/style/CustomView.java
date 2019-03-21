@@ -12,6 +12,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
@@ -51,13 +53,14 @@ public class CustomView extends AppCompatActivity {
     EditText look_name;
     String imagename;
     int n;
-
+    private MixpanelAPI mixpanelAPI;
 
 
     protected void onCreate(Bundle savedInstanceState){
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_look);
+        mixpanelAPI= MixpanelAPI.getInstance(CustomView.this,"257c7d2e1c44d7d1ab6105af372f65a6");
 
         frameLayout=(FrameLayout) findViewById(R.id.frame);
         img=(ImageView) findViewById(R.id.testimage);
@@ -86,6 +89,8 @@ public class CustomView extends AppCompatActivity {
         stickerImageView3.setVisibility(View.GONE);
         stickerImageView4=new StickerImageView(this);
         stickerImageView4.setVisibility(View.GONE);
+
+       
 
 
         stickerImageView1.setOnClickListener(new View.OnClickListener() {
@@ -187,6 +192,8 @@ public class CustomView extends AppCompatActivity {
 
             case R.id.save:
 
+                mixpanelAPI.track("Create A Look Save");
+
                 stickerImageView1.setControlItemsHidden(true);
                 stickerImageView2.setControlItemsHidden(true);
                 stickerImageView3.setControlItemsHidden(true);
@@ -229,6 +236,7 @@ public class CustomView extends AppCompatActivity {
                     stickerImageView2.setVisibility(View.INVISIBLE);
                     stickerImageView3.setVisibility(View.INVISIBLE);
                     stickerImageView4.setVisibility(View.INVISIBLE);
+
 
                     finish();
 

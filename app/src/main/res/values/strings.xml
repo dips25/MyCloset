@@ -49,7 +49,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="appintro_first">An Easy way to Organize your Clothes,Accessories and Footwear</string>
+    <string name="appintro_first">An Easy way to Organize your Clothes, Accessories and Footwear</string>
     <string name="appintro_second">Upload Apparel Pictures and Create Outfits</string>
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>
@@ -75,7 +75,7 @@
     <string name="outerwear">OuterWear</string>
     <string name="home">Home</string>
     <string name="closet">Closet</string>
-    <string name="lookbook">Lookbook</string>
+    <string name="lookbook">Look Book</string>
     <string name="notification">Notification</string>
     <string name="profile">Profile</string>
     <string name="help">Help</string>
@@ -84,7 +84,22 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="username">Username</string>
-    <string name="destription">Write Description Here</string>
+    <string name="destription">Describe look with Tags</string>
+    <string name="background_color">BG Color</string>
+    <string name="name_the_look">Name the look</string>
+    <string name="position_hint">Increase/Decrease size of picture</string>
+    <string name="eraser_hint">Erase/Unerase by selecting brush size</string>
+    <string name="magicwand_hint">Remove/Restore similar colors by sliding the bar</string>
+    <string name="click_here_to_add_clothes">Click here to add clothes</string>
+    <string name="post">Post</string>
+    <string name="describe_with_tags">Describe with Tags</string>
+    <string name="create_look">CREATE LOOK</string>
+    <string name="my_uploads">My Uploads</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="user_name">user name</string>
+    <string name="profile_updated">Profile Updated</string>
+    <string name="coming_soon">Coming Soon</string>
+    <string name="select_pictures_to_create_a_look_in_closet">Select pictures to create a look in closet</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>

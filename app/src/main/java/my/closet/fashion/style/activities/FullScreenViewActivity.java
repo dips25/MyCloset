@@ -208,6 +208,7 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
         follow_btn = (Button) findViewById(R.id.follow_btn);
         follow_btn.setText("Follow");
         follow_btn.setOnClickListener(this);
+        follow_btn.setVisibility(View.GONE);
 
         if (!Utilities.loadPref(FullScreenViewActivity.this, "email", "").equalsIgnoreCase("")) {
             if (!feedResponse_obj.getEmail().equalsIgnoreCase("") && feedResponse_obj.getEmail() != null) {
@@ -222,7 +223,7 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                 if (feedResponse_obj.getEmail().equalsIgnoreCase(Utilities.loadPref(FullScreenViewActivity.this, "email", ""))) {
                     follow_btn.setVisibility(View.GONE);
                 } else {
-                    follow_btn.setVisibility(View.VISIBLE);
+                   // follow_btn.setVisibility(View.VISIBLE);
                 }
             }
 

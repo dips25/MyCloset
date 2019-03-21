@@ -4,7 +4,8 @@
         android:id="@+id/home"
         android:checked="true"
         android:icon="@drawable/selector_home"
-        android:title="@string/home" />
+        android:title="@string/home"
+        />
 
     <item
         android:id="@+id/closet"
@@ -15,12 +16,6 @@
         android:id="@+id/lookbook"
         android:icon="@drawable/selector_lookbook"
         android:title="@string/lookbook" />
-
-
-    <item
-        android:id="@+id/notification"
-        android:icon="@drawable/selector_notification"
-        android:title="@string/notification" />
 
 
     <item

@@ -30,11 +30,12 @@ import my.closet.fashion.style.modesl.Looks;
 public class LookbookFragment extends Fragment {
 
     View view;
-    static GridView gridView;
+   public static GridView gridView;
     Realm realm;
     ArrayList<Looks> dresses = new ArrayList<>();
     my.closet.fashion.style.adapters.Lookbookadapter Lookbookadapter;
     private TextView toolbar_title;
+    public TextView lookbook_tutorial_text;
 
     public LookbookFragment() {
         // Required empty public constructor
@@ -59,12 +60,24 @@ public class LookbookFragment extends Fragment {
             toolbar_title.setText(R.string.lookbook);
         }
 
+        lookbook_tutorial_text = (TextView)v.findViewById(R.id.lookbook_tutorial_text);
+
         gridView = (GridView) v.findViewById(R.id.grid);
+
 
         refresh();
 
         Lookbookadapter = new Lookbookadapter(Objects.requireNonNull(getContext()), R.layout.single_gridview, dresses);
         gridView.setAdapter(Lookbookadapter);
+        if (Lookbookadapter.isEmpty()){
+
+            lookbook_tutorial_text.setVisibility(View.VISIBLE);
+
+        }else {
+
+            lookbook_tutorial_text.setVisibility(View.GONE);
+        }
+
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

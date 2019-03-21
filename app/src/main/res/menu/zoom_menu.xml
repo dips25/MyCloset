@@ -4,7 +4,17 @@
   <item android:id="@+id/deleteii"
         android:icon="@drawable/ic_delete_black_24dp"
         android:enabled="true"
-        android:title="Delete"
-        app:showAsAction="always"/>
+        android:title="@string/delete"
+        app:showAsAction="never"/>
+
+  <item android:id="@+id/edit_lookbook"
+         android:title="@string/edit"
+         app:showAsAction="never"/>
+
+  <item android:id="@+id/post"
+        android:title="@string/post"
+        android:iconTint="@color/colorAccent"
+        app:showAsAction="always"
+        />
 
 </menu>

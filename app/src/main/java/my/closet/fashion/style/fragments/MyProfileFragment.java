@@ -245,8 +245,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
     private void setupViewPager() {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
-        adapter.addFrag(new MyPicsFragment(), "My Uploads");
-        adapter.addFrag(new BookmarkFragment(), "Bookmarks");
+        adapter.addFrag(new MyPicsFragment(), getString(R.string.my_uploads));
+        adapter.addFrag(new BookmarkFragment(), getString(R.string.bookmarks));
         frame.setAdapter(adapter);
     }
 

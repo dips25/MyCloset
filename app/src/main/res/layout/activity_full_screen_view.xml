@@ -68,7 +68,8 @@
                 android:background="@drawable/follow_btn"
                 android:text="Follow"
                 android:textAllCaps="false"
-                android:textColor="@color/white" />
+                android:textColor="@color/colorAccent"
+                android:visibility="gone"/>
 
             <ProgressBar
                 android:id="@+id/connectProgress"
@@ -132,7 +133,8 @@
                         android:layout_width="wrap_content"
                         android:orientation="horizontal"
                         android:layout_alignParentLeft="true"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        >
 
                         <xyz.hanks.library.bang.SmallBangView
                             android:id="@+id/like_heart"
@@ -142,7 +144,8 @@
                             app:circle_end_color="#f0616d"
                             app:circle_start_color="#EF505d"
                             app:dots_primary_color="#EF505d"
-                            app:dots_secondary_color="#f0616d">
+                            app:dots_secondary_color="#f0616d"
+                            android:visibility="gone">
 
                             <ImageView
                                 android:id="@+id/blog_like_btn"
@@ -162,7 +165,8 @@
                         android:layout_centerInParent="true"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/like_layout"
-                        android:gravity="center" />
+                        android:gravity="center"
+                        android:visibility="gone"/>
 
 
                     <ImageView
@@ -173,7 +177,8 @@
                         android:gravity="center"
                         android:padding="10dp"
                         android:layout_centerInParent="true"
-                        android:src="@drawable/ic_baseline_share" />
+                        android:src="@drawable/ic_baseline_share"
+                        android:visibility="gone"/>
 
 
                     <xyz.hanks.library.bang.SmallBangView
@@ -186,7 +191,8 @@
                         app:circle_end_color="#60b4fe"
                         app:circle_start_color="#4facfe"
                         app:dots_primary_color="#4facfe"
-                        app:dots_secondary_color="#60b4fe">
+                        app:dots_secondary_color="#60b4fe"
+                        android:visibility="gone">
 
                         <ImageView
                             android:id="@+id/blog_bookmark_btn"

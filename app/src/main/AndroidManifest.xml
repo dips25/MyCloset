@@ -55,7 +55,7 @@
         <activity
             android:name=".activities.UserProfileActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.FbGmailActivity"
             android:screenOrientation="portrait"
@@ -95,12 +95,12 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".CustomView"
-            android:label="LookBook"
+            android:label="@string/lookbook"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ZoomImage"
-            android:label="LookBook"
+            android:label="@string/lookbook"
             android:theme="@style/AppTheme" />
 
         <meta-data

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.github.chrisbanes.photoview.PhotoView;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,8 +28,10 @@ import java.util.Objects;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import my.closet.fashion.style.activities.PostFeedActivity;
 import my.closet.fashion.style.adapters.Lookbookadapter;
 import my.closet.fashion.style.customs.ImageSaver;
+import my.closet.fashion.style.fragments.LookbookFragment;
 import my.closet.fashion.style.modesl.Looks;
 
 public class ZoomImage extends AppCompatActivity {
@@ -46,16 +49,17 @@ public class ZoomImage extends AppCompatActivity {
     ImageView share;
     RelativeLayout looksvbttn;
     ArrayList<Looks> looksArrayList=new ArrayList<>();
+    MixpanelAPI mixpanelAPI;
 
 
-
-    ImageView edit;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zoom_activity);
+
+        mixpanelAPI= MixpanelAPI.getInstance(ZoomImage.this,"257c7d2e1c44d7d1ab6105af372f65a6");
 
         Realm.init(this);
         realm=Realm.getDefaultInstance();
@@ -70,7 +74,6 @@ public class ZoomImage extends AppCompatActivity {
         lookedit.setVisibility(View.INVISIBLE);
 
         lookupdt=(ImageView) findViewById(R.id.look_updt);
-        edit=(ImageView) findViewById(R.id.toogle_edit);
         finalname= Objects.requireNonNull(getIntent().getExtras()).getString("imgname");
 
         edtlook=getIntent().getExtras().getString("stylename");
@@ -93,23 +96,13 @@ public class ZoomImage extends AppCompatActivity {
                                      }
                                  });
 
-                edit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        edit.setVisibility(View.INVISIBLE);
-                        lookedit.setVisibility(View.VISIBLE);
-                        lookedit.setText(edtlook);
-                        looksvbttn.setVisibility(View.VISIBLE);
-
-
-                    }
-                });
 
                 lookupdt.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //Looks looks = new Looks();
+
+                        mixpanelAPI.track("ZoomActivity Update");
 
                             realm.beginTransaction();
                         Looks looks=realm.where(Looks.class).equalTo("id",newid).findFirst();
@@ -122,17 +115,15 @@ public class ZoomImage extends AppCompatActivity {
                             realm.commitTransaction();
                         }
 
-                        refreshlayout();
+                       // refreshlayout();
 
-                        Intent intent=new Intent(getApplicationContext(),Lookbook.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
+
 
 
                             //realm.close();
 
 
-                       // finish();
+                        finish();
 
                     }
                 });
@@ -149,11 +140,9 @@ public class ZoomImage extends AppCompatActivity {
             looksArrayList.add(looks1);
         }
 
-        Lookbook lookbook=new Lookbook();
-
 
         Lookbookadapter lookbookadapter=new Lookbookadapter(getApplicationContext(),R.layout.single_gridview,looksArrayList);
-        lookbook.gridView.setAdapter(lookbookadapter);
+        LookbookFragment.gridView.setAdapter(lookbookadapter);
         lookbookadapter.notifyDataSetChanged();
 
     }
@@ -170,6 +159,8 @@ public class ZoomImage extends AppCompatActivity {
         switch (item.getItemId()){
 
             case R.id.deleteii:
+
+                mixpanelAPI.track("ZoomActivity Delete");
                 realm=Realm.getDefaultInstance();
                 realm.beginTransaction();
                 Looks looke = realm.where(Looks.class).equalTo("id", newid).findFirst();
@@ -177,9 +168,26 @@ public class ZoomImage extends AppCompatActivity {
                 realm.commitTransaction();
                 refreshlayout();
 
-               Intent intent=new Intent(getApplicationContext(),Lookbook.class);
-               intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-               startActivity(intent);
+              // Intent intent=new Intent(getApplicationContext(),Lookbook.class);
+              // startActivity(intent);
+                finish();
+                return true;
+
+            case R.id.edit_lookbook:
+
+                mixpanelAPI.track("ZoomActivity Edit");
+
+                lookedit.setVisibility(View.VISIBLE);
+                lookedit.setText(edtlook);
+                looksvbttn.setVisibility(View.VISIBLE);
+                return true;
+
+
+            case R.id.post:
+
+                Intent intent1 = new Intent(getApplicationContext(),PostFeedActivity.class);
+                intent1.putExtra("Lookbook",finalname);
+                startActivity(intent1);
                 return true;
         }
 

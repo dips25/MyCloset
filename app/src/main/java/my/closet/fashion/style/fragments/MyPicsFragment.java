@@ -26,12 +26,13 @@ import java.io.Serializable;
 
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
-import my.closet.fashion.style.activities.FullScreenViewActivity;
 import my.closet.fashion.style.activities.PictureDeletingActivity;
-import my.closet.fashion.style.adapters.FeedsViewHolder;
 import my.closet.fashion.style.adapters.UserFeedsViewHolder;
 import my.closet.fashion.style.customs.SpacesItemDecoration;
 import my.closet.fashion.style.modesl.FeedResponse;
+
+import static my.closet.fashion.style.activities.HomeActivity.bottomnav;
+import static my.closet.fashion.style.activities.HomeActivity.look_tab;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,6 +80,33 @@ public class MyPicsFragment extends Fragment {
         mLayoutManager = new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL);
         mypicsrecyleview.setLayoutManager(mLayoutManager);
         mypicsrecyleview.addItemDecoration(new SpacesItemDecoration(20));
+
+        mypicsrecyleview.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if (dy > 0 && bottomnav.isShown() && look_tab.isShown())
+                {
+                    bottomnav.setVisibility(View.GONE);
+                    look_tab.setVisibility(View.GONE);
+
+                }else if (dy<0){
+
+                    look_tab.setVisibility(View.VISIBLE);
+                    bottomnav.setVisibility(View.VISIBLE);
+
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+
 
 
         SetUpRecycleView();
@@ -140,10 +168,10 @@ public class MyPicsFragment extends Fragment {
                         //   prbLoading.setVisibility(View.VISIBLE);
                         break;
                     case LOADED:
-                        //   prbLoading.setVisibility(View.GONE);
+                           prbLoading.setVisibility(View.GONE);
                         break;
                     case FINISHED:
-                        //  prbLoading.setVisibility(View.GONE);
+                          prbLoading.setVisibility(View.GONE);
                         break;
                     case ERROR:
                         retry();

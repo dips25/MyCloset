@@ -47,20 +47,20 @@
     <string name="screencrop">画面のクロップ</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="appintro_first">An Easy way to Organize your Clothes,Accessories and Footwear</string>
-    <string name="appintro_second">Upload Apparel Pictures and Create Outfits</string>
-    <string name="next">NEXT</string>
-    <string name="skip">SKIP</string>
-    <string name="start">GOT IT</string>
+    <string name="appintro_first">简单 的 方法 来 Organsize 服装, 饰品 和 鞋类</string>
+    <string name="appintro_second">上传 照片 和 创建 服装</string>
+    <string name="next">次</string>
+    <string name="skip">跳跃</string>
+    <string name="start">とった</string>
     <string name="appintro_third">Get Inspired and Find Matching Appareal from your Closet</string>
-    <string name="signin_hint">Sign in for better app experience</string>
+    <string name="signin_hint">登录 更好 的 应用 体验</string>
     <string name="google">Google</string>
     <string name="facebook">Facebook</string>
-    <string name="signin_hint_two">By signing in,you agree to our Terms and Privacy Policy</string>
-    <string name="name">User Name</string>
+    <string name="signin_hint_two">通过 在 您 签署 同意 我们 的 条款 和 隐私权 政策</string>
+    <string name="name">ユーザー名</string>
     <string name="gmail">Gmail</string>
     <string name="website">Webside</string>
-    <string name="bio">Bio</string>
+    <string name="bio">バイオ</string>
 
     <string name="no_location_detected">
         No location detected. Make sure location is enabled on the device.
@@ -71,13 +71,29 @@
         functionality.</string>
     <string name="settings">Settings</string>
     <string name="outerwear">OuterWear</string>
-    <string name="home">Home</string>
-    <string name="closet">Closet</string>
-    <string name="lookbook">Lookbook</string>
+    <string name="home">家</string>
+    <string name="closet">クローゼット</string>
+    <string name="lookbook">本を見て</string>
     <string name="help">Help</string>
     <string name="feedback">Feedback</string>
     <string name="rateapp">Rate App</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="username">Username</string>
     <string name="destription">Write Description Here</string>
+    <string name="magicwand_hint">删除 / 通过 滑动 杆 还原 相似 的 颜色</string>
+    <string name="eraser_hint">通过 选择 尺寸 刷 擦 / 取消 擦除</string>
+    <string name="position_hint">画面 的 增加 / 减少 尺寸</string>
+    <string name="click_here_to_add_clothes">删除 / 通过 滑动 杆 还原 相似 的 颜色</string>
+    <string name="name_the_look">名称 查找</string>
+    <string name="profile">轮廓</string>
+    <string name="describe_with_tags">与 标签</string>
+    <string name="post">ENVIAR</string>
+    <string name="create_look">外観を作成します。</string>
+    <string name="background_color">背景色</string>
+    <string name="my_uploads">私のポスト</string>
+    <string name="bookmarks">ブックマーク</string>
+    <string name="user_name">ユーザー名</string>
+    <string name="profile_updated">プロフィール更新済み</string>
+    <string name="select_pictures_to_create_a_look_in_closet">クローゼットに外観を作成するために画像を選択します</string>
+    <string name="coming_soon">近日公開</string>
 </resources>

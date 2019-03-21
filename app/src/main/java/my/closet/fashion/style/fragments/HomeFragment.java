@@ -54,6 +54,9 @@ import my.closet.fashion.style.adapters.FeedsViewHolder;
 import my.closet.fashion.style.customs.SpacesItemDecoration;
 import my.closet.fashion.style.modesl.FeedResponse;
 
+import static my.closet.fashion.style.activities.HomeActivity.bottomnav;
+import static my.closet.fashion.style.activities.HomeActivity.look_tab;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -110,6 +113,32 @@ public class HomeFragment extends Fragment {
         homerecyleview.addItemDecoration(new SpacesItemDecoration(20));
 
         query = feedRef.orderBy("timestamp", Query.Direction.DESCENDING);
+
+        homerecyleview.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if (dy > 0 && bottomnav.isShown() && look_tab.isShown())
+                {
+                    bottomnav.setVisibility(View.GONE);
+                    look_tab.setVisibility(View.GONE);
+
+                }else if (dy<0){
+
+                    look_tab.setVisibility(View.VISIBLE);
+                    bottomnav.setVisibility(View.VISIBLE);
+
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
 
         SetUpRecycleView(query);
     }
@@ -337,6 +366,7 @@ public class HomeFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         menu.findItem(R.id.filter).setVisible(false);
         menu.findItem(R.id.upload_menu).setVisible(false);
+        menu.findItem(R.id.action_search).setVisible(false);
     }
 
     @Override

@@ -340,6 +340,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, foss);
 
 
+
+
                     IMAGES_PRODUCED++;
                     Log.e(TAG, "captured image: " + IMAGES_PRODUCED);
 

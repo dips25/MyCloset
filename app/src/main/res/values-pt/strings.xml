@@ -48,17 +48,17 @@
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="appintro_first">An Easy way to Organize your Clothes,Accessories and Footwear</string>
-    <string name="appintro_second">Upload Apparel Pictures and Create Outfits</string>
-    <string name="next">NEXT</string>
-    <string name="skip">SKIP</string>
-    <string name="start">GOT IT</string>
+    <string name="appintro_first">Un moyen fácil de Organsize Vêtements, Accesorios et Chaussures</string>
+    <string name="appintro_second">Télécharger des photos et Creer Tenues</string>
+    <string name="next">PRÓXIMO</string>
+    <string name="skip">SAUTER</string>
+    <string name="start">Consegui</string>
     <string name="appintro_third">Get Inspired and Find Matching Appareal from your Closet</string>
-    <string name="signin_hint">Sign in for better app experience</string>
+    <string name="signin_hint">En vous inscrivant, vous acceptez núms condiciones générales Politique de confidencialidad</string>
     <string name="google">Google</string>
     <string name="facebook">Facebook</string>
-    <string name="signin_hint_two">By signing in,you agree to our Terms and Privacy Policy</string>
-    <string name="name">User Name</string>
+    <string name="signin_hint_two">En vous inscrivant, vous acceptez núms condiciones générales Politique de confidencialidad</string>
+    <string name="name">Nome de Usuário</string>
     <string name="gmail">Gmail</string>
     <string name="website">Webside</string>
     <string name="bio">Bio</string>
@@ -72,13 +72,29 @@
         functionality.</string>
     <string name="settings">Settings</string>
     <string name="outerwear">OuterWear</string>
-    <string name="home">Home</string>
-    <string name="closet">Closet</string>
-    <string name="lookbook">Lookbook</string>
+    <string name="home">Accueil</string>
+    <string name="closet">Armário de roupa</string>
+    <string name="lookbook">Olhe livro</string>
     <string name="help">Help</string>
     <string name="feedback">Feedback</string>
     <string name="rateapp">Rate App</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="username">Username</string>
     <string name="destription">Write Description Here</string>
+    <string name="describe_with_tags">Décrire avec des étiquettes</string>
+    <string name="magicwand_hint">Supprimer / restaurer des couleurs similaires en faisant glisser la barre</string>
+    <string name="eraser_hint">Eliminar / Un-borramiento en sélectionnant La Taille du pinceau</string>
+    <string name="position_hint">/ Réduire La Taille de l\'imagen augmenter</string>
+    <string name="click_here_to_add_clothes">Cliquez pour ajouter des vêtements</string>
+    <string name="name_the_look">Look nom</string>
+    <string name="profile">Profil</string>
+    <string name="post">PÓSTER</string>
+    <string name="create_look">Criar um olhar</string>
+    <string name="background_color">Cor de fundo</string>
+    <string name="my_uploads">Minha publicação</string>
+    <string name="bookmarks">Favoritos</string>
+    <string name="user_name">Nome de Usuário</string>
+    <string name="profile_updated">Perfil atualizado</string>
+    <string name="select_pictures_to_create_a_look_in_closet">Selecione fotos para criar um olhar no armário</string>
+    <string name="coming_soon">Em breve</string>
 </resources>

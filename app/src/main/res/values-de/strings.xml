@@ -47,17 +47,17 @@
     <string name="screencrop">Screen Crop</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="appintro_first">An Easy way to Organize your Clothes,Accessories and Footwear</string>
-    <string name="appintro_second">Upload Apparel Pictures and Create Outfits</string>
-    <string name="next">NEXT</string>
-    <string name="skip">SKIP</string>
-    <string name="start">GOT IT</string>
+    <string name="appintro_first">Einfache Möglichkeit, Organsize Kleidung, Zubehör und Schuhe</string>
+    <string name="appintro_second">Laden Sie Bilder und erstellen Outfits</string>
+    <string name="next">NÄCHSTER</string>
+    <string name="skip">ÜBERSPRINGEN</string>
+    <string name="start">Ich habs</string>
     <string name="appintro_third">Get Inspired and Find Matching Appareal from your Closet</string>
-    <string name="signin_hint">Sign in for better app experience</string>
+    <string name="signin_hint">Melden Sie sich für eine bessere App-Erfahrung</string>
     <string name="google">Google</string>
     <string name="facebook">Facebook</string>
-    <string name="signin_hint_two">By signing in,you agree to our Terms and Privacy Policy</string>
-    <string name="name">User Name</string>
+    <string name="signin_hint_two">Durch die in Ihnen Unterzeichnung zustimmen unseren allgemeinen Geschäfts Datenschutz</string>
+    <string name="name">Nutzername</string>
     <string name="gmail">Gmail</string>
     <string name="website">Webside</string>
     <string name="bio">Bio</string>
@@ -71,8 +71,8 @@
         functionality.</string>
     <string name="settings">Settings</string>
     <string name="outerwear">OuterWear</string>
-    <string name="home">Home</string>
-    <string name="closet">Closet</string>
+    <string name="home">Zuhause</string>
+    <string name="closet">Wandschrank</string>
     <string name="lookbook">Lookbook</string>
     <string name="help">Help</string>
     <string name="feedback">Feedback</string>
@@ -80,4 +80,20 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="username">Username</string>
     <string name="destription">Write Description Here</string>
+    <string name="magicwand_hint">Entfernen / Restore ähnliche Farben durch die Gleitstange</string>
+    <string name="eraser_hint">Lösch- / Un-Erase durch Pinselgröße Auswählen</string>
+    <string name="position_hint">Zunahme / Abnahme Größe des Bildes,</string>
+    <string name="click_here_to_add_clothes">Entfernen / Restore ähnliche Farben durch die Gleitstange</string>
+    <string name="name_the_look">Nennen Sie den Blick</string>
+    <string name="profile">Profil</string>
+    <string name="describe_with_tags">Beschreiben Sie mit Tags</string>
+    <string name="post">POST</string>
+    <string name="create_look">Erstellen Sie einen Blick</string>
+    <string name="background_color">Hintergrundfarbe</string>
+    <string name="my_uploads">Mein Post</string>
+    <string name="bookmarks">Lesezeichen</string>
+    <string name="user_name">Nutzername</string>
+    <string name="profile_updated">Profil aktualisiert</string>
+    <string name="select_pictures_to_create_a_look_in_closet">Wählen Sie Bilder aus, um einen Blick in Closet zu erstellen</string>
+    <string name="coming_soon">Demnächst</string>
 </resources>

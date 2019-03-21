@@ -52,7 +52,7 @@ import static my.closet.fashion.style.fragments.ClosetFragment.toprecycler;
 
 public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.ViewHolder> {
 
-    public static   Context mcontext;
+    public static Context mcontext;
     Bitmap bitmap;
     MixpanelAPI mixpanel;
 
@@ -75,15 +75,18 @@ public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.View
     public ArrayList<String> getItems(){
 
         ArrayList<String> dressname= new ArrayList<>();
+        ArrayList<Integer> code = new ArrayList<>();
 
         for (Dresses dresses : mdresses){
 
             if (dresses.isSelected()){
 
                 dressname.add(dresses.getImagename());
+                dressname.add(String.valueOf(dresses.getId()));
             }
         }
         return dressname;
+
 
     }
 

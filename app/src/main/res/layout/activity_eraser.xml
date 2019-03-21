@@ -15,32 +15,58 @@
             android:background="@color/secondarycolor"
             android:gravity="center_vertical">
 
+            <LinearLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/saveviewholder"
+                >
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_check_black_24dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="18dp"
-                android:layout_marginBottom="5dp"
-                android:id="@+id/nextButton"/>
+                android:src="@drawable/ic_check_black_24dp"
+                android:id="@+id/nextButton"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:layout_toLeftOf="@id/saveviewholder"
+                android:id="@+id/redoviewholder"
+                android:background="@drawable/ripple">
 
             <ImageView
                 android:id="@+id/redoButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_toStartOf="@id/nextButton"
-                android:layout_marginEnd="21dp"
-                android:background="@drawable/ic_redo_black_24dp"/>
+                android:src="@drawable/ic_redo_black_24dp"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:layout_toLeftOf="@id/redoviewholder"
+                android:id="@+id/undoviewholder"
+                android:background="@drawable/ripple">
+
 
             <ImageView
                 android:id="@+id/undoButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="21dp"
-                android:layout_toStartOf="@+id/redoButton"
-                android:background="@drawable/ic_undo_black_24dp"
+                android:src="@drawable/ic_undo_black_24dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:gravity="center" />
+            </LinearLayout>
 
         </RelativeLayout>
 
@@ -65,6 +91,15 @@
                 android:layout_alignParentTop="true"
                 android:background="@drawable/white_drawable"
                 android:layout_margin="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/background_color"
+                android:layout_below="@id/colorButton"
+                android:textSize="14dp"
+                android:textColor="@color/colorAccent"
+                />
 
             <RelativeLayout
                 android:id="@+id/subBottomBar"

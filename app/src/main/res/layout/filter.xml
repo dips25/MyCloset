@@ -598,11 +598,11 @@
                 android:id="@+id/clearbutton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/secondarycolor"
                 android:foreground="@drawable/ripple"
                 android:gravity="center"
                 android:src="@drawable/ic_refresh_black_24dp"
-                android:textColor="@color/black" />
+                android:textColor="@color/colorAccent"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
 
     </LinearLayout>
             </LinearLayout>
@@ -621,7 +621,7 @@
             android:layout_gravity="end"
             android:layout_toEndOf="@id/clearlayout"
             android:background="@color/secondarycolor"
-            android:foreground="@drawable/ripple">
+            >
 
         <TextView
             android:layout_width="match_parent"
@@ -631,12 +631,11 @@
             android:paddingLeft="5dp"
             android:clickable="true"
             android:textSize="16dp"
-            android:background="@color/secondarycolor"
             android:text="@string/apply"
             android:textStyle="bold"
             android:textColor="@color/colorAccent"
             android:id="@+id/applybutton"
-            />
+            android:background="?attr/selectableItemBackground"/>
 
         </LinearLayout>
         </RelativeLayout>
