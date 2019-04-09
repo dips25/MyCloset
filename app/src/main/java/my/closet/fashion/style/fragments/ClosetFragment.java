@@ -2,13 +2,26 @@ package my.closet.fashion.style.fragments;
 
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
+import android.graphics.Point;
+import android.hardware.display.DisplayManager;
+import android.hardware.display.VirtualDisplay;
+import android.media.Image;
+import android.media.ImageReader;
+import android.media.projection.MediaProjection;
+import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
@@ -16,11 +29,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -32,7 +49,11 @@ import android.widget.Toast;
 import com.github.clans.fab.FloatingActionButton;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,8 +63,11 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import my.closet.fashion.style.BuildConfig;
+import my.closet.fashion.style.Crop;
 import my.closet.fashion.style.EraserActivity;
+import my.closet.fashion.style.MainActivity;
 import my.closet.fashion.style.R;
+import my.closet.fashion.style.ScreenShotService;
 import my.closet.fashion.style.activities.HomeActivity;
 import my.closet.fashion.style.adapters.AccessoryAdapter;
 import my.closet.fashion.style.adapters.BottomAdapter;
@@ -74,7 +98,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
     public static FootWearAdapter mfootwearadapter;
     public static TopAdapter mtopadapter;
     public static BottomAdapter mbottomadapter;
-    public ClosetFragment instance = this;
+
 
     public RecyclerView.LayoutManager mlayoutmanager;
     public RecyclerView.LayoutManager toplayout;
@@ -82,6 +106,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
     public RecyclerView.LayoutManager footlayout;
 
     static Realm realm;
+    public static ClosetFragment instance;
     RealmResults<Dresses> r1;
     RealmResults<Dresses> r2;
     RealmResults<Dresses> r3;
@@ -100,11 +125,13 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
     public FloatingActionButton fab_scrnshot;
     private RelativeLayout add_layout;
     private Uri finaluri;
-    private String STORE_DIRECTORY;
-    private final int CAMERA_REQUEST = 100;
+   // private String STORE_DIRECTORY;
+    private final int CAMERA_REQUEST = 1888;
     private TextView apply;
     private LinearLayout clearall;
     private MixpanelAPI mixpanelAPI;
+
+
 
     int nblack;
     int nwhite;
@@ -217,6 +244,134 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
 
     Uri imguri;
 
+    private static final String TAG = MainActivity.class.getName();
+    private static final int REQUEST_CODE = 100;
+    private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
+    private static String STORE_DIRECTORY;
+    private static int IMAGES_PRODUCED;
+    private static final String SCREENCAP_NAME = "screencap";
+    private static final int VIRTUAL_DISPLAY_FLAGS = DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY | DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC;
+    private static MediaProjection sMediaProjection;
+    String filename = "myscreen_.png";
+
+    private MediaProjectionManager mProjectionManager;
+    private ImageReader mImageReader;
+    private Handler mHandler;
+    private Display mDisplay;
+    private VirtualDisplay mVirtualDisplay;
+    private int mDensity;
+    private int mWidth;
+    private int mHeight;
+    private int mRotation;
+    private OrientationChangeCallback mOrientationChangeCallback;
+
+    Bitmap bitmap = null;
+    private Bitmap alteredbitmap;
+    private ByteArrayOutputStream byteArrayOutputStream;
+
+
+    private class ImageAvailableListener implements ImageReader.OnImageAvailableListener {
+        @Override
+        public void onImageAvailable(ImageReader reader) {
+            Image image = null;
+
+            FileOutputStream foss = null;
+
+
+            try {
+                image = reader.acquireLatestImage();
+                if (image != null) {
+                    Image.Plane[] planes = image.getPlanes();
+                    ByteBuffer buffer = planes[0].getBuffer();
+                    int pixelStride = planes[0].getPixelStride();
+                    int rowStride = planes[0].getRowStride();
+                    int rowPadding = rowStride - pixelStride * mWidth;
+
+                    // create bitmap
+                    bitmap = Bitmap.createBitmap(mWidth + rowPadding / pixelStride, mHeight, Bitmap.Config.ARGB_8888);
+                    bitmap.copyPixelsFromBuffer(buffer);
+
+
+                    // write bitmap to a file
+
+                    foss = new FileOutputStream(STORE_DIRECTORY + filename);
+
+
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, foss);
+
+
+                    IMAGES_PRODUCED++;
+                    Log.e(TAG, "captured image: " + IMAGES_PRODUCED);
+
+
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+
+                if (foss != null) {
+                    try {
+                        foss.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+                if (image != null) {
+
+                    image.close();
+                }
+                bitmap.recycle();
+            }
+        }
+    }
+
+    private class OrientationChangeCallback extends OrientationEventListener {
+
+        OrientationChangeCallback(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onOrientationChanged(int orientation) {
+            final int rotation = mDisplay.getRotation();
+            if (rotation != mRotation) {
+                mRotation = rotation;
+                try {
+                    // clean up
+                    if (mVirtualDisplay != null) mVirtualDisplay.release();
+                    if (mImageReader != null) mImageReader.setOnImageAvailableListener(null, null);
+
+                    // re-create virtual display depending on device width / height
+                    createVirtualDisplay();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private class MediaProjectionStopCallback extends MediaProjection.Callback {
+        @Override
+        public void onStop() {
+            Log.e("ScreenCapture", "stopping projection.");
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mVirtualDisplay != null) mVirtualDisplay.release();
+                    if (mImageReader != null) mImageReader.setOnImageAvailableListener(null, null);
+                    if (mOrientationChangeCallback != null) mOrientationChangeCallback.disable();
+                    sMediaProjection.unregisterCallback(MediaProjectionStopCallback.this);
+                }
+            });
+        }
+    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -224,6 +379,8 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         mixpanelAPI= MixpanelAPI.getInstance(getContext(),"257c7d2e1c44d7d1ab6105af372f65a6");
         view = inflater.inflate(R.layout.fragment_closet, container, false);
+
+        instance = this;
 
         String[] PERMISSIONS = {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -235,9 +392,26 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         Realm.init(getContext());
         realm = Realm.getDefaultInstance();
 
+     /*   if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(getActivity())){
+            // Show alert dialog to the user saying a separate permission is needed
+            // Launch the settings activity if the user prefers
+            Intent myIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:" + Objects.requireNonNull(getActivity()).getPackageName()));
+            startActivityForResult(myIntent,CODE_DRAW_OVER_OTHER_APP_PERMISSION);
+        } */
+
         findView(view);
 
+        new Thread() {
+            @Override
+            public void run() {
+                Looper.prepare();
+                mHandler = new Handler();
+                Looper.loop();
+            }
+        }.start();
+
         return view;
+
     }
 
 
@@ -253,6 +427,8 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
 
         SharedPreferences preferences = getContext().getSharedPreferences("prefs",MODE_PRIVATE);
         boolean firstlaunch = preferences.getBoolean("firsttime",true);
+
+
 
         if (firstlaunch){
 
@@ -307,14 +483,14 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         mdr.addDrawerListener(toogle);
 
 
-       // scrntst = (TextView) v.findViewById(R.id.scrntst);
+        scrntst = (TextView) v.findViewById(R.id.scrntst);
         camertst = (TextView) v.findViewById(R.id.camertst);
         glrytst = (TextView) v.findViewById(R.id.glrytst);
         add_layout = (RelativeLayout) v.findViewById(R.id.add_layout);
 
         fab_camera = (FloatingActionButton) v.findViewById(R.id.fab_camera);
         fab_gallery = (FloatingActionButton) v.findViewById(R.id.fab_gallery);
-       // fab_scrnshot = (FloatingActionButton) v.findViewById(R.id.scrnshot);
+        fab_scrnshot = (FloatingActionButton) v.findViewById(R.id.scrnshot);
 
         apply = (TextView) v.findViewById(R.id.applybutton);
         clearall = (LinearLayout) v.findViewById(R.id.clear);
@@ -322,10 +498,10 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         add_layout.setVisibility(View.GONE);
         fab_camera.setVisibility(View.INVISIBLE);
         fab_gallery.setVisibility(View.INVISIBLE);
-       // fab_scrnshot.setVisibility(View.INVISIBLE);
+        fab_scrnshot.setVisibility(View.INVISIBLE);
         camertst.setVisibility(View.INVISIBLE);
         glrytst.setVisibility(View.INVISIBLE);
-       // scrntst.setVisibility(View.INVISIBLE);
+        scrntst.setVisibility(View.INVISIBLE);
 
         flblack = (ImageView) v.findViewById(R.id.blacksq);
         flwhite = (ImageView) v.findViewById(R.id.whitesq);
@@ -1057,6 +1233,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
 
         fab_camera.setOnClickListener(this);
         fab_gallery.setOnClickListener(this);
+        fab_scrnshot.setOnClickListener(this);
 
 
         accrecycler = (RecyclerView) v.findViewById(R.id.recycler);
@@ -1279,7 +1456,10 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
 
             case R.id.filter:
 
-                mixpanelAPI.track("Filter");
+                if (mixpanelAPI!=null) {
+
+                    mixpanelAPI.track("Filter");
+                }
 
                 if (mdr.isDrawerOpen(Gravity.END)) {
                     mdr.closeDrawer(Gravity.END);
@@ -1303,8 +1483,8 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
 
                         fab_camera.setVisibility(View.INVISIBLE);
                         fab_gallery.setVisibility(View.INVISIBLE);
-                       // fab_scrnshot.setVisibility(View.INVISIBLE);
-                       // scrntst.setVisibility(View.INVISIBLE);
+                        fab_scrnshot.setVisibility(View.INVISIBLE);
+                        scrntst.setVisibility(View.INVISIBLE);
                         glrytst.setVisibility(View.INVISIBLE);
                         camertst.setVisibility(View.INVISIBLE);
                         add_layout.setVisibility(View.GONE);
@@ -1314,8 +1494,8 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
                         add_layout.setVisibility(View.VISIBLE);
                         fab_camera.setVisibility(View.VISIBLE);
                         fab_gallery.setVisibility(View.VISIBLE);
-                       // fab_scrnshot.setVisibility(View.VISIBLE);
-                       // scrntst.setVisibility(View.VISIBLE);
+                        fab_scrnshot.setVisibility(View.INVISIBLE);
+                        scrntst.setVisibility(View.INVISIBLE);
                         glrytst.setVisibility(View.VISIBLE);
                         camertst.setVisibility(View.VISIBLE);
 
@@ -1374,9 +1554,84 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
                 startActivityForResult(intent, GALLERY_REQUEST);
 
                 add_layout.setVisibility(View.GONE);
+                break;
+
+            case R.id.scrnshot:
+                mixpanelAPI.track("ScreenShot Icon Clicked");
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mProjectionManager = (MediaProjectionManager)getActivity().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+                }
+
+                startProjection();
+                getActivity().startService(new Intent(getContext(), ScreenShotService.class));
 
         }
     }
+
+    private void startProjection() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            startActivityForResult(mProjectionManager.createScreenCaptureIntent(), REQUEST_CODE);
+        }
+    }
+
+    private void stopProjection() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (sMediaProjection != null) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        sMediaProjection.stop();
+                    }
+                }
+            }
+        });
+    }
+
+    public void carry() {
+
+        mixpanelAPI.track("ScreenShot Clicked");
+
+
+        stopProjection();
+        Objects.requireNonNull(getActivity()).stopService(new Intent(getActivity(),ScreenShotService.class));
+
+        if (bitmap != null) {
+
+            alteredbitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight());
+            Bitmap bmp = alteredbitmap;
+
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+            byte[] bytes = byteArrayOutputStream.toByteArray();
+            Intent intent = new Intent(getContext(), Crop.class);
+            intent.putExtra("bytearray", bytes);
+            startActivity(intent);
+            bmp.recycle();
+
+
+        } else {
+
+            Toast.makeText(getContext(), "Please Switch On service and revert back", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private void createVirtualDisplay() {
+        // get width and height
+        Point size = new Point();
+        mDisplay.getSize(size);
+        mWidth = size.x;
+        mHeight = size.y;
+
+        // start capture reader
+        mImageReader = ImageReader.newInstance(mWidth, mHeight, PixelFormat.RGBA_8888, 2);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mVirtualDisplay = sMediaProjection.createVirtualDisplay(SCREENCAP_NAME, mWidth, mHeight, mDensity, VIRTUAL_DISPLAY_FLAGS, mImageReader.getSurface(), null, mHandler);
+        }
+        mImageReader.setOnImageAvailableListener(new ImageAvailableListener(), mHandler);
+    }
+
 
     private File getImgFile() {
 
@@ -1439,7 +1694,61 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
 
                 }
                 break;
+
+            case REQUEST_CODE:
+
+                if (requestCode == REQUEST_CODE) {
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        sMediaProjection = mProjectionManager.getMediaProjection(resultCode, data);
+                    }
+
+
+                    if (sMediaProjection != null) {
+                        File externalFilesDir = getActivity().getExternalFilesDir(null);
+                        if (externalFilesDir != null) {
+                            STORE_DIRECTORY = externalFilesDir.getAbsolutePath() + "/screenshots/";
+                            File storeDirectory = new File(STORE_DIRECTORY);
+                            if (!storeDirectory.exists()) {
+                                boolean success = storeDirectory.mkdirs();
+                                if (!success) {
+                                    Log.e(TAG, "failed to create file storage directory.");
+                                    return;
+                                }
+                            }
+                        } else {
+                            Log.e(TAG, "failed to create file storage directory, getExternalFilesDir is null.");
+                            return;
+                        }
+
+
+                        // display metrics
+                        DisplayMetrics metrics = getResources().getDisplayMetrics();
+                        mDensity = metrics.densityDpi;
+                        mDisplay = getActivity().getWindowManager().getDefaultDisplay();
+
+                        // create virtual display depending on device width / height
+                        createVirtualDisplay();
+
+                        // register orientation change callback
+                        mOrientationChangeCallback = new OrientationChangeCallback(getContext());
+                        if (mOrientationChangeCallback.canDetectOrientation()) {
+                            mOrientationChangeCallback.enable();
+                        }
+
+                        // register media projection stop callback
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            sMediaProjection.registerCallback(new MediaProjectionStopCallback(), mHandler);
+                        }
+
+
+                    }
+
+                }
+                break;
+
         }
+
     }
 
 

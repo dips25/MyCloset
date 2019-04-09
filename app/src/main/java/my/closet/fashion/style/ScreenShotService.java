@@ -18,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import my.closet.fashion.style.fragments.ClosetFragment;
+
 /**
  * Created by biswa on 11/27/2017.
  */
@@ -52,14 +54,15 @@ public class ScreenShotService extends Service  {
 
         assert inflater != null;
         removeView = (RelativeLayout) inflater.inflate(R.layout.remove, null);
-        WindowManager.LayoutParams paramRemove = new WindowManager.LayoutParams(
+        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_TOAST, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT);
-        paramRemove.gravity = Gravity.TOP | Gravity.LEFT;
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
         removeView.setVisibility(View.INVISIBLE);
         removeImg = (ImageView) removeView.findViewById(R.id.remove_img);
-        windowManager.addView(removeView, paramRemove);
+        windowManager.addView(removeView, params);
 
 
         chatheadView = (RelativeLayout) inflater.inflate(R.layout.screenshot_popup, null);
@@ -68,15 +71,16 @@ public class ScreenShotService extends Service  {
 
         windowManager.getDefaultDisplay().getSize(szWindow);
 
-        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+        final WindowManager.LayoutParams paramss = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_TOAST,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.TOP | Gravity.LEFT;
-        params.x = 0;
-        params.y = 100;
-        windowManager.addView(chatheadView, params);
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+        paramss.gravity = Gravity.TOP | Gravity.LEFT;
+        paramss.x = 0;
+        paramss.y = 100;
+        windowManager.addView(chatheadView, paramss);
 
         chatheadView.setOnTouchListener(new View.OnTouchListener() {
             long time_start = 0, time_end = 0;
@@ -203,12 +207,13 @@ public class ScreenShotService extends Service  {
                             time_end = System.currentTimeMillis();
                             if ((time_end - time_start) < 300) {
 
-                                MainActivity m=MainActivity.instance;
+                                ClosetFragment m = ClosetFragment.instance;
                                 if (m!=null){
 
                                     m.carry();
-                                  // chatheadView.setAlpha(1.0f);
                                 }
+
+
                                // chathead_click();
                             }
                         }

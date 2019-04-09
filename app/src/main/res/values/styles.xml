@@ -17,6 +17,7 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
+        <item name="colorControlHighlight">@color/cardviewheadingtext</item>
     </style>
 
     <style name="AppTheme.Toolbar" parent="AppTheme">

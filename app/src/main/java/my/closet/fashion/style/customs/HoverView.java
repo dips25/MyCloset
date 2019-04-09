@@ -98,7 +98,7 @@ public class HoverView extends View {
         resetPath();
         saveLastMaskData();
         if(mode == MAGIC_MODE || mode == MAGIC_MODE_RESTORE) {
-            magicPointer = BitmapFactory.decodeResource(getResources(), R.drawable.csbutton);
+            magicPointer = BitmapFactory.decodeResource(getResources(), R.drawable.colorhead);
         } else if(mode == ERASE_MODE || mode == UNERASE_MODE) {
             magicPointer = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.colorhead), strokeWidth + 5, strokeWidth + 5, false);
         }
@@ -183,7 +183,7 @@ public class HoverView extends View {
         strokeWidth = offSet;
         eraser.setStrokeWidth(offSet);
         uneraser.setStrokeWidth(offSet);
-        magicPointer = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.csbutton), offSet + 5, offSet + 5, false);
+        magicPointer = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.colorhead), offSet + 5, offSet + 5, false);
         mPath.reset();
         resetPath();
         invalidate();

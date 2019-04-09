@@ -155,10 +155,19 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
                 break;
 
             case R.id.done_txt:
-                mixpanelAPI.track("Post");
-                if (My_DbKey != null && !My_DbKey.equalsIgnoreCase("")) {
-                    SendPicturetoDB();
+                if (mixpanelAPI!=null) {
+                    mixpanelAPI.track("Post");
                 }
+
+                    if (!Utilities.loadPref(PostFeedActivity.this, "email", "").equalsIgnoreCase("")) {
+                        SendPicturetoDB();
+                    } else {
+                        Intent ii = new Intent(PostFeedActivity.this, FbGmailActivity.class);
+                        startActivity(ii);
+                        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
+                    }
+
+
                 break;
         }
     }

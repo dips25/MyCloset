@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp">
 
-      <!--      <com.facebook.login.widget.LoginButton
+      <!---      <com.facebook.login.widget.LoginButton
                 android:id="@+id/facebook_login"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -100,7 +100,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 android:weightSum="1"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                >
 
                 <ImageView
                     android:id="@+id/facebook"

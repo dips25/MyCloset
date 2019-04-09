@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -39,6 +40,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import my.closet.fashion.style.CustomView;
@@ -59,6 +61,7 @@ import static my.closet.fashion.style.fragments.ClosetFragment.mtopadapter;
 public class HomeActivity extends AppCompatActivity {
 
     private static final int PERMISSION_ALL = 1111;
+
     Realm realm;
     private File rootDir;
     private DisplayMetrics dm;
@@ -72,6 +75,8 @@ public class HomeActivity extends AppCompatActivity {
     public TextView title;
     Intent i;
     ImageView cross;
+
+
 
     private LinearLayout looktext;
 
@@ -91,7 +96,9 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this,new Crashlytics());
         setContentView( R.layout.activity_home);
+
 
         Realm.init(this);
         realm = Realm.getDefaultInstance();
@@ -103,7 +110,6 @@ public class HomeActivity extends AppCompatActivity {
         }
 
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(null);
         setSupportActionBar(toolbar);
@@ -112,6 +118,7 @@ public class HomeActivity extends AppCompatActivity {
         Objects.requireNonNull(avy).setTitle(null);
 
         cross = (ImageView) findViewById(R.id.cross);
+
 
         cross.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,7 +218,10 @@ public class HomeActivity extends AppCompatActivity {
                                         @Override
                                         public void onClick(View v) {
 
-                                            mixpanelAPI.track("Create Look Tab");
+                                            if (mixpanelAPI!=null) {
+
+                                                mixpanelAPI.track("Create Look Tab");
+                                            }
 
                                             names = madapter.getItems();
                                             topnames = mtopadapter.getItems();
@@ -393,4 +403,4 @@ public class HomeActivity extends AppCompatActivity {
         return true;
     }
 
-   }
+}

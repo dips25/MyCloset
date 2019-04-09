@@ -511,8 +511,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     case R.id.lookbook:
 
-                        Intent lookintent = new Intent(MainActivity.this, Lookbook.class);
-                        startActivity(lookintent);
+                  //      Intent lookintent = new Intent(MainActivity.this, Lookbook.class);
+                   //     startActivity(lookintent);
 
                         return true;
                 }

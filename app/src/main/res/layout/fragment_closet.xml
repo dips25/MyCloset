@@ -73,7 +73,7 @@
                 app:fab_label="@string/screencrop"
                 app:fab_size="normal"
                 app:pressedTranslationZ="12dp"
-                android:visibility="gone"/>
+                />
 
             <TextView
                 android:id="@+id/scrntst"
@@ -85,7 +85,6 @@
                 android:gravity="center_vertical"
                 android:layout_marginEnd="3dp"
                 android:text="Screen Shot"
-                android:visibility="gone"
                 android:textColor="@color/colorAccent"
                 android:textSize="14dp"
                 android:textStyle="bold"

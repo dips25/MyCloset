@@ -35,15 +35,15 @@ import my.closet.fashion.style.modesl.Colors;
 import my.closet.fashion.style.modesl.Dresses;
 import my.closet.fashion.style.modesl.Styles;
 
-import static my.closet.fashion.style.fragments.ClosetFragment.madapter;
-import static my.closet.fashion.style.fragments.ClosetFragment.mbottomadapter;
-import static my.closet.fashion.style.fragments.ClosetFragment.mfootwearadapter;
-import static my.closet.fashion.style.fragments.ClosetFragment.mtopadapter;
 import static my.closet.fashion.style.adapters.BottomAdapter.mbcontext;
 import static my.closet.fashion.style.adapters.FootWearAdapter.mfcontext;
 import static my.closet.fashion.style.fragments.ClosetFragment.accrecycler;
 import static my.closet.fashion.style.fragments.ClosetFragment.bottomrecycler;
 import static my.closet.fashion.style.fragments.ClosetFragment.footrecycler;
+import static my.closet.fashion.style.fragments.ClosetFragment.madapter;
+import static my.closet.fashion.style.fragments.ClosetFragment.mbottomadapter;
+import static my.closet.fashion.style.fragments.ClosetFragment.mfootwearadapter;
+import static my.closet.fashion.style.fragments.ClosetFragment.mtopadapter;
 import static my.closet.fashion.style.fragments.ClosetFragment.toprecycler;
 
 /**

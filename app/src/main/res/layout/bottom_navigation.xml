@@ -18,11 +18,11 @@
        android:layout_width="match_parent"
        android:layout_height="54dp"
        android:layout_gravity="bottom"
-       android:background="?android:attr/windowBackground"
-       app:itemBackground="@color/secondarycolor"
-       app:itemIconTint="@color/black"
+       android:background="@android:color/white"
+       app:elevation="10dp"
+       app:itemIconTint="@drawable/nav_item_color_state"
        app:menu="@menu/menu_navigation"
-       app:itemTextColor="@color/secondarycolor">
+       app:itemTextColor="@drawable/nav_item_color_state">
    </android.support.design.widget.BottomNavigationView>
 
     <RelativeLayout

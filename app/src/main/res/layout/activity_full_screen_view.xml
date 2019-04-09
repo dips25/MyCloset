@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/whitepink"
     android:orientation="vertical"
     >
 
@@ -145,7 +145,7 @@
                             app:circle_start_color="#EF505d"
                             app:dots_primary_color="#EF505d"
                             app:dots_secondary_color="#f0616d"
-                            android:visibility="gone">
+                            >
 
                             <ImageView
                                 android:id="@+id/blog_like_btn"

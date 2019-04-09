@@ -52,6 +52,7 @@
                 android:orientation="horizontal"
                 android:weightSum="10">
 
+
                 <ImageView
                     android:id="@+id/accessories"
                     android:layout_width="38dp"
@@ -60,8 +61,8 @@
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="10dp"
                     android:clickable="true"
-                    android:foreground="@drawable/ripple"
-                    android:src="@drawable/a1" />
+                    android:src="@drawable/ic_handbag"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
 
                 <ImageView
                     android:id="@+id/accselect"
@@ -71,8 +72,8 @@
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="10dp"
                     android:clickable="true"
-                    android:foreground="@drawable/ripple"
-                    android:src="@drawable/a2" />
+                    android:src="@drawable/ic_handbag_selected"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
 
                 <TextView
                     android:id="@+id/acctext"
@@ -95,7 +96,7 @@
                     android:layout_marginTop="3dp"
                     android:gravity="center"
                     android:text="@string/accessories"
-                    android:textColor="@color/blue"
+                    android:textColor="@color/picinfo_category_color"
                     android:textSize="14sp" />
 
                 <ImageView
@@ -106,8 +107,8 @@
                     android:layout_marginTop="10dp"
                     android:layout_toRightOf="@+id/accselect"
                     android:clickable="true"
-                    android:foreground="@drawable/ripple"
-                    android:src="@drawable/t1" />
+                    android:src="@drawable/ic_shirt"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
 
                 <ImageView
                     android:id="@+id/topselect"
@@ -117,8 +118,9 @@
                     android:layout_marginTop="10dp"
                     android:layout_toRightOf="@+id/accselect"
                     android:clickable="true"
-                    android:foreground="@drawable/ripple"
-                    android:src="@drawable/t2" />
+
+                    android:src="@drawable/ic_shirt_selected"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
 
                 <TextView
                     android:id="@+id/toptext"
@@ -143,7 +145,7 @@
                     android:layout_marginTop="3dp"
                     android:gravity="center_horizontal"
                     android:text="@string/top"
-                    android:textColor="@color/blue"
+                    android:textColor="@color/picinfo_category_color"
                     android:textSize="14sp"
                     />
 
@@ -156,8 +158,8 @@
                     android:layout_marginTop="10dp"
                     android:layout_toRightOf="@+id/topselect"
                     android:clickable="true"
-                    android:foreground="@drawable/ripple"
-                    android:src="@drawable/b1"
+                    android:src="@drawable/ic_trousers"
+                    android:background="?attr/selectableItemBackgroundBorderless"
 
 
                     />
@@ -170,8 +172,9 @@
                     android:layout_marginTop="10dp"
                     android:layout_toRightOf="@id/topselect"
                     android:clickable="true"
-                    android:foreground="@drawable/ripple"
-                    android:src="@drawable/b2" />
+
+                    android:src="@drawable/ic_pants_selected"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
 
                 <TextView
                     android:id="@+id/bottomtext"
@@ -195,7 +198,7 @@
                     android:layout_below="@id/bottomselect"
                     android:layout_marginTop="3dp"
                     android:text="@string/bottom"
-                    android:textColor="@color/blue"
+                    android:textColor="@color/picinfo_category_color"
                     android:textSize="14sp"
                     android:maxLength="6"/>
 
@@ -208,8 +211,9 @@
                     android:layout_marginEnd="33dp"
                     android:layout_marginTop="10dp"
                     android:clickable="true"
-                    android:foreground="@drawable/ripple"
-                    android:src="@drawable/f1" />
+
+                    android:src="@drawable/ic_high_heels"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
 
                 <ImageView
                     android:id="@+id/footselect"
@@ -219,8 +223,9 @@
                     android:layout_marginEnd="33dp"
                     android:layout_marginTop="10dp"
                     android:clickable="true"
-                    android:foreground="@drawable/ripple"
-                    android:src="@drawable/f2" />
+
+                    android:src="@drawable/ic_high_heels_selected"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
 
                 <TextView
                     android:id="@+id/foottext"
@@ -245,7 +250,7 @@
                     android:layout_marginTop="3dp"
                     android:gravity="fill_horizontal"
                     android:text="@string/footwear"
-                    android:textColor="@color/blue"
+                    android:textColor="@color/picinfo_category_color"
                     android:textSize="14sp" />
 
 

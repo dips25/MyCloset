@@ -67,4 +67,5 @@
     <color name="demo_dark_transparent">#B5B5B5</color>
     <color name="tool_bg">#151414</color>
     <color name="whitepink">#fff0f5</color>
+    <color name="picinfo_category_color">#442b2c</color>
 </resources>

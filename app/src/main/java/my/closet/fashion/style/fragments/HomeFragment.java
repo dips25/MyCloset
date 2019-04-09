@@ -182,6 +182,7 @@ public class HomeFragment extends Fragment {
                 holder.bind(getActivity(), model);
 
 
+
                 holder.picture.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
