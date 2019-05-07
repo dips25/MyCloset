@@ -47,6 +47,12 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fb_gmail);
 
+        if (Build.VERSION.SDK_INT >= 23 ) {
+            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
+
        /* callbackManager = CallbackManager.Factory.create();
         if (BuildConfig.DEBUG) {
             FacebookSdk.setIsDebugEnabled(true);

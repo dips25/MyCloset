@@ -1,11 +1,7 @@
 package my.closet.fashion.style;
 
-/**
- * Created by biswa on 2/11/2018.
- */
-
-
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,12 +10,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.support.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.media.ExifInterface;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -28,8 +23,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,15 +34,13 @@ import smartdevelop.ir.eram.showcaseviewlib.GuideView;
 import smartdevelop.ir.eram.showcaseviewlib.config.DismissType;
 import smartdevelop.ir.eram.showcaseviewlib.listener.GuideListener;
 
-
-public class EraserActivity extends AppCompatActivity implements OnClickListener {
+public class EraserActivity extends Activity implements OnClickListener {
     private String imagePath;
     private Intent intent;
     private ContentResolver mContentResolver;
     private Bitmap mBitmap;
-    MixpanelAPI mixpanelAPI;
 
-    HoverView mHoverView;
+    HoverView hoverView;
     double mDensity;
 
     int viewWidth;
@@ -72,21 +63,29 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
     ImageView  undoButton, redoButton;
     ImageView nextButton;
     ImageView colorButton;
-    Uri imguri;
-    Bitmap getmBitmap;
 
     SeekBar magicSeekbar;
     RelativeLayout eraserLayout, magicLayout;
     RelativeLayout mLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eraser);
         mContentResolver = getContentResolver();
-        mixpanelAPI= MixpanelAPI.getInstance(EraserActivity.this,"257c7d2e1c44d7d1ab6105af372f65a6");
 
+        Bundle bundle = getIntent().getExtras();
 
+        if (bundle!=null && bundle.containsKey("source")){
+
+            Uri uri = (Uri) bundle.get("path");
+            mBitmap = getBitmapfromUri(uri);
+        }else {
+
+            String path = getIntent().getStringExtra("path");
+            mBitmap = getBitmap(path);
+        }
 
 
 
@@ -97,38 +96,6 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
 
-        Bundle bundle=getIntent().getExtras();
-        Intent intent=getIntent();
-
-        if (bundle!=null && bundle.containsKey("source")){
-
-            if (bundle.getString("source").equalsIgnoreCase("add")){
-
-                if (bundle.getString("image").equalsIgnoreCase("gallery")){
-
-                     imguri= (Uri) bundle.get("uri");
-                    assert imguri != null;
-                    getmBitmap= getBitmap(imguri);
-
-                }else if (bundle.getString("image").equalsIgnoreCase("camera")){
-
-                    imguri= (Uri) bundle.get("uri");
-                    assert imguri!=null;
-                    getmBitmap=getBitmap(imguri);
-
-                }else if (bundle.getString("image").equalsIgnoreCase("screenshot")){
-
-                    byte[] sshot =bundle.getByteArray("screenshots");
-                    assert sshot!=null;
-                    getmBitmap=BitmapFactory.decodeByteArray(sshot,0,sshot.length);
-
-                }
-            }
-        }
-
-        if (getmBitmap != null) {
-            mBitmap=Bitmap.createScaledBitmap(getmBitmap,getmBitmap.getWidth(),getmBitmap.getHeight(),true);
-        }
 
 
         mLayout = (RelativeLayout) findViewById(R.id.mainLayout);
@@ -140,6 +107,8 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
         viewWidth = getResources().getDisplayMetrics().widthPixels;
         viewHeight = getResources().getDisplayMetrics().heightPixels - actionBarHeight - bottombarHeight;
         viewRatio = (double) viewHeight/ (double) viewWidth;
+
+
         if (mBitmap!=null) {
             bmRatio = (double) mBitmap.getHeight() / (double) mBitmap.getWidth();
             if (bmRatio < viewRatio) {
@@ -156,25 +125,18 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
             mBitmap = Bitmap.createScaledBitmap(mBitmap, bmWidth, bmHeight, false);
         }
 
+        if (mBitmap!=null) {
 
-        if (bmWidth!=0) {
-            if (bmHeight != 0) {
-                mHoverView = new HoverView(this, mBitmap, bmWidth, bmHeight, viewWidth, viewHeight);
-
-            }
+            hoverView = new HoverView(this, mBitmap, bmWidth, bmHeight, viewWidth, viewHeight);
         }
 
-        if (mHoverView!=null) {
+        if (hoverView!=null) {
 
-            mHoverView.setLayoutParams(new LayoutParams(viewWidth, viewHeight));
-        }
+            hoverView.setLayoutParams(new LayoutParams(viewWidth, viewHeight));
 
-        if (mLayout!=null) {
 
-            if (mHoverView!=null) {
 
-                mLayout.addView(mHoverView);
-            }
+            mLayout.addView(hoverView);
         }
 
         initButton();
@@ -190,6 +152,8 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
         mirrorButton.setOnClickListener(this);
         positionButton = (ImageButton) findViewById(R.id.positionButton);
         positionButton.setOnClickListener(this);
+        nextButton = (ImageView) findViewById(R.id.nextButton);
+        nextButton.setOnClickListener(this);
 
         SharedPreferences preferences = getSharedPreferences("preference",MODE_PRIVATE);
         boolean first = preferences.getBoolean("first",true);
@@ -200,19 +164,11 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
             showtutorial();
         }
 
-
-
-
-        if (mHoverView!=null) {
-
-            mHoverView.switchMode(HoverView.MOVING_MODE);
-        }
+        hoverView.switchMode(HoverView.MOVING_MODE);
         findViewById(R.id.magicWand_layout).setVisibility(View.GONE);
         findViewById(R.id.eraser_layout).setVisibility(View.GONE);
         resetMainButtonState();
         positionButton.setSelected(true);
-
-
 
         eraserSubButton = (ImageView) findViewById(R.id.erase_sub_button);
         eraserSubButton.setOnClickListener(this);
@@ -238,13 +194,15 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                mHoverView.setMagicThreshold(seekBar.getProgress());
-                if(mHoverView.getMode() == mHoverView.MAGIC_MODE)
-                    mHoverView.magicEraseBitmap();
-                else if(mHoverView.getMode() == mHoverView.MAGIC_MODE_RESTORE)
-                    mHoverView.magicRestoreBitmap();
-                mHoverView.invalidateView();
+                hoverView.setMagicThreshold(seekBar.getProgress());
+                if(hoverView.getMode() == hoverView.MAGIC_MODE)
+                    hoverView.magicEraseBitmap();
+                else if(hoverView.getMode() == hoverView.MAGIC_MODE_RESTORE)
+                    hoverView.magicRestoreBitmap();
+                hoverView.invalidateView();
             }
+
+
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -267,8 +225,8 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
         magicRestoreButton = (ImageView) findViewById(R.id.magic_restore_button);
         magicRestoreButton.setOnClickListener(this);
 
-        nextButton = (ImageView) findViewById(R.id.nextButton);
-        nextButton.setOnClickListener(this);
+       // nextButton = (Button) findViewById(R.id.nextButton);
+       // nextButton.setOnClickListener(this);
 
         undoButton = (ImageView) findViewById(R.id.undoButton);
         undoButton.setOnClickListener(this);
@@ -279,63 +237,14 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
 
         eraserLayout = (RelativeLayout) findViewById(R.id.eraser_layout);
         magicLayout = (RelativeLayout) findViewById(R.id.magicWand_layout);
-        eraserMainButton.setSelected(false);
+       // eraserMainButton.setSelected(true);
 
         colorButton = (ImageView) findViewById(R.id.colorButton);
         colorButton.setOnClickListener(this);
     }
 
-    private void showtutorial() {
-
-        new GuideView.Builder(EraserActivity.this)
-                .setContentText(getString(R.string.eraser_hint))
-                .setTargetView(eraserMainButton)
-                .setDismissType(DismissType.anywhere)
-                .setContentTextSize(16)
-                .setGuideListener(new GuideListener() {
-                    @Override
-                    public void onDismiss(View view) {
-
-                        new GuideView.Builder(EraserActivity.this)
-                                .setContentText(getString(R.string.magicwand_hint))
-                                .setTargetView(magicWandMainButton)
-                                .setDismissType(DismissType.anywhere)
-                                .setContentTextSize(16)
-                                .setGuideListener(new GuideListener() {
-                                    @Override
-                                    public void onDismiss(View view) {
-
-
-                                        new GuideView.Builder(EraserActivity.this)
-                                                .setContentText(getString(R.string.position_hint))
-                                                .setTargetView(positionButton)
-                                                .setDismissType(DismissType.anywhere)
-                                                .setContentTextSize(16)
-                                                .build()
-                                                .show();
-
-
-                                    }
-                                })
-                                .build()
-                                .show();
-
-                    }
-                })
-                .build()
-                .show();
-
-
-
-        SharedPreferences preferences = getSharedPreferences("preference",MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("first",false);
-        editor.apply();
-
-    }
-
-    private Bitmap getBitmap(Uri uri) {
-       // Uri uri = getImageUri(path);
+    private Bitmap getBitmap(String path) {
+        Uri uri = getImageUri(path);
         InputStream in = null;
         try {
             final int IMAGE_MAX_SIZE = 600;
@@ -346,7 +255,6 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
             o.inJustDecodeBounds = true;
 
             BitmapFactory.decodeStream(in, null, o);
-
             in.close();
 
             int scale = 1;
@@ -361,7 +269,46 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
             Bitmap b = BitmapFactory.decodeStream(in, null, o2);
             in.close();
 
-            b = Bitmap.createBitmap(b, 0, 0, o2.outWidth, o2.outHeight, getOrientationMatrix(imguri.getPath()), true);
+            b = Bitmap.createBitmap(b, 0, 0, o2.outWidth, o2.outHeight, getOrientationMatrix(path), true);
+
+            return b;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private Bitmap getBitmapfromUri(Uri uri) {
+        //Uri uri = getImageUri(path);
+        InputStream in = null;
+        try {
+            final int IMAGE_MAX_SIZE = 600;
+            in = mContentResolver.openInputStream(uri);
+
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+
+            BitmapFactory.decodeStream(in, null, o);
+            in.close();
+
+            int scale = 1;
+            if (o.outHeight > IMAGE_MAX_SIZE || o.outWidth > IMAGE_MAX_SIZE) {
+                scale = (int) Math.pow(2, (int) Math
+                        .round(Math.log(IMAGE_MAX_SIZE / (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
+            }
+
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            in = mContentResolver.openInputStream(uri);
+            Bitmap b = BitmapFactory.decodeStream(in, null, o2);
+            in.close();
+
+            b = Bitmap.createBitmap(b, 0, 0, o2.outWidth, o2.outHeight, getOrientationMatrix(uri.getPath()), true);
 
             return b;
         } catch (FileNotFoundException e) {
@@ -376,7 +323,7 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
 
     public void resetSeekBar() {
         magicSeekbar.setProgress(0);
-        mHoverView.setMagicThreshold(0);
+        hoverView.setMagicThreshold(0);
     }
 
     private Uri getImageUri(String path) {
@@ -473,19 +420,21 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
     }
 
     public void updateUndoButton() {
-        if(mHoverView.checkUndoEnable()) {
-            undoButton.setEnabled(true);
-            undoButton.setAlpha(1.0f);
-        }
-        else {
-            undoButton.setEnabled(false);
-            undoButton.setAlpha(0.3f);
+        if (hoverView != null) {
+            if (hoverView.checkUndoEnable()) {
+                undoButton.setEnabled(true);
+                undoButton.setAlpha(1.0f);
+            } else {
+                undoButton.setEnabled(false);
+                undoButton.setAlpha(0.3f);
+            }
         }
     }
 
     public void updateRedoButton() {
-        if (mHoverView!=null) {
-            if (mHoverView.checkRedoEnable()) {
+
+        if (hoverView != null) {
+            if (hoverView.checkRedoEnable()) {
                 redoButton.setEnabled(true);
                 redoButton.setAlpha(1.0f);
             } else {
@@ -502,8 +451,7 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
 
         switch (v.getId()) {
             case R.id.eraseButton:
-                mixpanelAPI.track("Eraser Clicked");
-                mHoverView.switchMode(mHoverView.ERASE_MODE);
+                hoverView.switchMode(hoverView.ERASE_MODE);
                 if(eraserLayout.getVisibility() == View.VISIBLE) {
                     eraserLayout.setVisibility(View.GONE);
                 } else {
@@ -516,8 +464,7 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
                 eraserMainButton.setSelected(true);
                 break;
             case R.id.magicButton:
-                mixpanelAPI.track("MagicWand Clicked");
-                mHoverView.switchMode(HoverView.MAGIC_MODE);
+                hoverView.switchMode(HoverView.MAGIC_MODE);
                 if(magicLayout.getVisibility() == View.VISIBLE) {
                     magicLayout.setVisibility(View.GONE);
                 } else {
@@ -535,10 +482,10 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
             case R.id.mirrorButton:
                 findViewById(R.id.eraser_layout).setVisibility(View.GONE);
                 findViewById(R.id.magicWand_layout).setVisibility(View.GONE);
-                mHoverView.mirrorImage();
+                hoverView.mirrorImage();
                 break;
             case R.id.positionButton:
-                mHoverView.switchMode(HoverView.MOVING_MODE);
+                hoverView.switchMode(HoverView.MOVING_MODE);
                 findViewById(R.id.magicWand_layout).setVisibility(View.GONE);
                 findViewById(R.id.eraser_layout).setVisibility(View.GONE);
                 resetMainButtonState();
@@ -546,57 +493,58 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
                 break;
 
             case R.id.erase_sub_button:
-                mHoverView.switchMode(HoverView.ERASE_MODE);
+                hoverView.switchMode(HoverView.ERASE_MODE);
                 resetSubEraserButtonState();
                 eraserSubButton.setSelected(true);
                 break;
             case R.id.unerase_sub_button:
-                mHoverView.switchMode(HoverView.UNERASE_MODE);
+                hoverView.switchMode(HoverView.UNERASE_MODE);
                 resetSubEraserButtonState();
                 unEraserSubButton.setSelected(true);
                 break;
 
             case R.id.brush_size_1_button:
                 resetBrushButtonState();
-                mHoverView.setEraseOffset(40);
+                hoverView.setEraseOffset(40);
                 brushSize1Button.setSelected(true);
                 break;
 
             case R.id.brush_size_2_button:
                 resetBrushButtonState();
-                mHoverView.setEraseOffset(60);
+                hoverView.setEraseOffset(60);
                 brushSize2Button.setSelected(true);
                 break;
 
             case R.id.brush_size_3_button:
                 resetBrushButtonState();
-                mHoverView.setEraseOffset(80);
+                hoverView.setEraseOffset(80);
                 brushSize3Button.setSelected(true);
                 break;
 
             case R.id.brush_size_4_button:
                 resetBrushButtonState();
-                mHoverView.setEraseOffset(100);
+                hoverView.setEraseOffset(100);
                 brushSize4Button.setSelected(true);
                 break;
 
             case R.id.magic_remove_button:
                 resetSubMagicButtonState();
                 magicRemoveButton.setSelected(true);
-                mHoverView.switchMode(HoverView.MAGIC_MODE);
+                hoverView.switchMode(HoverView.MAGIC_MODE);
                 resetSeekBar();
                 break;
 
             case R.id.magic_restore_button:
                 resetSubMagicButtonState();
                 magicRestoreButton.setSelected(true);
-                mHoverView.switchMode(HoverView.MAGIC_MODE_RESTORE);
+                hoverView.switchMode(HoverView.MAGIC_MODE_RESTORE);
                 resetSeekBar();
                 break;
 
             case R.id.nextButton:
-              mHoverView.save();
-              finish();
+                //Intent intent = new Intent(getApplicationContext(), Pic_info.class)
+                hoverView.save();
+                finish();
                 break;
 
             case R.id.colorButton:
@@ -606,8 +554,8 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
             case R.id.undoButton:
                 findViewById(R.id.eraser_layout).setVisibility(View.GONE);
                 findViewById(R.id.magicWand_layout).setVisibility(View.GONE);
-                mHoverView.undo();
-                if(mHoverView.checkUndoEnable()) {
+                hoverView.undo();
+                if(hoverView.checkUndoEnable()) {
                     undoButton.setEnabled(true);
                     undoButton.setAlpha(1.0f);
                 }
@@ -620,21 +568,62 @@ public class EraserActivity extends AppCompatActivity implements OnClickListener
             case R.id.redoButton:
                 findViewById(R.id.eraser_layout).setVisibility(View.GONE);
                 findViewById(R.id.magicWand_layout).setVisibility(View.GONE);
-                mHoverView.redo();
+                hoverView.redo();
                 updateUndoButton();
                 updateRedoButton();
                 break;
-
-                default:
-                    mHoverView.switchMode(HoverView.MOVING_MODE);
-                    findViewById(R.id.magicWand_layout).setVisibility(View.GONE);
-                    findViewById(R.id.eraser_layout).setVisibility(View.GONE);
-                    resetMainButtonState();
-                    break;
-
-
         }
 
     }
+
+    private void showtutorial() {
+
+        new GuideView.Builder(EraserActivity.this)
+                .setContentText(getString(R.string.eraser_hint))
+                .setTargetView(eraserMainButton)
+                .setDismissType(DismissType.anywhere)
+                .setContentTextSize(16)
+                .setGuideListener(new GuideListener() {
+                    @Override
+                    public void onDismiss(View view) {
+
+                        new GuideView.Builder(EraserActivity.this)
+                                .setContentText(getString(R.string.magicwand_hint))
+                                .setTargetView(magicWandMainButton)
+                                .setDismissType(DismissType.anywhere)
+                                .setContentTextSize(16)
+                                .setGuideListener(new GuideListener() {
+                                    @Override
+                                    public void onDismiss(View view) {
+
+
+                                        new GuideView.Builder(EraserActivity.this)
+                                                .setContentText(getString(R.string.position_hint))
+                                                .setTargetView(positionButton)
+                                                .setDismissType(DismissType.anywhere)
+                                                .setContentTextSize(16)
+                                                .build()
+                                                .show();
+
+
+                                    }
+                                })
+                                .build()
+                                .show();
+
+                    }
+                })
+                .build()
+                .show();
+
+
+
+        SharedPreferences preferences = getSharedPreferences("preference",MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("first",false);
+        editor.apply();
+
+    }
+
 
 }

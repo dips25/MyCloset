@@ -22,7 +22,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.BuildConfig;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -223,7 +222,7 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                 if (feedResponse_obj.getEmail().equalsIgnoreCase(Utilities.loadPref(FullScreenViewActivity.this, "email", ""))) {
                     follow_btn.setVisibility(View.GONE);
                 } else {
-                   // follow_btn.setVisibility(View.VISIBLE);
+                    // follow_btn.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -360,7 +359,7 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
 
                     } else {
                         if (key != null) {
-                            Intent ii = new Intent(FullScreenViewActivity.this, UserProfileActivity.class);
+                            Intent ii = new Intent(FullScreenViewActivity.this, UserPersonalActivity.class);
                             ii.putExtra("key", (Serializable) feedResponse_obj);
                             startActivity(ii);
                             overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
@@ -411,7 +410,7 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                                 @Override
                                 public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                                     if (e != null) {
-                                      //  Log.w(TAG, "listen:error", e);
+                                        //  Log.w(TAG, "listen:error", e);
                                         return;
                                     }
                                     if (documentSnapshot.exists()) {
@@ -430,7 +429,7 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                     }
                 } else {
                     progressBar.setVisibility(View.GONE);
-                   // Log.d(TAG, "Error getting documents: ", task.getException());
+                    // Log.d(TAG, "Error getting documents: ", task.getException());
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -442,7 +441,7 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
     }
 
     private void Likepost() {
-        userCollection.collection("Feeds/" + blogPostId + "/Likes").document(myemail).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        userCollection.collection("CommonFeed/" + blogPostId + "/Likes").document(myemail).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -454,10 +453,10 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                         data.put("id", id);
                         data.put("email", Utilities.loadPref(FullScreenViewActivity.this, "email", ""));
 
-                        userCollection.collection("Feeds/" + blogPostId + "/Likes").document(myemail).set(data);
+                        userCollection.collection("CommonFeed/" + blogPostId + "/Likes").document(myemail).set(data);
 
                     } else {
-                        userCollection.collection("Feeds/" + blogPostId + "/Likes").document(myemail).delete();
+                        userCollection.collection("CommonFeed/" + blogPostId + "/Likes").document(myemail).delete();
                     }
                 } else {
                     Log.i("LikeError", task.getException().getMessage());
@@ -480,9 +479,13 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                             Map<String, Object> data = new HashMap<>();
                             String id = UUID.randomUUID().toString();
 
+                            Long tsLong = System.currentTimeMillis() / 1000;
+                            String timestamp = tsLong.toString();
+
                             data.put("id", id);
                             data.put("image", imageUri);
                             data.put("email", feedResponse_obj.getEmail());
+                            data.put("timestamp",timestamp);
                             userCollection.collection("UsersList/" + My_DbKey + "/Bookmarks").document(blogPostId).set(data);
                         } else {
                             userCollection.collection("UsersList/" + My_DbKey + "/Bookmarks").document(blogPostId).delete();
@@ -535,12 +538,12 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                     .load(imagePath)
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
                             myUri = getLocalBitmapUri(resource);
                             if (myUri != null) {
                                 Utilities.hideLoading();
                                 Intent i = new Intent(Intent.ACTION_SEND);
-                                i.putExtra(Intent.EXTRA_TEXT, "Get nice Quotes and Thoughts from Thought Writer App.Click Here to know more." + "https://play.google.com/store/apps/details?id=thought.writer.quotes");
+                                i.putExtra(Intent.EXTRA_TEXT, R.string.sharequote + "https://play.google.com/store/apps/details?id=my.closet.fashion.style");
                                 i.setType("image/*");
                                 i.putExtra(Intent.EXTRA_STREAM, myUri);
                                 startActivity(Intent.createChooser(i, "Share Image"));
@@ -563,7 +566,7 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
             bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
             out.close();
 
-            bmpUri = FileProvider.getUriForFile(FullScreenViewActivity.this, BuildConfig.APPLICATION_ID + ".provider", file);
+            bmpUri = FileProvider.getUriForFile(FullScreenViewActivity.this,"my.closet.fashion.style.FileProvider", file);
         } catch (IOException e) {
             e.printStackTrace();
         }

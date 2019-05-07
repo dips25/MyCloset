@@ -62,7 +62,6 @@ import java.util.Objects;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import my.closet.fashion.style.BuildConfig;
 import my.closet.fashion.style.Crop;
 import my.closet.fashion.style.EraserActivity;
 import my.closet.fashion.style.MainActivity;
@@ -1530,7 +1529,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
 
                     File photofile = null;
                     photofile = getImgFile();
-                    finaluri = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".provider", photofile);
+                    finaluri = FileProvider.getUriForFile(getActivity(), "my.closet.fashion.style.FileProvider", photofile);
 
                     if (finaluri != null) {
 
@@ -1657,47 +1656,31 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode) {
-
-            case CAMERA_REQUEST:
 
                 if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
 
-                    // Uri uri=data.getData();
 
                     Intent intent = new Intent(getActivity(), EraserActivity.class);
                     intent.putExtra("source", "add");
                     intent.putExtra("image", "camera");
-
-                    intent.putExtra("uri", finaluri);
-
+                    intent.putExtra("path", finaluri);
                     startActivity(intent);
 
-                }
-                break;
 
-            case GALLERY_REQUEST:
-
-                if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
+                } else if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
 
 
-                    imguri = data.getData();
-                    String imagepath = getPath(imguri, "Photo");
-                    imguri = Uri.fromFile(new File(imagepath));
-                   // Bundle bundle = new Bundle();
-                    Intent i = new Intent(getActivity(), EraserActivity.class);
-                    i.putExtra("source", "add");
-                    i.putExtra("image", "gallery");
-                    i.putExtra("uri", imguri);
+                    Uri imguri = data.getData();
 
-                    startActivity(i);
+                    if (imguri != null) {
+                        String path = getPath(imguri,"Photo");
 
-                }
-                break;
+                        Intent intent = new Intent(getActivity(),EraserActivity.class);
+                        intent.putExtra("path",path);
+                        startActivity(intent);
+                    }
 
-            case REQUEST_CODE:
-
-                if (requestCode == REQUEST_CODE) {
+                } else if (requestCode == REQUEST_CODE) {
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         sMediaProjection = mProjectionManager.getMediaProjection(resultCode, data);
@@ -1745,18 +1728,19 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
                     }
 
                 }
-                break;
 
-        }
+
 
     }
 
 
 
+
+
     public String getPath(Uri uri, String type) {
         String document_id = null;
-        Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
-        if (cursor.moveToFirst()) {
+        Cursor cursor = Objects.requireNonNull(getActivity()).getContentResolver().query(uri, null, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
             document_id = cursor.getString(0);
             document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
         }
@@ -1775,7 +1759,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
 
             cursor = getActivity().getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                     null, MediaStore.Video.Media._ID + " = ? ", new String[]{document_id}, null);
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
 
                 path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
                 cursor.close();

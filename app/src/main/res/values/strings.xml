@@ -100,6 +100,7 @@
     <string name="profile_updated">Profile Updated</string>
     <string name="coming_soon">Coming Soon</string>
     <string name="select_pictures_to_create_a_look_in_closet">Select pictures to create a look in closet</string>
+    <string name="sharequote">I thought you would like this, click here</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>

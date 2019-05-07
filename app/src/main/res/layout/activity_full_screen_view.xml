@@ -178,7 +178,7 @@
                         android:padding="10dp"
                         android:layout_centerInParent="true"
                         android:src="@drawable/ic_baseline_share"
-                        android:visibility="gone"/>
+                        />
 
 
                     <xyz.hanks.library.bang.SmallBangView
@@ -192,7 +192,7 @@
                         app:circle_start_color="#4facfe"
                         app:dots_primary_color="#4facfe"
                         app:dots_secondary_color="#60b4fe"
-                        android:visibility="gone">
+                        >
 
                         <ImageView
                             android:id="@+id/blog_bookmark_btn"

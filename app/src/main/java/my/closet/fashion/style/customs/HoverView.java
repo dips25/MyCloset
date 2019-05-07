@@ -51,7 +51,7 @@ public class HoverView extends View {
     public static int ERASE_MODE = 0;
     public static int UNERASE_MODE = 1;
     public static int MAGIC_MODE = 2;
-    public static int MAGIC_MODE_RESTORE = 25;  // it was 3 before
+    public static int MAGIC_MODE_RESTORE = 3;
     public static int MOVING_MODE = 4;
     public static int MIRROR_MODE = 5;
 
@@ -86,11 +86,7 @@ public class HoverView extends View {
         bmWidth = w;
         bmHeight = h;
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-
-        if (w>0 && h>0) {
-
-            init(bm, w, h);
-        }
+        init(bm, w, h);
     }
 
     public void switchMode(int _mode) {
@@ -98,7 +94,7 @@ public class HoverView extends View {
         resetPath();
         saveLastMaskData();
         if(mode == MAGIC_MODE || mode == MAGIC_MODE_RESTORE) {
-            magicPointer = BitmapFactory.decodeResource(getResources(), R.drawable.colorhead);
+            magicPointer = BitmapFactory.decodeResource(getResources(), R.drawable.csbutton);
         } else if(mode == ERASE_MODE || mode == UNERASE_MODE) {
             magicPointer = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.colorhead), strokeWidth + 5, strokeWidth + 5, false);
         }
@@ -136,40 +132,18 @@ public class HoverView extends View {
         addToStack(true);
     }
 
+    @SuppressLint("WrongThread")
     public void save() {
-        Bitmap bitmap =  saveDrawnBitmap();
+        Bitmap bitmap = saveDrawnBitmap();
 
-        ByteArrayOutputStream baos=new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,50,baos);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 50, baos);
 
-        Intent intent =new Intent(mContext, Pic_info.class);
-        intent.putExtra("source","add");
+        Intent intent = new Intent(mContext, Pic_info.class);
+        intent.putExtra("source", "add");
         //      intent.putExtra("image","gallery");
-        intent.putExtra("galbtmp",baos.toByteArray());
+        intent.putExtra("galbtmp", baos.toByteArray());
         mContext.startActivity(intent);
-
-
-
-
-        //     File sdCard = Environment.getExternalStorageDirectory();
-        //   File dir = new File (sdCard.getAbsolutePath() + "/BackgroundRemover");
-        //  dir.mkdirs();
-
-        // File dest = new File(dir, filename);
-
-        // try {
-        //   FileOutputStream out = new FileOutputStream(dest);
-        // bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-
-        //out.flush();
-        //out.close();
-        //} catch (Exception e) {
-        //  e.printStackTrace();
-        //}
-
-        // refreshGallery(dest);
-
-        // return (sdCard + "/BackgroundRemover/" + filename);
     }
 
     private void refreshGallery(File file) {
@@ -213,7 +187,7 @@ public class HoverView extends View {
 
         mBitmapPaint = new Paint();
         mBitmapPaint.setXfermode(new PorterDuffXfermode(Mode.DST_IN));
-         mBitmapPaint.setAntiAlias(true);
+        mBitmapPaint.setAntiAlias(true);
 
         mMaskPaint = new Paint();
         mMaskPaint.setAntiAlias(true);
@@ -222,6 +196,7 @@ public class HoverView extends View {
         if (bm!=null) {
             bm = bm.copy(Bitmap.Config.ARGB_8888, true);
         }
+
         clippedBitmap = Bitmap.createBitmap(w, h, Config.ARGB_8888);
 
         newCanvas = new Canvas(clippedBitmap);
@@ -237,7 +212,7 @@ public class HoverView extends View {
 
         lastBitmapData = new int[w * h];
 
-        magicPointer = BitmapFactory.decodeResource(getResources(), R.drawable.select1);
+        magicPointer = BitmapFactory.decodeResource(getResources(), R.drawable.csbutton);
         touchPoint = new PointF(w/2, h/2);
         drawingPoint = new PointF(w/2, h/2);
 
@@ -456,7 +431,6 @@ public class HoverView extends View {
 
 
     public Bitmap magicRestoreBitmap() {
-
         int mWidth = clippedBitmap.getWidth();
         int mHeight = clippedBitmap.getHeight();
 

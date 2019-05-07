@@ -37,7 +37,7 @@ public class CustomView extends AppCompatActivity {
     Realm realm;
     int id;
 
-    Bitmap bitmaparray[]=new Bitmap[6];
+    Bitmap bitmaparray[]=new Bitmap[10];
 
     ArrayList<String> imagearray=new ArrayList<>();
     ArrayList<String> toparray=new ArrayList<>();
@@ -54,6 +54,8 @@ public class CustomView extends AppCompatActivity {
     String imagename;
     int n;
     private MixpanelAPI mixpanelAPI;
+    StickerImageView stickerImageView5;
+    StickerImageView stickerImageView6;
 
 
     protected void onCreate(Bundle savedInstanceState){
@@ -89,8 +91,13 @@ public class CustomView extends AppCompatActivity {
         stickerImageView3.setVisibility(View.GONE);
         stickerImageView4=new StickerImageView(this);
         stickerImageView4.setVisibility(View.GONE);
+        stickerImageView5=new StickerImageView(this);
+        stickerImageView5.setVisibility(View.GONE);
+        stickerImageView6=new StickerImageView(this);
+        stickerImageView6.setVisibility(View.GONE);
 
-       
+
+
 
 
         stickerImageView1.setOnClickListener(new View.OnClickListener() {
@@ -166,6 +173,22 @@ public class CustomView extends AppCompatActivity {
             stickerImageView4.setImageBitmap(bitmaparray[3]);
             frameLayout.addView(stickerImageView4);
         }
+
+        if (bitmaparray[4]!=null){
+
+            stickerImageView5.setVisibility(View.VISIBLE);
+            stickerImageView5.setImageBitmap(bitmaparray[4]);
+            frameLayout.addView(stickerImageView5);
+        }
+
+        if (bitmaparray[5]!=null){
+
+            stickerImageView6.setVisibility(View.VISIBLE);
+            stickerImageView6.setImageBitmap(bitmaparray[5]);
+            frameLayout.addView(stickerImageView6);
+        }
+
+
 
         finaldress.clear();
 

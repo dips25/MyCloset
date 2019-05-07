@@ -5,15 +5,17 @@ public class BookmarkResponse {
     String id;
     String email;
     String image;
+    String timestamp;
 
     public BookmarkResponse() {
 
     }
 
-    public BookmarkResponse(String id, String email, String image) {
+    public BookmarkResponse(String id, String email, String image,String timestamp) {
         this.id = id;
         this.email = email;
         this.image = image;
+        this.timestamp = timestamp;
     }
 
     public String getId() {
@@ -38,6 +40,14 @@ public class BookmarkResponse {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
 

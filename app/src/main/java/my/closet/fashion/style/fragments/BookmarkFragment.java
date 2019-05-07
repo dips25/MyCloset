@@ -15,14 +15,17 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.firebase.ui.firestore.SnapshotParser;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.firebase.ui.firestore.paging.LoadingState;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
@@ -60,7 +63,7 @@ public class BookmarkFragment extends Fragment {
         // Inflate the layout for this fragment
         view=inflater.inflate(R.layout.fragment_bookmark, container, false);
 
-        My_DbKey = Utilities.loadPref(getActivity(), "My_DbKey", "");
+        My_DbKey = Utilities.loadPref(Objects.requireNonNull(getActivity()), "My_DbKey", "");
         feedRef = FirebaseFirestore.getInstance().collection("UsersList/" + My_DbKey + "/Bookmarks");
 
 
@@ -124,7 +127,14 @@ public class BookmarkFragment extends Fragment {
 
             FirestorePagingOptions<BookmarkResponse> options = new FirestorePagingOptions.Builder<BookmarkResponse>()
                     .setLifecycleOwner(this)
-                    .setQuery(query, config, BookmarkResponse.class)
+                    .setQuery(query, config, new SnapshotParser<BookmarkResponse>() {
+                        @NonNull
+                        @Override
+                        public BookmarkResponse parseSnapshot(@NonNull DocumentSnapshot snapshot) {
+
+                            return snapshot.toObject(BookmarkResponse.class);
+                        }
+                    })
                     .build();
 
             adapter = new FirestorePagingAdapter<BookmarkResponse, BookmarkViewHolder>(options) {
