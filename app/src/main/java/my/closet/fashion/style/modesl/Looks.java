@@ -1,19 +1,30 @@
 package my.closet.fashion.style.modesl;
 
+import android.os.Parcel;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Looks extends RealmObject {
+public class Looks extends RealmObject  {
 @PrimaryKey
     int id;
     String image_name;
     String style_name;
+    int lookid;
+
 
     public Looks(){
 
 
     }
 
+
+    protected Looks(Parcel in) {
+        id = in.readInt();
+        image_name = in.readString();
+        style_name = in.readString();
+
+    }
 
 
     public int getId() {
@@ -38,6 +49,14 @@ public class Looks extends RealmObject {
 
     public void setStyle_name(String style_name) {
         this.style_name = style_name;
+    }
+
+    public int getLookid() {
+        return lookid;
+    }
+
+    public void setLookid(int lookid) {
+        this.lookid = lookid;
     }
 
 }

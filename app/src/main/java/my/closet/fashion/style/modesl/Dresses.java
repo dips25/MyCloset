@@ -1,16 +1,17 @@
 package my.closet.fashion.style.modesl;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import my.closet.fashion.style.modesl.Colors;
-import my.closet.fashion.style.modesl.Styles;
 
 /**
  * Created by biswa on 6/22/2017.
  */
 
-public class Dresses extends RealmObject {
+public class Dresses extends RealmObject implements Parcelable {
 
 
 
@@ -21,21 +22,35 @@ public class Dresses extends RealmObject {
 
     boolean isSelected=false;
 
-
-
     RealmList<Styles> stylesRealmList=new RealmList<>();
     String imagename;
 
-
-
     RealmList<Colors> colorsRealmList=new RealmList<>();
 
+    public Dresses() {
 
+        //Empty Constructor
+    }
 
+    protected Dresses(Parcel in) {
+        id = in.readInt();
+        category = in.readString();
+        styles = in.readString();
+        isSelected = in.readByte() != 0;
+        imagename = in.readString();
+    }
 
+    public static final Creator<Dresses> CREATOR = new Creator<Dresses>() {
+        @Override
+        public Dresses createFromParcel(Parcel in) {
+            return new Dresses(in);
+        }
 
-
-
+        @Override
+        public Dresses[] newArray(int size) {
+            return new Dresses[size];
+        }
+    };
 
     public String getCategory(){
         return category;
@@ -102,5 +117,18 @@ public class Dresses extends RealmObject {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(category);
+        dest.writeString(styles);
+        dest.writeByte((byte) (isSelected ? 1 : 0));
+        dest.writeString(imagename);
+    }
+}
 

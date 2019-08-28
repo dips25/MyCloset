@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -16,9 +15,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -97,7 +93,7 @@ public class Utilities {
     }
 
 
-    public static void showLoading(Context context,@NonNull String message) {
+    public static void showLoading(Context context,String message) {
         mProgressDialog = new ProgressDialog(context);
         mProgressDialog.setMessage(message);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);

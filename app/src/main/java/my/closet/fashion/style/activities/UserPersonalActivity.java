@@ -1,7 +1,6 @@
 package my.closet.fashion.style.activities;
 
 import android.app.Dialog;
-import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,15 +9,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,6 +24,16 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.paging.PagedList;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.BuildConfig;
 import com.bumptech.glide.Glide;
@@ -51,18 +51,24 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import my.closet.fashion.style.R;
@@ -106,6 +112,9 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
     private TextView username_follow_txt;
     Button cancel_flw_popup, unflw_popup_btn;
     private String followingkey = "";
+    private TextView following_count_txt;
+    private List followers = new ArrayList();
+    LinearLayout follower_layout,following_layout;
 
 
     @Override
@@ -125,9 +134,15 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
             feedResponse_obj = (FeedResponse) i.getSerializableExtra("key");
         }
 
+
+
         findViews();
 
         getUserData();
+
+        //getFollowers();
+
+       // FollowingQuery();
 
     }
 
@@ -137,7 +152,11 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
         toolbar_txt = (TextView) toolbar.findViewById(R.id.toolbar_txt);
         setSupportActionBar(toolbar);
         ActionBar avy = getSupportActionBar();
-        avy.setTitle(null);
+        if (avy != null) {
+            avy.setTitle(null);
+        }
+        toolbar.setBackgroundColor(getResources().getColor(R.color.secondarycolor));
+
 
         toolbar.setNavigationIcon(R.drawable.ic_arrowback);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -151,16 +170,45 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
         follow_btn = (Button) findViewById(R.id.follow_btn);
         follow_btn.setText("Follow");
 
+        follower_layout = (LinearLayout) findViewById(R.id.follower_layout);
+        following_layout = (LinearLayout) findViewById(R.id.following_layout);
+
+        follower_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(UserPersonalActivity.this,FollowerFollowingViewActivity.class);
+                intent.putExtra("key",key);
+                intent.putExtra("name",feedResponse_obj.getPenname());
+                startActivity(intent);
+
+            }
+        });
+
+        following_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(UserPersonalActivity.this,FollowerFollowingViewActivity.class);
+                intent.putExtra("key",key);
+                intent.putExtra("name",feedResponse_obj.getPenname());
+                startActivity(intent);
+            }
+        });
+
         follow_btn.setOnClickListener(this);
 
-        follower_count_txt = (TextView) findViewById(R.id.follower_count_txt);
+        following_count_txt = (TextView) findViewById(R.id.following_count_txt);
+        follower_count_txt = (TextView) findViewById(R.id.followers_count_txt);
         profile_image = (CircleImageView) findViewById(R.id.profile_image);
-        profile_image.setBackgroundResource(R.drawable.ic_user_profile);
+       // profile_image.setBackgroundResource(R.drawable.ic_user_profile);
         post_count_txt = (TextView) findViewById(R.id.post_count_txt);
         link_txt = (TextView) findViewById(R.id.link_txt);
         bio_txt = (TextView) findViewById(R.id.bio_txt);
 
-        if (feedResponse_obj.getProfile() != null && feedResponse_obj.getProfile().contains("http")) {
+
+
+        if (feedResponse_obj.getProfile() != null) {
             Glide.with(UserPersonalActivity.this).load(feedResponse_obj.getProfile()).into(profile_image);
         } else {
             profile_image.setBackgroundResource(R.drawable.ic_user_profile);
@@ -180,20 +228,22 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
 
         postCount();
         SetUpRecycleView();
+       // checkFollowers();
+
     }
 
     private void postCount() {
 
         db.collection("CommonFeed")
-                .whereEqualTo("penname", feedResponse_obj.getPenname())
+                .whereEqualTo("email", feedResponse_obj.getEmail())
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
 
                     for (DocumentSnapshot document : task.getResult()) {
                         posts.add(document.getId());
-                        post_count_txt.setText(String.valueOf(posts.size()) + " Posts");
+                        post_count_txt.setText(String.valueOf(posts.size()));
                     }
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
@@ -201,7 +251,7 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
+            public void onFailure(Exception e) {
 
             }
         });
@@ -212,26 +262,27 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
         Utilities.showLoading(UserPersonalActivity.this, "Loading");
         db.collection("UsersList").whereEqualTo("Email", feedResponse_obj.getEmail()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
 
                     Utilities.hideLoading();
-                    for (DocumentSnapshot document : task.getResult()) {
+                    for (DocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
 
                         key = document.getId();
-                        username_txt.setText(document.get("Pen_Name").toString());
-                        bio_txt.setText(document.get("Bio").toString());
-                        link_txt.setText(document.get("Website").toString());
-                        toolbar_txt.setText(document.get("Display_Name").toString());
+                        username_txt.setText(Objects.requireNonNull(document.get("Pen_Name")).toString());
+                        bio_txt.setText(Objects.requireNonNull(document.get("Bio")).toString());
+                        link_txt.setText(Objects.requireNonNull(document.get("Website")).toString());
+                        toolbar_txt.setText(Objects.requireNonNull(document.get("Display_Name")).toString());
 
                         Glide.with(UserPersonalActivity.this)
                                 .load(document.get("Profile_Pic"))
                                 .into(profile_image);
 
-                        /*if (key != null && !key.equalsIgnoreCase("")) {
+                        if (key != null && !key.equalsIgnoreCase("")) {
                             FollowerCount();
-                            FollowingQuery();
-                        }*/
+                            FollowingCount();
+                            //checkFollowers();
+                        }
 
                     }
                 } else {
@@ -240,38 +291,89 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
+            public void onFailure(Exception e) {
                 Utilities.hideLoading();
             }
         });
     }
 
-   /* private void FollowerCount() {
+    private void FollowingCount() {
+
         db.collection("UsersList")
                 .document(key).
-                collection("FollowCollection").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                collection("Followee").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
 
-                    for (DocumentSnapshot document : task.getResult()) {
-                        followings.add(document.get("Following").toString());
+                    for (DocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                        followings.add(document.get("email"));
                         followingkey = document.getId();
-                        follower_count_txt.setText(String.valueOf(followings.size()) + " Followings");
+                        following_count_txt.setText(String.valueOf(followings.size()));
                     }
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
             }
         });
-    }*/
+    }
+
+    private void FollowerCount() {
+        db.collection("UsersList")
+                .document(key).
+                collection("FollowCollection").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+
+                    for (DocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                        followers.add(document.get("email"));
+                       // followingkey = document.getId();
+                        follower_count_txt.setText(String.valueOf(followers.size()));
+                    }
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
+   public void checkFollowers(){
+
+       DocumentReference followreference = db.collection("UsersList")
+               .document(key).collection("FollowCollection").document(Utilities.loadPref(UserPersonalActivity.this, "email", ""));
+
+       followreference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+           @Override
+           public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+               if (documentSnapshot.exists()) {
+
+                   follow_btn.setText("Following");
+                   follow_btn.setBackgroundResource(R.drawable.following_btn);
+                   follow_btn.setTextColor(ContextCompat.getColor(UserPersonalActivity.this, R.color.selected_tab));
+                   Utilities.Following = true;
+
+               }else {
+
+                   Utilities.Following = false;
+                   follow_btn.setText("Follow");
+                   follow_btn.setBackgroundResource(R.drawable.follow_btn);
+                   follow_btn.setTextColor(ContextCompat.getColor(UserPersonalActivity.this, R.color.white));
+
+
+               }
+
+           }
+       });
+   }
 
 
     private void FollowingQuery() {
 
         db.collection("UsersList").document(key).
                 collection("FollowCollection").
-                whereEqualTo("Following",
+                whereEqualTo("email",
                         Utilities.loadPref(UserPersonalActivity.this, "email", ""))
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -293,7 +395,7 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
+            public void onFailure(Exception e) {
 
                 Utilities.Following = false;
                 follow_btn.setText("Follow");
@@ -308,7 +410,7 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
 
         Query query = feedRef
                 .whereEqualTo("email", feedResponse_obj.getEmail())
-                .orderBy("id", Query.Direction.DESCENDING);
+                .orderBy("timestamp", Query.Direction.DESCENDING);
 
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
@@ -322,9 +424,9 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
                 .build();
 
         adapter = new FirestorePagingAdapter<FeedResponse, UserFeedsViewHolder>(options) {
-            @NonNull
+
             @Override
-            public UserFeedsViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
+            public UserFeedsViewHolder onCreateViewHolder(ViewGroup parent,
                                                           int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.user_feed_item, parent, false);
@@ -332,7 +434,7 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull UserFeedsViewHolder holder,
+            protected void onBindViewHolder(UserFeedsViewHolder holder,
                                             int position,
                                             final FeedResponse model) {
                 holder.bind(UserPersonalActivity.this, model);
@@ -341,13 +443,17 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
                     @Override
                     public void onClick(View v) {
 
-                       // FullScreen_Popup(model);
+                        Intent textint = new Intent(UserPersonalActivity.this, PictureDeletingActivity.class);
+                        Utilities.MyTab=false;
+                        textint.putExtra("picture", (Serializable) model);
+                        startActivity(textint);
+                        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
                     }
                 });
             }
 
             @Override
-            protected void onLoadingStateChanged(@NonNull LoadingState state) {
+            protected void onLoadingStateChanged(LoadingState state) {
                 switch (state) {
                     case LOADING_INITIAL:
                     case LOADING_MORE:
@@ -454,7 +560,7 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
 
             db.collection("Bookmarks").document().set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
-                public void onComplete(@NonNull Task<Void> task) {
+                public void onComplete(Task<Void> task) {
                     if (task.isSuccessful()) {
                         Utilities.bookmarked = true;
                         Utilities.showToast(UserPersonalActivity.this, "Saved...");
@@ -684,7 +790,7 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
-                        public void onFailure(@NonNull Exception e) {
+                        public void onFailure(Exception e) {
                             Utilities.showToast(UserPersonalActivity.this, "Try Later");
                         }
                     });
@@ -698,13 +804,15 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
 
         if (!Utilities.loadPref(UserPersonalActivity.this, "email", "").equalsIgnoreCase(feedResponse_obj.getEmail())) {
 
-            Map<String, Object> following = new HashMap<>();
-            following.put("Following", Utilities.loadPref(UserPersonalActivity.this, "email", ""));
+            Map<String, Object> data = new HashMap<>();
+            String id = UUID.randomUUID().toString();
 
-            db.collection("UsersList").document(key).collection("FollowCollection").add(following)
+            data.put("id", id);
+            data.put("email", Utilities.loadPref(UserPersonalActivity.this, "email", ""));
+            db.collection("UsersList").document(key).collection("FollowCollection").add(data)
                     .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                         @Override
-                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                        public void onComplete(Task<DocumentReference> task) {
                             if (task.isComplete()) {
 
                                 follow_btn.setText("Following");

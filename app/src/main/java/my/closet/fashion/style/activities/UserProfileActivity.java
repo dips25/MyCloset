@@ -1,9 +1,7 @@
 package my.closet.fashion.style.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,16 +16,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -45,6 +34,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -52,21 +47,22 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.facebook.FacebookSdk;
 import com.facebook.LoggingBehavior;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -92,12 +88,16 @@ import my.closet.fashion.style.BuildConfig;
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
 import my.closet.fashion.style.customs.IconizedMenu;
+import my.closet.fashion.style.modesl.DefaultFollowers;
 import my.closet.fashion.style.modesl.FBGmailData;
 
 public class UserProfileActivity extends AppCompatActivity implements
         View.OnClickListener, GoogleApiClient.OnConnectionFailedListener  {
 
     FirebaseFirestore profCollection;
+    List<DefaultFollowers> defaultFollowers;
+
+
     private MixpanelAPI mixpanelAPI;
     private FirebaseStorage storage;
     private StorageReference storageRef;
@@ -135,6 +135,7 @@ public class UserProfileActivity extends AppCompatActivity implements
     private IconizedMenu popup;
     private Bitmap imageBitmap;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,7 +163,10 @@ public class UserProfileActivity extends AppCompatActivity implements
             fBGmailData_obj = (FBGmailData) i.getSerializableExtra("LoginData");
             fetchingData();
         }
+
+
     }
+
 
     @Override
     public void onStart() {
@@ -180,7 +184,7 @@ public class UserProfileActivity extends AppCompatActivity implements
         mFusedLocationClient.getLastLocation()
                 .addOnCompleteListener(this, new OnCompleteListener<Location>() {
                     @Override
-                    public void onComplete(@NonNull Task<Location> task) {
+                    public void onComplete(Task<Location> task) {
                         if (task.isSuccessful() && task.getResult() != null) {
                             mLastLocation = task.getResult();
 
@@ -265,7 +269,7 @@ public class UserProfileActivity extends AppCompatActivity implements
 
     private void findView() {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar avy = getSupportActionBar();
         avy.setTitle("Profile");
@@ -278,20 +282,23 @@ public class UserProfileActivity extends AppCompatActivity implements
                 overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_from_left);
             }
         });
-        profile_image = (CircleImageView) findViewById(R.id.profile_image);
-        username_txt = (TextView) findViewById(R.id.username_txt);
-        penname_edittext = (EditText) findViewById(R.id.penname_edittext);
-        email_edittext = (EditText) findViewById(R.id.email_edittext);
-        link_edittext = (EditText) findViewById(R.id.link_edittext);
-        bio_edittext = (EditText) findViewById(R.id.bio_edittext);
+        profile_image = findViewById(R.id.profile_image);
+        username_txt = findViewById(R.id.username_txt);
+        penname_edittext = findViewById(R.id.penname_edittext);
+        email_edittext = findViewById(R.id.email_edittext);
+        link_edittext = findViewById(R.id.link_edittext);
+        bio_edittext = findViewById(R.id.bio_edittext);
 
-        edit_profile_pic = (RelativeLayout) findViewById(R.id.edit_profile_pic);
+
+
+
+        edit_profile_pic = findViewById(R.id.edit_profile_pic);
         edit_profile_pic.setOnClickListener(this);
 
-        menu = (ImageView) findViewById(R.id.menu);
+        menu = findViewById(R.id.menu);
         menu.setOnClickListener(this);
 
-        login_btn = (Button) findViewById(R.id.login_btn);
+        login_btn = findViewById(R.id.login_btn);
         login_btn.setOnClickListener(this);
     }
 
@@ -299,6 +306,7 @@ public class UserProfileActivity extends AppCompatActivity implements
 
         if (fBGmailData_obj.getEmail() != null && !fBGmailData_obj.getEmail().equalsIgnoreCase("")) {
             email_edittext.setText(fBGmailData_obj.getEmail());
+            Utilities.savePref(UserProfileActivity.this, "email", fBGmailData_obj.getEmail());
 
             LoginUsingEmail();
         }
@@ -316,7 +324,7 @@ public class UserProfileActivity extends AppCompatActivity implements
 
                     Glide.with(UserProfileActivity.this).asBitmap().load(profile_pic.toString()).into(new SimpleTarget<Bitmap>() {
                         @Override
-                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        public void onResourceReady( Bitmap resource, Transition<? super Bitmap> transition) {
                             String root = Environment.getExternalStorageDirectory().toString();
                             File myDir = new File(root + "/req_images");
                             myDir.mkdirs();
@@ -337,7 +345,7 @@ public class UserProfileActivity extends AppCompatActivity implements
                                 e.printStackTrace();
                             }
                             selectedImageUri = FileProvider.getUriForFile(UserProfileActivity.this,
-                                    BuildConfig.APPLICATION_ID + ".provider",
+                                    "my.closet.fashion.style.FileProvider",
                                     file);
 
                             Glide.with(UserProfileActivity.this)
@@ -352,10 +360,14 @@ public class UserProfileActivity extends AppCompatActivity implements
             } else {
 
                 Glide.with(UserProfileActivity.this)
+                        .load(fBGmailData_obj.getPicture()).apply(requestOptions)
+                        .into(profile_image);
+
+                Glide.with(UserProfileActivity.this)
                         .asBitmap()
                         .load(fBGmailData_obj.getPicture()).into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
 
 
                         String root = Environment.getExternalStorageDirectory().toString();
@@ -378,12 +390,10 @@ public class UserProfileActivity extends AppCompatActivity implements
                             e.printStackTrace();
                         }
                         selectedImageUri = FileProvider.getUriForFile(UserProfileActivity.this,
-                                BuildConfig.APPLICATION_ID + ".provider",
+                                "my.closet.fashion.style.FileProvider",
                                 file);
                         deletePath(file);
-                        Glide.with(UserProfileActivity.this)
-                                .load(selectedImageUri).apply(requestOptions)
-                                .into(profile_image);
+
                     }
                 });
 
@@ -452,9 +462,9 @@ public class UserProfileActivity extends AppCompatActivity implements
 
         }
 
-        close_btn = (ImageButton) cam_dialog.findViewById(R.id.close_btn);
-        camera_button = (Button) cam_dialog.findViewById(R.id.camera_button);
-        gallery_button = (Button) cam_dialog.findViewById(R.id.gallery_button);
+        close_btn = cam_dialog.findViewById(R.id.close_btn);
+        camera_button = cam_dialog.findViewById(R.id.camera_button);
+        gallery_button = cam_dialog.findViewById(R.id.gallery_button);
 
         lp.gravity = Gravity.CENTER;
         cam_dialog.getWindow().setAttributes(lp);
@@ -541,12 +551,14 @@ public class UserProfileActivity extends AppCompatActivity implements
     }
 
     private void gmailLogoutCall() {
-        final GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, UserProfileActivity.this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API)
-                .build();
 
-        final ProgressDialog dialog = new ProgressDialog(this);
+        FirebaseAuth.getInstance().signOut();
+       /* final GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage((FragmentActivity) getApplicationContext(), UserProfileActivity.this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API)
+                .build();  */
+
+       /* final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setMessage("Please wait...");
         dialog.show();
         new Handler().postDelayed(new Runnable() {
@@ -556,7 +568,7 @@ public class UserProfileActivity extends AppCompatActivity implements
                         new ResultCallback<Status>() {
                             @Override
                             public void onResult(Status status) {
-                                dialog.dismiss();
+                                dialog.dismiss(); */
                                 Utilities.savebooleanPref(getApplicationContext(), "HasLogged_In", false);
                                 Utilities.savePref(UserProfileActivity.this, "email", "");
                                 Utilities.savePref(UserProfileActivity.this, "Profile_Pic", "");
@@ -564,22 +576,20 @@ public class UserProfileActivity extends AppCompatActivity implements
                                 Utilities.savePref(UserProfileActivity.this, "Pen_Name", "");
 
 
-                                Intent returnTOLogin = new Intent(getApplicationContext(), HomeActivity.class);
+                                Intent returnTOLogin = new Intent(getApplicationContext(), FbGmailActivity.class);
                                 returnTOLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 returnTOLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(returnTOLogin);
                                 finish();
                                 overridePendingTransition(R.anim.fade_in, R.anim.slide_out_down);
                             }
-                        });
-            }
-        }, 2000);
 
-    }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAMERA_PIC_REQUEST && resultCode == Activity.RESULT_OK) {
+        if (requestCode == CAMERA_PIC_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
             Bitmap image = null;
 
             if (requestCode == 0) {
@@ -620,7 +630,7 @@ public class UserProfileActivity extends AppCompatActivity implements
                     .load(selectedImageUri).apply(requestOptions)
                     .into(profile_image);
 
-        } else if (requestCode == GALLERY_PIC_REQUEST && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == GALLERY_PIC_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
 
             selectedImageUri = data.getData();
             String selectedImagePath = "";
@@ -642,7 +652,7 @@ public class UserProfileActivity extends AppCompatActivity implements
 
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d("", "onConnectionFailed:" + connectionResult);
     }
 
@@ -654,20 +664,21 @@ public class UserProfileActivity extends AppCompatActivity implements
                 .whereEqualTo("Email", fBGmailData_obj.getEmail())
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
 
-                    for (DocumentSnapshot document : task.getResult()) {
+                    for (DocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
 
                         Utilities.hideLoading();
                         update_key = document.getId();
 
                         Utilities.savePref(UserProfileActivity.this, "My_DbKey",update_key);
-                        penname_edittext.setText(document.get("Pen_Name").toString());
-                        email_edittext.setText(document.get("Email").toString());
-                        link_edittext.setText(document.get("Website").toString());
-                        bio_edittext.setText(document.get("Bio").toString());
-                        username_txt.setText(document.get("Display_Name").toString());
+                       // Utilities.savePref(UserProfileActivity.this,"email", Objects.requireNonNull(document.get("Email")).toString());
+                        penname_edittext.setText(Objects.requireNonNull(document.get("Pen_Name")).toString());
+                        email_edittext.setText(Objects.requireNonNull(document.get("Email")).toString());
+                        link_edittext.setText(Objects.requireNonNull(document.get("Website")).toString());
+                        bio_edittext.setText(Objects.requireNonNull(document.get("Bio")).toString());
+                        username_txt.setText(Objects.requireNonNull(document.get("Display_Name")).toString());
 
                         // TODO for retriving languages .not require now
 
@@ -679,7 +690,7 @@ public class UserProfileActivity extends AppCompatActivity implements
                         } else {
                             language_Text.setTags("Select Languages");
                         }*/
-                        selectedImageUri = Uri.parse(document.get("Profile_Pic").toString());
+                        selectedImageUri = Uri.parse(Objects.requireNonNull(document.get("Profile_Pic")).toString());
 
                         Glide.with(UserProfileActivity.this)
                                 .load(selectedImageUri).apply(requestOptions)
@@ -693,7 +704,7 @@ public class UserProfileActivity extends AppCompatActivity implements
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
+            public void onFailure(Exception e) {
                 Utilities.hideLoading();
 
             }
@@ -713,13 +724,17 @@ public class UserProfileActivity extends AppCompatActivity implements
 
             } else {
 
-                final StorageReference ref = storageRef.child(new StringBuilder("Profiles/").
-                        append(UUID.randomUUID().toString()).toString());
-                uploadTask = ref.putFile(selectedImageUri);
+                final StorageReference ref = storageRef.child("Profiles/" +
+                        UUID.randomUUID().toString());
+
+                StorageMetadata metadata = new StorageMetadata.Builder()
+                        .setContentType("image/jpg")
+                        .build();
+                uploadTask = ref.putFile(selectedImageUri,metadata);
 
                 Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    public Task<Uri> then(Task<UploadTask.TaskSnapshot> task) throws Exception {
                         if (!task.isSuccessful()) {
                             throw Objects.requireNonNull(task.getException());
                         }
@@ -728,9 +743,9 @@ public class UserProfileActivity extends AppCompatActivity implements
                     }
                 }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
+                    public void onComplete(Task<Uri> task) {
                         if (task.isComplete()) {
-                            downloaded_url = task.getResult().toString();
+                            downloaded_url = Objects.requireNonNull(task.getResult()).toString();
 
                             saveuserDetails(downloaded_url);
                         }
@@ -770,15 +785,14 @@ public class UserProfileActivity extends AppCompatActivity implements
                             .set(Details)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
-                                public void onComplete(@NonNull Task<Void> task) {
+                                public void onComplete(Task<Void> task) {
 
                                     if (task.isComplete()) {
                                         Utilities.hideLoading();
 
                                         Utilities.showToast(UserProfileActivity.this, getString(R.string.profile_updated));
                                         Utilities.savebooleanPref(UserProfileActivity.this, "HasLogged_In", true);
-                                        Utilities.savePref(UserProfileActivity.this, "Profile_Pic", url.toString());
-                                        Utilities.savePref(UserProfileActivity.this, "Pen_Name", penname_edittext.getText().toString());
+                                        Utilities.savePref(UserProfileActivity.this, "Profile_Pic", url);
                                         Utilities.savePref(UserProfileActivity.this, "email", email_edittext.getText().toString());
 
 
@@ -794,29 +808,37 @@ public class UserProfileActivity extends AppCompatActivity implements
                             });
                 } else {
 
-                    profCollection.collection("UsersList").document().
-                            set(Details).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    profCollection.collection("UsersList").add(Details).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
+                        public void onComplete(Task<DocumentReference> task) {
+
+                            if (task.isSuccessful()){
+
+                               // String id = task.getResult().getId();
 
                                 Utilities.hideLoading();
                                 Utilities.showToast(UserProfileActivity.this, "Profile Saved");
                                 Utilities.savebooleanPref(UserProfileActivity.this, "HasLogged_In", true);
-                                Utilities.savePref(UserProfileActivity.this, "Profile_Pic", url.toString());
+                                Utilities.savePref(UserProfileActivity.this, "Profile_Pic", url);
                                 Utilities.savePref(UserProfileActivity.this, "Pen_Name", penname_edittext.getText().toString());
                                 Utilities.savePref(UserProfileActivity.this, "email", email_edittext.getText().toString());
+                                Utilities.savePref(UserProfileActivity.this,"My_DbKey", Objects.requireNonNull(task.getResult()).getId());
                                 Intent login_Intent = new Intent(UserProfileActivity.this, HomeActivity.class);
                                 startActivity(login_Intent);
                                 finish();
                                 overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
+                                Toast.makeText(UserProfileActivity.this, "key:" + Objects.requireNonNull(task.getResult()).getId(), Toast.LENGTH_SHORT).show();
+                            }else {
 
-                            } else {
                                 Utilities.showToast(UserProfileActivity.this, "Try again later");
                                 Utilities.hideLoading();
+
                             }
+
                         }
                     });
+
+
                 }
 
             }else {
@@ -828,7 +850,7 @@ public class UserProfileActivity extends AppCompatActivity implements
     public String getPath(Uri uri, String type) {
         String document_id = null;
         Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        if (cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             document_id = cursor.getString(0);
             document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
         }
@@ -838,7 +860,7 @@ public class UserProfileActivity extends AppCompatActivity implements
 
             cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
 
                 path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
                 cursor.close();
@@ -847,7 +869,7 @@ public class UserProfileActivity extends AppCompatActivity implements
 
             cursor = getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                     null, MediaStore.Video.Media._ID + " = ? ", new String[]{document_id}, null);
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
 
                 path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
                 cursor.close();

@@ -2,17 +2,18 @@ package my.closet.fashion.style.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -22,7 +23,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -35,13 +38,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
+import io.realm.Realm;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
 import my.closet.fashion.style.customs.ImageSaver;
+import my.closet.fashion.style.modesl.Looks;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
+
 
 public class PostFeedActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -64,11 +72,17 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
     byte[] data;
     Bundle b;
     private String bitmap_lookbook_obj;
+    int metaid;
+    Looks looks;
+    Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_feed);
+
+        Realm.init(this);
+        realm=Realm.getDefaultInstance();
 
         mixpanelAPI= MixpanelAPI.getInstance(PostFeedActivity.this,"257c7d2e1c44d7d1ab6105af372f65a6");
 
@@ -79,6 +93,10 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
         profCollection = FirebaseFirestore.getInstance();
         i = getIntent();
         b = getIntent().getExtras();
+
+        //metaid = Objects.requireNonNull(getIntent().getExtras()).getInt("id");
+        //looks = realm.where(Looks.class).equalTo("id",metaid).findFirst();
+        //Toast.makeText(this, looks.getIdint().toString(), Toast.LENGTH_SHORT).show();
 
 
         if (i != null ) {
@@ -94,6 +112,9 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
 
     private void findViews() {
 
+        SharedPreferences sharedPreferences = getSharedPreferences("prefs",MODE_PRIVATE);
+        boolean post_tut = sharedPreferences.getBoolean("post",true);
+
 
         mPhotoEditorView = (PhotoEditorView) findViewById(R.id.photoEditorView);
 
@@ -104,6 +125,39 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
         done_txt.setOnClickListener(this);
 
         description_text=(EditText)findViewById(R.id.description_text);
+        description_text.setText(getIntent().getStringExtra("stylename"));
+
+        if (post_tut){
+
+            new MaterialTapTargetPrompt.Builder(PostFeedActivity.this,R.style.MaterialTapTargetPromptTheme)
+                    .setTarget(findViewById(R.id.done_txt))
+                    .setSecondaryText("Click to Post")
+                    .setAnimationInterpolator(new FastOutSlowInInterpolator())
+                    .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
+                        @Override
+                        public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
+
+                            if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED){
+
+                                SharedPreferences preferences = getSharedPreferences("prefs", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putBoolean("post", false);
+                                editor.apply();
+
+                                prompt.finish();
+                            }
+                        }
+                    })
+
+                    .show();
+
+
+        }
+
+
+
+       /* */
+
 
         mPhotoEditor = new PhotoEditor.Builder(PostFeedActivity.this, mPhotoEditorView)
                 .setPinchTextScalable(true)
@@ -119,7 +173,7 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
                         .asBitmap()
                         .load(bitmap_obj.toString()).into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                         mPhotoEditorView.getSource().setImageBitmap(resource);
                     }
                 });
@@ -128,6 +182,8 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
         }else {
 
             bitmap_lookbook_obj = i.getStringExtra("Lookbook");
+
+
             if (bitmap_lookbook_obj!=null) {
                 Bitmap bmp = new ImageSaver(PostFeedActivity.this).setFileName(bitmap_lookbook_obj).setDirectoryName("mycloset").load();
                 mPhotoEditorView.getSource().setImageBitmap(bmp);
@@ -139,6 +195,8 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
 
             }
         }
+
+
 
 
 
@@ -184,7 +242,7 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
         }
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+            public Task<Uri> then(Task<UploadTask.TaskSnapshot> task) throws Exception {
                 if (!task.isSuccessful()) {
                     throw task.getException();
                 }
@@ -193,7 +251,7 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
             }
         }).addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
-            public void onComplete(@NonNull Task<Uri> task) {
+            public void onComplete(Task<Uri> task) {
                 if (task.isSuccessful()) {
 
                     // downloaded_url will retrive the downloaadlink of imgae url
@@ -204,30 +262,73 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
                         Long tsLong = System.currentTimeMillis() / 1000;
                         String timestamp = tsLong.toString();
 
-                        Map<String, Object> data = new HashMap<>();
+                        final Map<String, Object> data = new HashMap<>();
                         final String id = UUID.randomUUID().toString();
 
                         data.put("id", id);
+                        data.put("lookid", Objects.requireNonNull(i.getExtras()).getInt("lookid"));
                         data.put("image", downloaded_url);
                         data.put("description", description_text.getText().toString());
                         data.put("timestamp", timestamp);
                         data.put("email", Utilities.loadPref(PostFeedActivity.this, "email", ""));
                         data.put("languages", "");
+                        data.put("dbkey",My_DbKey);
                         //data.put("catagory",)
 
-                        profCollection.collection("CommonFeed").document().set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        profCollection.collection("CommonFeed").document(id).set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
+                            public void onComplete(Task<Void> task) {
 
-                               // profCollection.collection("CommonFeed").document(id);
+                                if (task.isSuccessful()){
+
+                                   // profCollection.collection("CommonFeed").document(id).collection("Metadata").document().set(looks);
+
+
+                                }
+                            }
+                        });
+
+                        profCollection.collection("UsersList").document(My_DbKey).collection("Feed").add(data);
+
+                        profCollection.collection("UsersList").document(My_DbKey).collection("FollowCollection").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(Task<QuerySnapshot> task) {
+
+                                if (task.isSuccessful()){
+
+                                    if (!Objects.requireNonNull(task.getResult()).isEmpty()){
+
+                                        for (DocumentSnapshot documentSnapshot : task.getResult()){
+
+                                            profCollection.collection("UsersList").whereEqualTo("Email",documentSnapshot.get("email")).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(Task<QuerySnapshot> task) {
+
+                                                    if (task.isSuccessful()){
+
+                                                        for (DocumentSnapshot documentSnapshot1 : Objects.requireNonNull(task.getResult())){
+
+                                                            profCollection.collection("UsersList").document(documentSnapshot1.getId()).collection("Feed").add(data);
+                                                        }
+                                                    }
+
+                                                }
+                                            });
+
+                                        }
+
+
+                                    }
+                                }
 
                             }
                         });
 
+
                         profCollection.collection("UsersList")
                                 .document(My_DbKey).collection("Posts").document().set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
+                            public void onComplete(Task<Void> task) {
                                 if (task.isSuccessful()) {
 
                                     if (bitmap_obj!=null) {

@@ -88,4 +88,6 @@
     <string name="select_pictures_to_create_a_look_in_closet">选择图片来创建衣橱看看</string>
     <string name="coming_soon">快来了</string>
     <string name="sharequote">我以为你会喜欢这个，请点击这里</string>
+    <string name="bookmark_saved">保存</string>
+    <string name="matching_apparel_from_your_closet">从你的衣柜里的服装配套</string>
 </resources>

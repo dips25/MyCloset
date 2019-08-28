@@ -1,19 +1,19 @@
 package my.closet.fashion.style.fragments;
 
 
-import android.arch.paging.PagedList;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.paging.PagedList;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.firebase.ui.firestore.SnapshotParser;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
@@ -24,7 +24,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import my.closet.fashion.style.R;
@@ -128,9 +127,9 @@ public class BookmarkFragment extends Fragment {
             FirestorePagingOptions<BookmarkResponse> options = new FirestorePagingOptions.Builder<BookmarkResponse>()
                     .setLifecycleOwner(this)
                     .setQuery(query, config, new SnapshotParser<BookmarkResponse>() {
-                        @NonNull
+
                         @Override
-                        public BookmarkResponse parseSnapshot(@NonNull DocumentSnapshot snapshot) {
+                        public BookmarkResponse parseSnapshot( DocumentSnapshot snapshot) {
 
                             return snapshot.toObject(BookmarkResponse.class);
                         }
@@ -138,9 +137,9 @@ public class BookmarkFragment extends Fragment {
                     .build();
 
             adapter = new FirestorePagingAdapter<BookmarkResponse, BookmarkViewHolder>(options) {
-                @NonNull
+
                 @Override
-                public BookmarkViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
+                public BookmarkViewHolder onCreateViewHolder(ViewGroup parent,
                                                               int viewType) {
                     View view = LayoutInflater.from(parent.getContext())
                             .inflate(R.layout.user_feed_item, parent, false);
@@ -148,7 +147,7 @@ public class BookmarkFragment extends Fragment {
                 }
 
                 @Override
-                protected void onBindViewHolder(@NonNull final BookmarkViewHolder holder,
+                protected void onBindViewHolder(final BookmarkViewHolder holder,
                                                 int position,
                                                 final BookmarkResponse model) {
                     holder.bind(getActivity(), model);
@@ -158,8 +157,8 @@ public class BookmarkFragment extends Fragment {
                         public void onClick(View v) {
 
                             Intent textint = new Intent(getActivity(), PictureDeletingActivity.class);
-                            Utilities.MyTab=true;
-                            textint.putExtra("picture", (Serializable) model);
+                            Utilities.MyTab=false;
+                            textint.putExtra("bookmark", model);
                             getActivity().startActivity(textint);
                             getActivity().overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
                         }
@@ -170,7 +169,7 @@ public class BookmarkFragment extends Fragment {
                 }
 
                 @Override
-                protected void onLoadingStateChanged(@NonNull LoadingState state) {
+                protected void onLoadingStateChanged( LoadingState state) {
                     switch (state) {
                         case LOADING_INITIAL:
                         case LOADING_MORE:

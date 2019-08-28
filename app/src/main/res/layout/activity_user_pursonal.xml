@@ -1,4 +1,4 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="240dp"
@@ -14,7 +14,7 @@
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <android.support.design.widget.CollapsingToolbarLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="240dp"
@@ -81,45 +81,109 @@
                         android:layout_gravity="center"
                         android:orientation="vertical"
                         android:layout_height="match_parent"
-                        android:visibility="gone">
+                        >
 
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:weightSum="2"
+                            android:weightSum="3"
                             >
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/bio_txt"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                >
 
                             <TextView
                                 android:id="@+id/post_count_txt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textAllCaps="false"
+                                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/post_text" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:textSize="@dimen/post_text"
+                                    android:text="Posts"
+                                    android:textColor="@color/black"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/bio_txt"
                                 android:layout_gravity="center"
                                 android:layout_weight="1"
-                                android:gravity="center"
-                                android:padding="5dp"
-                                android:text="0 Posts"
-                                android:textAllCaps="false"
-                                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/text_small_size" />
+                                android:orientation="vertical"
+                                android:id="@+id/follower_layout">
+
+                                <TextView
+                                    android:id="@+id/followers_count_txt"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:text="0"
+                                    android:textAllCaps="false"
+                                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/post_text" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:textSize="@dimen/post_text"
+                                    android:text="Followers"
+                                    android:textColor="@color/black"/>
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/bio_txt"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:id="@+id/following_layout">
 
                             <TextView
-                                android:id="@+id/follower_count_txt"
-                                android:layout_width="0dp"
+                                android:id="@+id/following_count_txt"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/bio_txt"
                                 android:layout_gravity="center"
-                                android:layout_weight="1"
                                 android:gravity="center"
-                                android:padding="5dp"
-                                android:text="0 Followings"
+                                android:text="0"
                                 android:textAllCaps="false"
                                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/text_small_size" />
+                                android:textSize="@dimen/post_text"
+                                />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:textSize="@dimen/post_text"
+                                    android:text="Followings"
+                                    android:textColor="@color/black"/>
+                            </LinearLayout>
                         </LinearLayout>
 
 
@@ -142,7 +206,7 @@
                             android:weightSum="1"
                             android:gravity="center"
                             android:layout_height="wrap_content"
-                            >
+                            android:visibility="gone">
                         <Button
                             android:id="@+id/follow_btn"
                             android:layout_width="0dp"
@@ -153,7 +217,8 @@
                             android:background="@drawable/follow_btn"
                             android:text="Follow"
                             android:textColor="@color/white"
-                            android:textAllCaps="false" />
+                            android:textAllCaps="false"
+                            />
 
                         <ImageButton
                             android:id="@+id/unfollow_btn"
@@ -161,7 +226,7 @@
                             android:layout_height="35dp"
                             android:layout_gravity="center"
                             android:layout_margin="5dp"
-                            android:src="@drawable/ic_action_lookbook"
+                            app:srcCompat="@drawable/ic_action_lookbook"
                             android:background="@android:color/transparent"
                             tools:ignore="VectorDrawableCompat" />
                         </LinearLayout>
@@ -194,7 +259,7 @@
 
             </RelativeLayout>
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -210,10 +275,10 @@
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="@dimen/text_size" />
-            </android.support.v7.widget.Toolbar>
-        </android.support.design.widget.CollapsingToolbarLayout>
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
 
 
@@ -229,7 +294,7 @@
             android:background="@color/colorPrimary"
             android:layout_height="0.2dp" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvVideos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -241,4 +306,4 @@
 
     </FrameLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

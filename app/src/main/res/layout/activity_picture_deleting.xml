@@ -7,7 +7,7 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
                 android:layout_margin="10dp"
                 android:layout_gravity="center"
                 android:padding="5dp"
-                android:src="@drawable/ic_baseline_share"
+                app:srcCompat="@drawable/ic_baseline_share"
                 tools:ignore="VectorDrawableCompat"
                 android:visibility="gone"/>
 
@@ -43,11 +43,11 @@
                 android:layout_margin="10dp"
                 android:layout_gravity="center"
                 android:padding="5dp"
-                android:src="@drawable/ic_setting"
+                app:srcCompat="@drawable/ic_setting"
                 tools:ignore="VectorDrawableCompat" />
 
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
 
 
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/cardview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -81,7 +81,7 @@
                     android:layout_gravity="center"
                     android:scaleType="fitXY"
                     android:src="@drawable/sample_pic" />
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -105,7 +105,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:padding="10dp"
-                        android:src="@drawable/ic_like_unselected" />
+                        app:srcCompat="@drawable/ic_like_unselected" />
 
                     <TextView
                         android:id="@+id/no_of_likes"
@@ -123,7 +123,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:src="@drawable/ic_baseline_share"
+                    app:srcCompat="@drawable/ic_baseline_share"
                     />
 
                 <ImageView
@@ -134,7 +134,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_gravity="center"
                     android:padding="10dp"
-                    android:src="@drawable/ic_bookmark" />
+                    app:srcCompat="@drawable/ic_bookmark" />
 
             </RelativeLayout>
 

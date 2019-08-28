@@ -1,5 +1,8 @@
 package my.closet.fashion.style.modesl;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -7,7 +10,11 @@ import io.realm.annotations.PrimaryKey;
  * Created by biswa on 8/12/2017.
  */
 
-public class Styles extends RealmObject {
+public class Styles extends RealmObject implements Parcelable {
+    public Styles() {
+
+        //Empty constructor
+    }
 
     @PrimaryKey
 
@@ -17,6 +24,26 @@ public class Styles extends RealmObject {
     String party;
     String special;
 
+
+    protected Styles(Parcel in) {
+        styleset = in.readInt();
+        formal = in.readString();
+        casual = in.readString();
+        party = in.readString();
+        special = in.readString();
+    }
+
+    public static final Creator<Styles> CREATOR = new Creator<Styles>() {
+        @Override
+        public Styles createFromParcel(Parcel in) {
+            return new Styles(in);
+        }
+
+        @Override
+        public Styles[] newArray(int size) {
+            return new Styles[size];
+        }
+    };
 
     public int getStyleset() {
         return styleset;
@@ -60,4 +87,17 @@ public class Styles extends RealmObject {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(styleset);
+        dest.writeString(formal);
+        dest.writeString(casual);
+        dest.writeString(party);
+        dest.writeString(special);
+    }
 }

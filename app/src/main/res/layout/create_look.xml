@@ -4,28 +4,24 @@
     android:layout_height="match_parent"
     android:id="@+id/frame1"
     android:background="@color/white">
-    <FrameLayout
+
+    <com.shashi.mysticker.StickerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="54dp"
-        android:id="@+id/frame">
+        android:id="@+id/frame"
+        >
 
-    </FrameLayout>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/testimage"
-        android:layout_gravity="center"/>
+    </com.shashi.mysticker.StickerView>
 
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="36dp"
-        android:id="@+id/looklay"
-        >
+        android:layout_marginBottom="30dp"
+
+        android:id="@+id/looklay">
 
         <EditText
             android:layout_width="match_parent"
@@ -36,6 +32,16 @@
             android:background="@drawable/background"
             android:padding="10dp"
             android:layout_margin="5dp"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Post"
+            android:layout_below="@id/look_name"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            android:id="@+id/chk_post"/>
 
 
     </RelativeLayout>

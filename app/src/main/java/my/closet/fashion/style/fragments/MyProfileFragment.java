@@ -1,18 +1,12 @@
 package my.closet.fashion.style.fragments;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,12 +18,19 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -41,11 +42,16 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.fabric.sdk.android.Fabric;
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
 import my.closet.fashion.style.activities.FbGmailActivity;
+import my.closet.fashion.style.activities.FollowerFollowingViewActivity;
 import my.closet.fashion.style.activities.PostFeedActivity;
 import my.closet.fashion.style.activities.UserProfileActivity;
 import my.closet.fashion.style.adapters.ViewPagerAdapter;
@@ -82,6 +88,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
     private File destination;
     private Uri selectedImageUri;
     private Bitmap imageBitmap;
+    private String My_DbKey;
+    private TextView followerss_count_txt;
 
     public MyProfileFragment() {
         // Required empty public constructor
@@ -92,6 +100,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Fabric.with(getActivity(),new Crashlytics());
          view = inflater.inflate(R.layout.fragment_my_profile, container, false);
 
         mixpanelAPI= MixpanelAPI.getInstance(getActivity(),"257c7d2e1c44d7d1ab6105af372f65a6");
@@ -99,6 +108,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
                 .diskCacheStrategy(DiskCacheStrategy.ALL);
 
         profCollection = FirebaseFirestore.getInstance();
+        My_DbKey = Utilities.loadPref(getActivity(), "My_DbKey", "");
 
          findView(view);
 
@@ -106,8 +116,10 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
     }
 
     private void findView(View view) {
-        toolbar_title = (TextView) getActivity().findViewById(R.id.title);
-        toolbar_title.setText(R.string.profile);
+        toolbar_title = (TextView) Objects.requireNonNull(getActivity()).findViewById(R.id.title);
+        if (toolbar_title!=null) {
+            toolbar_title.setText(R.string.profile);
+        }
 
         profile_pic = (CircleImageView) view.findViewById(R.id.profile_pic);
         username_txt = (TextView) view.findViewById(R.id.username_txt);
@@ -116,7 +128,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
         edit_profile_btn.setOnClickListener(this);
 
 
-        mContainer = (FrameLayout) getActivity().findViewById(R.id.container);
+        mContainer = (FrameLayout) Objects.requireNonNull(getActivity()).findViewById(R.id.container);
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mContainer.getLayoutParams();
         params.setBehavior(null);
         mContainer.requestLayout();
@@ -125,6 +137,29 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
         bio_txt = (TextView) view.findViewById(R.id.bio_txt);
         post_count_txt = (TextView) view.findViewById(R.id.post_count_txt);
         follower_count_txt = (TextView) view.findViewById(R.id.follower_count_txt);
+        followerss_count_txt = (TextView) view.findViewById(R.id.followerss_count_txt);
+
+        follower_count_txt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getActivity(), FollowerFollowingViewActivity.class);
+                intent.putExtra("key",key);
+                startActivity(intent);
+
+            }
+        });
+
+        followerss_count_txt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getActivity(), FollowerFollowingViewActivity.class);
+                intent.putExtra("key",key);
+                startActivity(intent);
+
+            }
+        });
 
         frame = (ViewPager) view.findViewById(R.id.viewpager);
         setupViewPager();
@@ -134,7 +169,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
 
         if (!Utilities.loadPref(getActivity(), "email", "").equalsIgnoreCase("")) {
             LoginUsingEmail();
-            postCount();
+
         } else {
 
         }
@@ -142,27 +177,25 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
 
     private void postCount() {
 
-        profCollection.collection("Feeds")
-                .whereEqualTo("email", Utilities.loadPref(getActivity(), "email", ""))
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
+        profCollection.collection("UsersList").document(My_DbKey).collection("Posts").addSnapshotListener(Objects.requireNonNull(getActivity()),new EventListener<QuerySnapshot>() {
 
-                    for (DocumentSnapshot document : task.getResult()) {
-                        posts.add(document.getId());
-                        post_count_txt.setText(String.valueOf(posts.size()));
-                    }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
+
             @Override
-            public void onFailure(@NonNull Exception e) {
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                if (e!=null){
+
+                    return;
+                }
+
+                assert queryDocumentSnapshots != null;
+
+                post_count_txt.setText(String.valueOf(queryDocumentSnapshots.size()));
 
             }
         });
+
+
     }
     private void LoginUsingEmail() {
 
@@ -172,23 +205,23 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
                 .whereEqualTo("Email", Utilities.loadPref(getActivity(), "email", ""))
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
 
                     Utilities.hideLoading();
-                    for (DocumentSnapshot document : task.getResult()) {
+                    for (DocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
 
                         fbGmailData = new FBGmailData();
-                        fbGmailData.setEmail(document.get("Email").toString());
-                        fbGmailData.setName(document.get("Pen_Name").toString());
-                        fbGmailData.setPicture(document.get("Profile_Pic").toString());
+                        fbGmailData.setEmail(Objects.requireNonNull(document.get("Email")).toString());
+                        fbGmailData.setName(Objects.requireNonNull(document.get("Pen_Name")).toString());
+                        fbGmailData.setPicture(Objects.requireNonNull(document.get("Profile_Pic")).toString());
                         fbGmailData.setId(document.getId());
 
                         key = document.getId();
                         username_txt.setText(document.get("Pen_Name").toString());
 
-                        if(!document.get("Profile_Pic").toString().equalsIgnoreCase("")) {
-                            Glide.with(getActivity()).load(document.get("Profile_Pic")).apply(requestOptions).into(profile_pic);
+                        if(!Objects.requireNonNull(document.get("Profile_Pic")).toString().equalsIgnoreCase("")) {
+                            Glide.with(Objects.requireNonNull(getActivity())).load(document.get("Profile_Pic")).apply(requestOptions).into(profile_pic);
 
                         }else {
                             profile_pic.setBackgroundResource(R.drawable.ic_user_profile);
@@ -206,6 +239,9 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
                         Utilities.savelist(getActivity(), "Languages", langlist);*/
                         if (key != null && !key.equalsIgnoreCase("")) {
                             FollowerCount();
+                            FolloweeCount();
+                            postCount();
+
                         }
 
                     }
@@ -216,10 +252,31 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
+            public void onFailure(Exception e) {
                 Utilities.hideLoading();
             }
         });
+    }
+
+    private void FolloweeCount() {
+
+        CollectionReference likeCollectionRef = profCollection.collection("UsersList")
+                .document(key).collection("Followee");
+        likeCollectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "listen:error", e);
+                    return;
+                }
+                if (documentSnapshots.isEmpty()) {
+                } else {
+                    int likeCount = documentSnapshots.size();
+                    followerss_count_txt.setText(String.valueOf(likeCount)   );
+                }
+            }
+        });
+
     }
 
     private void FollowerCount() {
@@ -235,7 +292,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
                 if (documentSnapshots.isEmpty()) {
                 } else {
                     int likeCount = documentSnapshots.size();
-                    follower_count_txt.setText(String.valueOf(likeCount));
+                    follower_count_txt.setText(String.valueOf(likeCount)   );
                 }
             }
         });
@@ -317,7 +374,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CHOOSE_PHOTO && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_CHOOSE_PHOTO && resultCode == AppCompatActivity.RESULT_OK) {
 
             selectedImageUri = data.getData();
             String selectedImagePath = "";

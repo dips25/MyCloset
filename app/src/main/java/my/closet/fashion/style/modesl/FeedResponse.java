@@ -7,6 +7,10 @@ public class FeedResponse extends BlogPostId implements Serializable{
 
     private String DocumentId;
     private String id;
+
+
+
+    private int lookid;
     private String image;
     private ArrayList<String> text;
     private String timestamp;
@@ -17,6 +21,7 @@ public class FeedResponse extends BlogPostId implements Serializable{
     private String bywhom;
     private String languages;
     private String like;
+    String dbkey;
 
 
     public FeedResponse() {
@@ -133,4 +138,22 @@ public class FeedResponse extends BlogPostId implements Serializable{
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public int getLookid() {
+        return lookid;
+    }
+
+    public void setLookid(int lookid) {
+        this.lookid = lookid;
+    }
+
+    public String getDbkey() {
+        return dbkey;
+    }
+
+    public void setDbkey(String dbkey) {
+        this.dbkey = dbkey;
+    }
+
+
 }

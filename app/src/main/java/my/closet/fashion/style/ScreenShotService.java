@@ -7,7 +7,6 @@ import android.graphics.Point;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 
 import my.closet.fashion.style.fragments.ClosetFragment;
 
@@ -356,7 +356,7 @@ public class ScreenShotService extends Service  {
 
     }
 
-    @Nullable
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;

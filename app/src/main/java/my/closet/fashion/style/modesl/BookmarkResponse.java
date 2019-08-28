@@ -1,6 +1,8 @@
 package my.closet.fashion.style.modesl;
 
-public class BookmarkResponse {
+import java.io.Serializable;
+
+public class BookmarkResponse implements Serializable {
 
     String id;
     String email;

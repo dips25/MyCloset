@@ -98,6 +98,8 @@
     <string name="select_pictures_to_create_a_look_in_closet">옷장에 모양을 만들기 위해 사진을 선택</string>
     <string name="coming_soon">출시 예정</string>
     <string name="sharequote">나는 당신이하고 싶은 생각은 여기를 클릭</string>
+    <string name="bookmark_saved">저장된</string>
+    <string name="matching_apparel_from_your_closet">당신의 옷장에서 의류를 일치</string>
 
 
 </resources>

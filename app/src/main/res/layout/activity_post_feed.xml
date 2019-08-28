@@ -35,7 +35,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:padding="10dp"
-                android:src="@drawable/ic_arrowback"
+                app:srcCompat="@drawable/ic_arrowback"
                 tools:ignore="VectorDrawableCompat" />
 
 

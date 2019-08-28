@@ -6,17 +6,17 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.BuildConfig;
 import com.bumptech.glide.Glide;
@@ -36,12 +36,14 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 import co.lujun.androidtagview.ColorFactory;
 import co.lujun.androidtagview.TagContainerLayout;
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
 import my.closet.fashion.style.customs.IconizedMenu;
+import my.closet.fashion.style.modesl.BookmarkResponse;
 import my.closet.fashion.style.modesl.FeedResponse;
 
 public class PictureDeletingActivity extends AppCompatActivity implements View.OnClickListener {
@@ -60,6 +62,7 @@ public class PictureDeletingActivity extends AppCompatActivity implements View.O
     private TextView tags_txt;
     private String My_DbKey="";
     private MixpanelAPI mixpanelAPI;
+    BookmarkResponse bookmarkResponse_obj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +80,15 @@ public class PictureDeletingActivity extends AppCompatActivity implements View.O
 
 
         i = getIntent();
-        if (i != null) {
+        if (i != null && Objects.requireNonNull(i.getExtras()).containsKey("picture")) {
             feedResponse_obj = (FeedResponse) i.getSerializableExtra("picture");
             picture_path=feedResponse_obj.getImage();
+        }else{
+
+            bookmarkResponse_obj = (BookmarkResponse) i.getSerializableExtra("bookmark");
+            picture_path = bookmarkResponse_obj.getImage();
+
+
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -111,19 +120,19 @@ public class PictureDeletingActivity extends AppCompatActivity implements View.O
         share_icon.setOnClickListener(this);
 
         if (picture_path != null) {
-            if (feedResponse_obj.getImage().contains("https")) {
-                Glide.with(PictureDeletingActivity.this).load(feedResponse_obj.getImage()).apply(requestOptions).into(imageView);
+
+                Glide.with(PictureDeletingActivity.this).load(picture_path).apply(requestOptions).into(imageView);
             }
 
-        }
 
-        if (feedResponse_obj.getText() != null) {
+
+      /*  if (feedResponse_obj.getText() != null) {
             selectedTags.setTags(feedResponse_obj.getText());
         }
 
         if (feedResponse_obj.getCaption() != null) {
             tags_txt.setText(feedResponse_obj.getCaption());
-        }
+        } */
     }
 
 
@@ -305,11 +314,30 @@ public class PictureDeletingActivity extends AppCompatActivity implements View.O
 
     private void getFeedKey() {
 
+        db.collection("UsersList").document(My_DbKey).collection("Feed").whereEqualTo("id",feedResponse_obj.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(Task<QuerySnapshot> task) {
+
+                if (task.isSuccessful()){
+
+                    for (DocumentSnapshot documentSnapshot : task.getResult()){
+
+                        String fkey = documentSnapshot.getId();
+                        if (fkey!=null){
+
+                            db.collection("UsersList").document(My_DbKey).collection("_Feed").document(fkey).delete();
+                        }
+                    }
+                }
+
+            }
+        });
+
         db.collection("UsersList/" + My_DbKey + "/Posts")
                 .whereEqualTo("id", feedResponse_obj.getId())
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(Task<QuerySnapshot> task) {
 
 
                 if (task.isSuccessful()) {
@@ -322,7 +350,7 @@ public class PictureDeletingActivity extends AppCompatActivity implements View.O
                             db.collection("UsersList/" + My_DbKey + "/Posts").document(mkey)
                                     .delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
-                                public void onComplete(@NonNull Task<Void> task) {
+                                public void onComplete(Task<Void> task) {
 
                                 }
                             });
@@ -337,7 +365,7 @@ public class PictureDeletingActivity extends AppCompatActivity implements View.O
                 .whereEqualTo("id", feedResponse_obj.getId())
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
 
@@ -353,7 +381,7 @@ public class PictureDeletingActivity extends AppCompatActivity implements View.O
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
+            public void onFailure(Exception e) {
                 Utilities.hideLoading();
             }
         });
@@ -362,10 +390,10 @@ public class PictureDeletingActivity extends AppCompatActivity implements View.O
     private void getBookmarkKey() {
 
         db.collection("UsersList/" + My_DbKey + "/Bookmarks")
-                .whereEqualTo("id", feedResponse_obj.getId())
+                .whereEqualTo("id", bookmarkResponse_obj.getId())
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
 
@@ -381,7 +409,7 @@ public class PictureDeletingActivity extends AppCompatActivity implements View.O
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
+            public void onFailure(Exception e) {
                 Utilities.hideLoading();
             }
         });
@@ -403,7 +431,7 @@ public class PictureDeletingActivity extends AppCompatActivity implements View.O
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
+                    public void onFailure(Exception e) {
                         Utilities.showToast(PictureDeletingActivity.this, "Try Later");
                     }
                 });
@@ -427,7 +455,7 @@ public class PictureDeletingActivity extends AppCompatActivity implements View.O
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
+                    public void onFailure(Exception e) {
                         Utilities.showToast(PictureDeletingActivity.this, "Try Later");
                     }
                 });

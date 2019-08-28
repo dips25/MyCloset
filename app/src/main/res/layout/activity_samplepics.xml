@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:id="@+id/samplepic_appbar">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:id="@+id/samplepic_toolbar"
+            android:elevation="5dp"
+            android:background="@color/colorPrimary">
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+
+        <my.closet.fashion.style.extra.SlidingTabLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/samplepics_tab"
+            android:layout_below="@id/samplepic_appbar"
+            android:layout_gravity="center_horizontal|center_vertical">
+
+        </my.closet.fashion.style.extra.SlidingTabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/samplepics_tab"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/samplepics_viewpager">
+
+   <!-- <com.google.android.material.tabs.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        app:tabIndicatorColor="@color/black"
+        app:tabIndicatorHeight="1dp"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/black"
+        app:tabTextAppearance="@style/TabLayoutTextStyle"
+        app:tabTextColor="@color/colorPrimaryDark"
+        android:id="@+id/samplepics_tab">
+
+    </com.google.android.material.tabs.TabLayout> -->
+
+
+
+    </androidx.viewpager.widget.ViewPager>
+
+</RelativeLayout>

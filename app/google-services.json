@@ -15,27 +15,82 @@
       },
       "oauth_client": [
         {
-          "client_id": "121115420809-behd6a37ko8ur55eqtki7diepgpg7m9t.apps.googleusercontent.com",
+          "client_id": "121115420809-m6o98098pd3n5954nocg4b8i9m8c72st.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "my.closet.fashion.style",
+            "certificate_hash": "c3e3d1a1d70d1603370bf857fb6bbf7d651e7779"
+          }
+        },
+        {
+          "client_id": "121115420809-fhpvmm5t40vbu61eehg959ar0m51apda.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "my.closet.fashion.style",
+            "certificate_hash": "638f14e7c22a24915c67fa900a04b8953a9df01f"
+          }
+        },
+        {
+          "client_id": "121115420809-uom8dehu0q8hlkj6aibavhsm7qd59dsc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "my.closet.fashion.style",
+            "certificate_hash": "b02b4cc84cea8c164545e83b00c59fa705a884aa"
+          }
+        },
+        {
+          "client_id": "121115420809-em90o48epv6ahmhq6d5b13rbdd3rrtq8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "my.closet.fashion.style",
+            "certificate_hash": "8b8d0ea119cde82cdf131c09312cb937370c1604"
+          }
+        },
+        {
+          "client_id": "121115420809-pg2oo6rk9b3qq6kk9tq20be11raoo5rj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "my.closet.fashion.style",
+            "certificate_hash": "1fcf0ed9af215c10b295a095f2b0792c6c9c2784"
+          }
+        },
+        {
+          "client_id": "121115420809-nloel6b839pq1h3961tn74ta564s84k0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "my.closet.fashion.style",
+            "certificate_hash": "ccdc7244b2d9ac14fbaff9981939708be3e7e166"
+          }
+        },
+        {
+          "client_id": "121115420809-ptmmkft7usrj897m7rldjdv0740geknm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "my.closet.fashion.style",
+            "certificate_hash": "4d8a7a218d23337d18152dd7bac794102de21f94"
+          }
+        },
+        {
+          "client_id": "121115420809-sco1vcda4e4hhq701nka0b4lk2gknqe5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDGYiUILZa-9XP_TQ1RLHB7YUjzCn7UyJU"
+          "current_key": "AIzaSyAwuH24gxWdUJ60PPnNFYha_WboBOsRToQ"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "121115420809-sco1vcda4e4hhq701nka0b4lk2gknqe5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-3828826031268173~5645990144"
     }
   ],
   "configuration_version": "1"

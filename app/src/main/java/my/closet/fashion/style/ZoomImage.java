@@ -4,14 +4,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.chrisbanes.photoview.PhotoView;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -50,12 +51,11 @@ public class ZoomImage extends AppCompatActivity {
     RelativeLayout looksvbttn;
     ArrayList<Looks> looksArrayList=new ArrayList<>();
     MixpanelAPI mixpanelAPI;
-
-
+    private int lookid;
 
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.zoom_activity);
 
@@ -78,6 +78,7 @@ public class ZoomImage extends AppCompatActivity {
 
         edtlook=getIntent().getExtras().getString("stylename");
         newid=  getIntent().getExtras().getInt("id");
+        lookid = getIntent().getExtras().getInt("lookid");
         bitmap=new ImageSaver(this).setFileName(finalname).setDirectoryName("mycloset").load();
 
         photoView.setImageBitmap(bitmap);
@@ -106,11 +107,12 @@ public class ZoomImage extends AppCompatActivity {
 
                             realm.beginTransaction();
                         Looks looks=realm.where(Looks.class).equalTo("id",newid).findFirst();
-                       // realmObject.deleteFromRealm();
+
                         if (looks!=null) {
-                          //  looks.setId(newid);
+                            looks.setId(newid);
                             looks.setStyle_name(lookedit.getText().toString());
                             looks.setImage_name(finalname);
+                            looks.setLookid(lookid);
                             realm.copyToRealmOrUpdate(looks);
                             realm.commitTransaction();
                         }
@@ -187,6 +189,8 @@ public class ZoomImage extends AppCompatActivity {
 
                 Intent intent1 = new Intent(getApplicationContext(),PostFeedActivity.class);
                 intent1.putExtra("Lookbook",finalname);
+                intent1.putExtra("lookid",lookid);
+                intent1.putExtra("stylename",edtlook);
                 startActivity(intent1);
                 return true;
         }
@@ -210,6 +214,7 @@ public class ZoomImage extends AppCompatActivity {
 
             file1.mkdirs();
         }
+
         File finalfile=new File(file1,imageFileName);
         try {
             FileOutputStream fileOutputStream=new FileOutputStream(finalfile);

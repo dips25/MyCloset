@@ -1,21 +1,27 @@
 package my.closet.fashion.style;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.io.InputStream;
@@ -27,6 +33,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import my.closet.fashion.style.Realm_database.RealmHandler;
+import my.closet.fashion.style.activities.HomeActivity;
 import my.closet.fashion.style.adapters.AccessoryAdapter;
 import my.closet.fashion.style.adapters.BottomAdapter;
 import my.closet.fashion.style.adapters.FootWearAdapter;
@@ -34,7 +41,9 @@ import my.closet.fashion.style.adapters.TopAdapter;
 import my.closet.fashion.style.customs.ImageSaver;
 import my.closet.fashion.style.modesl.Colors;
 import my.closet.fashion.style.modesl.Dresses;
+import my.closet.fashion.style.modesl.SamplePics;
 import my.closet.fashion.style.modesl.Styles;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 import static my.closet.fashion.style.fragments.ClosetFragment.accrecycler;
 import static my.closet.fashion.style.fragments.ClosetFragment.bottomrecycler;
@@ -76,6 +85,8 @@ public class Pic_info extends AppCompatActivity {
     TextView clrbrown;
     TextView clrpurple;
     TextView clrgold;
+
+    int j;
 
 
 
@@ -240,9 +251,10 @@ public class Pic_info extends AppCompatActivity {
     int id;
 
 
-    RecyclerView mrecycle = MainActivity.mrecycle;
+
 
     Toolbar toolbar;
+    int k;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -294,6 +306,35 @@ public class Pic_info extends AppCompatActivity {
         toptxtslct.setVisibility(View.INVISIBLE);
         bottomtxtslct.setVisibility(View.INVISIBLE);
         foottxtslct.setVisibility(View.INVISIBLE);
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        boolean firsttimepicinfo = sharedPreferences.getBoolean("firsttimepicinfo",true);
+
+        if (firsttimepicinfo) {
+
+            new MaterialTapTargetPrompt.Builder(Pic_info.this,R.style.MaterialTapTargetPromptTheme)
+                    .setTarget(save)
+                    .setSecondaryText("Click to Save")
+                    .setIcon(R.drawable.ic_check_black_24dp)
+                    .setAnimationInterpolator(new FastOutLinearInInterpolator())
+                    .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
+                        @Override
+                        public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
+
+                            if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED){
+
+                                SharedPreferences preferences = getSharedPreferences("prefs",MODE_PRIVATE);
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putBoolean("firsttimepicinfo",false);
+                                editor.apply();
+
+                                prompt.finish();
+                            }
+                        }
+                    })
+                    .show();
+
+        }
 
 
 
@@ -1009,19 +1050,217 @@ public class Pic_info extends AppCompatActivity {
             if (bundle.getString("source").equalsIgnoreCase("add")) {
                 isUpdate = false;
 
-
-
-                   // uri = (Uri) bundle.get("uri");
-
-                     bytes=bundle.getByteArray("galbtmp");
-                    assert bytes!=null;
-                bmp = getScaledBitmap(bytes,500,500);
-
+                uri = (Uri) bundle.get("imguri");
 
                 userimage = findViewById(R.id.userimage);
-                    userimage.setImageBitmap(bmp);
-                Realm.init(this);
-                save();
+
+                Glide.with(this).load(uri).into(userimage);
+
+
+
+                    Glide.with(Pic_info.this).asBitmap().load(uri).into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady( Bitmap resource, Transition<? super Bitmap> transition) {
+
+                            bmp = resource;
+                            save();
+
+                        }
+                    });
+
+
+            }else if (bundle.getString("source").equalsIgnoreCase("sample")){
+
+                isUpdate = false;
+
+                userimage = findViewById(R.id.userimage);
+
+                SamplePics samplePics = (SamplePics) intent.getSerializableExtra("sampleobject");
+                imagelocation = samplePics.getImgurl();
+                category = samplePics.getCategory();
+                Glide.with(this).load(imagelocation).into(userimage);
+
+                if (imagelocation.contains("https")){
+
+                    Glide.with(Pic_info.this).asBitmap().load(imagelocation).into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+
+                            bmp = resource;
+                            save();
+
+                        }
+                    });
+                }
+
+                if (category.equals(accessory)) {
+                    accselect.setVisibility(View.VISIBLE);
+                    accessories.setVisibility(View.INVISIBLE);
+                    acctextslct.setVisibility(View.VISIBLE);
+                    acctexttt.setVisibility(View.INVISIBLE);
+                    cat = accessory;
+
+                } else if (category.equals(bottoms)) {
+                    bottomselect.setVisibility(View.VISIBLE);
+                    bottom.setVisibility(View.INVISIBLE);
+                    bottomtxtslct.setVisibility(View.VISIBLE);
+                    bottomtxt.setVisibility(View.INVISIBLE);
+                    cat = bottoms;
+
+                } else if (category.equals(tops)) {
+                    topselect.setVisibility(View.VISIBLE);
+                    top.setVisibility(View.INVISIBLE);
+                    toptxtslct.setVisibility(View.VISIBLE);
+                    toptxt.setVisibility(View.INVISIBLE);
+                    cat = tops;
+
+                } else {
+                    footselect.setVisibility(View.VISIBLE);
+                    foottxtslct.setVisibility(View.VISIBLE);
+                    foot.setVisibility(View.INVISIBLE);
+                    foottxt.setVisibility(View.INVISIBLE);
+                    cat = footwear;
+                }
+
+                if (samplePics.getStyles()!=null){
+
+                    for (k=0;k<samplePics.getStyles().size();k++){
+
+                        if (samplePics.getStyles().get(k).equals(formalf)){
+
+                            formalsqtck.setVisibility(View.VISIBLE);
+                            formalsq.setVisibility(View.INVISIBLE);
+                            formal = formalf;
+                        }
+
+                        if (samplePics.getStyles().get(k).equals(casualf)){
+
+                            casualsqtck.setVisibility(View.VISIBLE);
+                            casualsq.setVisibility(View.INVISIBLE);
+                            casual = casualf;
+                        }
+
+                        if (samplePics.getStyles().get(k).equals(partyf)){
+
+                            partysqtck.setVisibility(View.VISIBLE);
+                            partysq.setVisibility(View.INVISIBLE);
+                            party = partyf;
+                        }
+
+                        if (samplePics.getStyles().get(k).equals(specialf)){
+
+                            specialsqtck.setVisibility(View.VISIBLE);
+                            specialsq.setVisibility(View.INVISIBLE);
+                            special = specialf;
+                        }
+
+
+                    }
+                }
+                for (j=0;j<samplePics.getColors().size();j++){
+
+
+                    if (samplePics.getColors().get(j).equalsIgnoreCase("Black")){
+
+                        blacksqtck.setVisibility(View.VISIBLE);
+                        black = blackf;
+
+                    }
+
+                    if (samplePics.getColors().get(j).equalsIgnoreCase("White")){
+
+                        whitesqtck.setVisibility(View.VISIBLE);
+                        white = whitef;
+
+                    }
+
+                    if (samplePics.getColors().get(j).equalsIgnoreCase("Grey")){
+
+                        greysqtck.setVisibility(View.VISIBLE);
+                        grey = greyf;
+
+                    }
+
+                    if (samplePics.getColors().get(j).equalsIgnoreCase("Beige")){
+
+                        beigesqtck.setVisibility(View.VISIBLE);
+                        beige = beigef;
+
+                    }
+
+                    if (samplePics.getColors().get(j).equalsIgnoreCase("Red")){
+
+                        redsqtck.setVisibility(View.VISIBLE);
+                        red = redf;
+
+                    }
+
+                    if (samplePics.getColors().get(j).equalsIgnoreCase("Pink")){
+
+                        pinksqtck.setVisibility(View.VISIBLE);
+                        pink = pinkf;
+
+                    }
+
+                    if (samplePics.getColors().get(j).equalsIgnoreCase("Silver")){
+
+                        silversqtck.setVisibility(View.VISIBLE);
+                        silver = silverf;
+
+                    }
+
+                    if (samplePics.getColors().get(j).equalsIgnoreCase("Green")){
+
+                        greensqtck.setVisibility(View.VISIBLE);
+                        green = greenf;
+
+                    }
+
+                    if (samplePics.getColors().get(j).equalsIgnoreCase("Blue")){
+
+                        bluesqtck.setVisibility(View.VISIBLE);
+                        blue = bluef;
+
+                    }
+
+                    if (samplePics.getColors().get(j).equalsIgnoreCase("Yellow")){
+
+                        yellowsqtck.setVisibility(View.VISIBLE);
+                        yellow = yellowf;
+
+                    }
+
+                    if (samplePics.getColors().get(j).equalsIgnoreCase("Orange")){
+
+                        orangesqtck.setVisibility(View.VISIBLE);
+                        orange = orangef;
+
+                    }
+
+                    if (samplePics.getColors().get(j).equalsIgnoreCase("Brown")){
+
+                        brownsqtck.setVisibility(View.VISIBLE);
+                        brown = brownf;
+
+                    }
+
+                    if (samplePics.getColors().get(j).equalsIgnoreCase("Purple")){
+
+                        purplesqtck.setVisibility(View.VISIBLE);
+                        purple = purplef;
+
+                    }
+
+                    if (samplePics.getColors().get(j).equalsIgnoreCase("Gold")){
+
+                        goldsqtck.setVisibility(View.VISIBLE);
+                        gold = goldf;
+
+                    }
+
+
+                }
+
             }
 
              else if (bundle.getString("source").equalsIgnoreCase("edit")) {
@@ -1573,12 +1812,38 @@ public class Pic_info extends AppCompatActivity {
 
                             RealmHandler handler = new RealmHandler(realm);
                             handler.save(dresses);
-                            finish();
+                            //finish();
                             refresh();
 
-                           // Intent intent1=new Intent(Pic_info.this,HomeActivity.class);
-                           // intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                           // startActivity(intent1);
+                            Intent intent1 = new Intent(Pic_info.this, HomeActivity.class);
+                            intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent1.putExtra("position",2);
+                            if (getSharedPreferences("prefs",MODE_PRIVATE).getBoolean("firsttimelaunch",true)){
+
+                                intent1.putExtra("celeb","celeb");
+
+                                SharedPreferences preferences = Pic_info.this.getSharedPreferences("prefs",MODE_PRIVATE);
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putBoolean("firsttimelaunch",false);
+                                editor.apply();
+                                Toast.makeText(Pic_info.this, "Congrats,You've added a new Cloth", Toast.LENGTH_SHORT).show();
+
+                            }else if (getSharedPreferences("prefs",MODE_PRIVATE).getBoolean("secondtimelaunch",true)){
+
+                                intent1.putExtra("celeb","celeb");
+
+                                SharedPreferences preferences = Pic_info.this.getSharedPreferences("prefs",MODE_PRIVATE);
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putBoolean("secondtimelaunch",false);
+                                editor.apply();
+                                Toast.makeText(Pic_info.this, "Congrats,You've added a new Cloth", Toast.LENGTH_SHORT).show();
+
+
+                            }
+                            startActivity(intent1);
+
+
+
 
 
                             Pic_info.super.onBackPressed();

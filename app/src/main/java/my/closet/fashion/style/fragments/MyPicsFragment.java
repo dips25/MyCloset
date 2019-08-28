@@ -1,19 +1,19 @@
 package my.closet.fashion.style.fragments;
 
 
-import android.arch.paging.PagedList;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.paging.PagedList;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
@@ -62,9 +63,9 @@ public class MyPicsFragment extends Fragment {
         // Inflate the layout for this fragment
         view=inflater.inflate(R.layout.fragment_my_pics, container, false);
 
-        My_DbKey = Utilities.loadPref(getActivity(), "My_DbKey", "");
+        My_DbKey = Utilities.loadPref(Objects.requireNonNull(getActivity()), "My_DbKey", "");
 
-        feedRef = db.collection("UsersList/" + My_DbKey + "/Posts");
+        feedRef = db.collection("UsersList").document(My_DbKey).collection("Posts");
         findViews(view);
 
         return view;
@@ -129,9 +130,9 @@ public class MyPicsFragment extends Fragment {
                 .build();
 
         adapter = new FirestorePagingAdapter<FeedResponse, UserFeedsViewHolder>(options) {
-            @NonNull
+
             @Override
-            public UserFeedsViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
+            public UserFeedsViewHolder onCreateViewHolder(ViewGroup parent,
                                                           int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.user_feed_item, parent, false);
@@ -139,7 +140,7 @@ public class MyPicsFragment extends Fragment {
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull final UserFeedsViewHolder holder,
+            protected void onBindViewHolder(final UserFeedsViewHolder holder,
                                             int position,
                                             final FeedResponse model) {
                 holder.bind(getActivity(), model);
@@ -161,7 +162,7 @@ public class MyPicsFragment extends Fragment {
             }
 
             @Override
-            protected void onLoadingStateChanged(@NonNull LoadingState state) {
+            protected void onLoadingStateChanged(LoadingState state) {
                 switch (state) {
                     case LOADING_INITIAL:
                     case LOADING_MORE:

@@ -7,11 +7,10 @@ import android.os.Build;
 import android.util.Log;
 import android.util.LongSparseArray;
 
-
 import java.lang.reflect.Field;
 
 
-public class MyAppFont extends Application  {
+public class MyAppFont extends Application {
     // Uses the Croscore_fonts: Arimo (sans), Tinos (serif) and Cousine (monospace)
 
     // Defining sans as the normal (default) typeface.
@@ -67,6 +66,7 @@ public class MyAppFont extends Application  {
             logFontError(e);
         }
     }
+
 
     private void setDefaultFonts() throws NoSuchFieldException, IllegalAccessException {
         final Typeface bold = Typeface.createFromAsset(getAssets(), DEFAULT_NORMAL_BOLD_FONT_FILENAME);

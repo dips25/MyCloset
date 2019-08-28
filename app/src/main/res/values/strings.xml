@@ -101,6 +101,9 @@
     <string name="coming_soon">Coming Soon</string>
     <string name="select_pictures_to_create_a_look_in_closet">Select pictures to create a look in closet</string>
     <string name="sharequote">I thought you would like this, click here</string>
+    <string name="bookmark_saved">Saved</string>
+    <string name="matching_apparel_from_your_closet">Matching apparel from your Closet</string>
+    <string name="sample_pics">Sample Pics</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>

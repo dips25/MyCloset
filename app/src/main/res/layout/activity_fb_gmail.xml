@@ -21,7 +21,7 @@
             android:layout_alignParentTop="true"
             android:layout_gravity="center"
             android:layout_marginTop="100dp"
-            android:src="@drawable/alldress" />
+            app:srcCompat="@drawable/alldress" />
 
 
     <TextView
@@ -43,7 +43,8 @@
         android:layout_below="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:foreground="?attr/selectableItemBackground">
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/google_login"
@@ -64,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:padding="10dp"
-                android:src="@drawable/ic_google_plus"
+                app:srcCompat="@drawable/ic_google_plus"
                 tools:ignore="VectorDrawableCompat" />
 
             <TextView
@@ -112,7 +113,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="10dp"
-                    android:src="@drawable/ic_facebook"
+                    app:srcCompat="@drawable/ic_facebook"
                     tools:ignore="VectorDrawableCompat" />
 
                 <TextView

@@ -3,7 +3,6 @@ package my.closet.fashion.style.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -47,7 +48,10 @@ public class LookbookFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view= inflater.inflate(R.layout.fragment_lookbook, container, false);
+
         Realm.init(getContext());
+       // Realm.getDefaultInstance().getConfiguration();
+       // final RealmConfiguration configuration = new RealmConfiguration.Builder().name("sample.realm").schemaVersion(1).migration(new MyMigration()).build();
         realm = Realm.getDefaultInstance();
         findView(view);
         return view;
@@ -90,9 +94,10 @@ public class LookbookFragment extends Fragment {
 
 
                 Intent intent = new Intent(getContext(), ZoomImage.class);
-                intent.putExtra("imgname", dresses.get(position).getImage_name());
+                intent.putExtra("imgname",dresses.get(position).getImage_name());
                 intent.putExtra("stylename", dresses.get(position).getStyle_name());
                 intent.putExtra("id", dresses.get(position).getId());
+                intent.putExtra("lookid",dresses.get(position).getLookid());
                 startActivity(intent);
             }
         });

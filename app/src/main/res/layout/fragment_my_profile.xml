@@ -85,7 +85,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:orientation="horizontal"
-                                android:weightSum="2">
+                                android:weightSum="3">
 
 
                                 <LinearLayout
@@ -118,7 +118,6 @@
 
                                 </LinearLayout>
 
-
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
@@ -128,6 +127,38 @@
 
                                     <TextView
                                         android:id="@+id/follower_count_txt"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:gravity="center"
+                                        android:padding="2dp"
+                                        android:text="0"
+                                        android:textAllCaps="false"
+                                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                                        android:textColor="@color/black"
+                                        android:textSize="@dimen/post_title" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:textSize="@dimen/post_text"
+                                        android:text="Followers" />
+
+
+                                </LinearLayout>
+
+
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/followerss_count_txt"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
@@ -204,7 +235,7 @@
                     android:layout_height="0.2dp"
                     android:background="@color/colorPrimary" />
 
-                <android.support.design.widget.TabLayout
+                <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -220,12 +251,12 @@
                     app:tabTextAppearance="@style/TabLayoutTextStyle"
                     app:tabTextColor="@color/colorPrimaryDark">
 
-                </android.support.design.widget.TabLayout>
+                </com.google.android.material.tabs.TabLayout>
 
             </LinearLayout>
         </LinearLayout>
 
-        <android.support.v4.view.ViewPager
+        <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

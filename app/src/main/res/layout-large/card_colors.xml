@@ -8,7 +8,7 @@
     android:elevation="2dp"
     tools:targetApi="lollipop">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/crd3"
         android:layout_width="match_parent"
         android:layout_height="130dp"
@@ -62,7 +62,7 @@
                     android:clickable="true"
 
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/a1" />
+                    app:srcCompat="@drawable/a1" />
 
                 <ImageView
                     android:id="@+id/accselect"
@@ -73,7 +73,7 @@
                     android:layout_marginTop="10dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/a2" />
+                    app:srcCompat="@drawable/a2" />
 
                 <TextView
                     android:id="@+id/acctext"
@@ -110,7 +110,7 @@
                     android:layout_toRightOf="@+id/accselect"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/t1" />
+                    app:srcCompat="@drawable/t1" />
 
                 <ImageView
                     android:id="@+id/topselect"
@@ -121,7 +121,7 @@
                     android:layout_toRightOf="@+id/accselect"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/t2" />
+                    app:srcCompat="@drawable/t2" />
 
                 <TextView
                     android:id="@+id/toptext"
@@ -162,7 +162,7 @@
                     android:layout_toRightOf="@+id/topselect"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/b1"
+                    app:srcCompat="@drawable/b1"
 
 
                     />
@@ -176,7 +176,7 @@
                     android:layout_toRightOf="@id/topselect"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/b2" />
+                    app:srcCompat="@drawable/b2" />
 
                 <TextView
                     android:id="@+id/bottomtext"
@@ -216,7 +216,7 @@
                     android:layout_marginTop="10dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/f1" />
+                    app:srcCompat="@drawable/f1" />
 
                 <ImageView
                     android:id="@+id/footselect"
@@ -227,7 +227,7 @@
                     android:layout_marginTop="10dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/f2" />
+                    app:srcCompat="@drawable/f2" />
 
                 <TextView
                     android:id="@+id/foottext"
@@ -259,7 +259,7 @@
             </RelativeLayout>
         </RelativeLayout>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 
     <android.support.v7.widget.CardView
@@ -480,7 +480,7 @@
                     android:layout_marginTop="10dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_square" />
+                    app:srcCompat="@drawable/ic_action_square" />
 
                 <ImageView
                     android:id="@+id/blacksqtck"
@@ -489,7 +489,7 @@
                     android:layout_marginTop="10dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_check_square" />
+                    app:srcCompat="@drawable/ic_action_check_square" />
 
 
                 <TextView
@@ -527,7 +527,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_square" />
+                    app:srcCompat="@drawable/ic_action_square" />
 
 
                 <ImageView
@@ -538,7 +538,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_check_square" />
+                    app:srcCompat="@drawable/ic_action_check_square" />
 
 
                 <TextView
@@ -574,7 +574,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_square" />
+                    app:srcCompat="@drawable/ic_action_square" />
 
 
                 <ImageView
@@ -585,7 +585,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_check_square" />
+                    app:srcCompat="@drawable/ic_action_check_square" />
 
 
                 <TextView
@@ -621,7 +621,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_square" />
+                    app:srcCompat="@drawable/ic_action_square" />
 
 
                 <ImageView
@@ -632,7 +632,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_check_square" />
+                    app:srcCompat="@drawable/ic_action_check_square" />
                 />
 
                 <TextView
@@ -672,7 +672,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_square" />
+                    app:srcCompat="@drawable/ic_action_square" />
                 />
 
                 <ImageView
@@ -683,7 +683,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_check_square" />
+                    app:srcCompat="@drawable/ic_action_check_square" />
                 />
 
                 <TextView
@@ -723,7 +723,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_square" />
+                    app:srcCompat="@drawable/ic_action_square" />
                 />
 
                 <ImageView
@@ -734,7 +734,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_check_square" />
+                    app:srcCompat="@drawable/ic_action_check_square" />
                 />
 
                 <TextView
@@ -770,7 +770,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_square" />
+                    app:srcCompat="@drawable/ic_action_square" />
                 />
 
                 <ImageView
@@ -781,7 +781,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_check_square" />
+                    app:srcCompat="@drawable/ic_action_check_square" />
                 />
 
                 <TextView
@@ -817,7 +817,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_square"
+                    app:srcCompat="@drawable/ic_action_square"
                     android:visibility="invisible" />
                 />
 
@@ -829,7 +829,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_check_square"
+                    app:srcCompat="@drawable/ic_action_check_square"
                     android:visibility="invisible" />
                 />
 
@@ -866,7 +866,7 @@
                     android:layout_marginTop="10dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_square" />
+                    app:srcCompat="@drawable/ic_action_square" />
                 />
 
                 <ImageView
@@ -876,7 +876,7 @@
                     android:layout_marginTop="10dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_check_square" />
+                    app:srcCompat="@drawable/ic_action_check_square" />
                 />
 
                 <TextView
@@ -913,7 +913,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_square" />
+                    app:srcCompat="@drawable/ic_action_square" />
                 />
 
                 <ImageView
@@ -924,7 +924,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_check_square" />
+                    app:srcCompat="@drawable/ic_action_check_square" />
                 />
 
                 <TextView
@@ -960,7 +960,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_square" />
+                    app:srcCompat="@drawable/ic_action_square" />
                 />
 
                 <ImageView
@@ -971,7 +971,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_check_square" />
+                    app:srcCompat="@drawable/ic_action_check_square" />
                 />
 
                 <TextView
@@ -1007,7 +1007,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_square" />
+                    app:srcCompat="@drawable/ic_action_square" />
                 />
 
                 <ImageView
@@ -1018,7 +1018,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_check_square" />
+                    app:srcCompat="@drawable/ic_action_check_square" />
                 />
 
                 <TextView
@@ -1055,7 +1055,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_square" />
+                    app:srcCompat="@drawable/ic_action_square" />
                 />
 
                 <ImageView
@@ -1066,7 +1066,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_check_square" />
+                    app:srcCompat="@drawable/ic_action_check_square" />
                 />
 
                 <TextView
@@ -1102,7 +1102,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_square" />
+                    app:srcCompat="@drawable/ic_action_square" />
                 />
 
                 <ImageView
@@ -1113,7 +1113,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_check_square" />
+                    app:srcCompat="@drawable/ic_action_check_square" />
                 />
 
                 <TextView
@@ -1149,7 +1149,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_square" />
+                    app:srcCompat="@drawable/ic_action_square" />
                 />
 
                 <ImageView
@@ -1160,7 +1160,7 @@
                     android:layout_marginTop="18dp"
                     android:clickable="true"
                     android:foreground="@drawable/ripple"
-                    android:src="@drawable/ic_action_check_square" />
+                    app:srcCompat="@drawable/ic_action_check_square" />
                 />
 
                 <TextView
@@ -1193,7 +1193,7 @@
                     android:layout_height="24dp"
                     android:layout_below="@+id/goldsqtck"
                     android:layout_marginTop="18dp"
-                    android:src="@drawable/ic_action_square"
+                    app:srcCompat="@drawable/ic_action_square"
                     android:visibility="invisible" />
                 />
 
@@ -1203,7 +1203,7 @@
                     android:layout_height="24dp"
                     android:layout_below="@+id/goldsqtck"
                     android:layout_marginTop="18dp"
-                    android:src="@drawable/ic_action_check_square"
+                    app:srcCompat="@drawable/ic_action_check_square"
                     android:visibility="invisible" />
                 />
 

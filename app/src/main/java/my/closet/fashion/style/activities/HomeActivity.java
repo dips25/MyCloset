@@ -3,23 +3,14 @@ package my.closet.fashion.style.activities;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,29 +19,54 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import my.closet.fashion.style.CustomView;
 import my.closet.fashion.style.R;
+import my.closet.fashion.style.Realm_database.MyMigration;
 import my.closet.fashion.style.Utilities;
+import my.closet.fashion.style.adapters.DefaultFollowersAdapter;
 import my.closet.fashion.style.fragments.ClosetFragment;
 import my.closet.fashion.style.fragments.HomeFragment;
 import my.closet.fashion.style.fragments.LookbookFragment;
 import my.closet.fashion.style.fragments.MyProfileFragment;
+import my.closet.fashion.style.modesl.DefaultFollowers;
 import my.closet.fashion.style.modesl.Dresses;
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
+import nl.dionsegijn.konfetti.models.Size;
 
 import static my.closet.fashion.style.fragments.ClosetFragment.clearrefresh;
 import static my.closet.fashion.style.fragments.ClosetFragment.madapter;
@@ -75,15 +91,18 @@ public class HomeActivity extends AppCompatActivity {
     public TextView title;
     Intent i;
     ImageView cross;
+    TextView ok_text;
+
+    ArrayList<Dresses> meta = new ArrayList<>();
 
 
 
-    private LinearLayout looktext;
+    public static LinearLayout looktext;
 
-    ArrayList<String> names = new ArrayList<>();
-    ArrayList<String> topnames = new ArrayList<>();
-    ArrayList<String> bottomnames = new ArrayList<>();
-    ArrayList<String> footnames = new ArrayList<>();
+    ArrayList<Integer> names = new ArrayList<>();
+    ArrayList<Integer> topnames = new ArrayList<>();
+    ArrayList<Integer> bottomnames = new ArrayList<>();
+    ArrayList<Integer> footnames = new ArrayList<>();
     public static RelativeLayout look_tab;
 
     String[] PERMISSIONS = {
@@ -92,6 +111,10 @@ public class HomeActivity extends AppCompatActivity {
             Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CAMERA,
     };
+    private List<DefaultFollowers> defaultFollowers;
+    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(HomeActivity.this);
+    KonfettiView konfettiView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +123,15 @@ public class HomeActivity extends AppCompatActivity {
         setContentView( R.layout.activity_home);
 
 
+
+
+
         Realm.init(this);
+        final RealmConfiguration configuration = new RealmConfiguration.Builder().name("sample.realm").schemaVersion(1).migration(new MyMigration()).build();
+
+        Realm.setDefaultConfiguration(configuration);
+//        Realm.getInstance(configuration);
+
         realm = Realm.getDefaultInstance();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -118,6 +149,9 @@ public class HomeActivity extends AppCompatActivity {
         Objects.requireNonNull(avy).setTitle(null);
 
         cross = (ImageView) findViewById(R.id.cross);
+
+        konfettiView = (KonfettiView) findViewById(R.id.viewKonfetti);
+        konfettiView.setVisibility(View.GONE);
 
 
         cross.setOnClickListener(new View.OnClickListener() {
@@ -138,7 +172,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 String refreshedToken = instanceIdResult.getToken();
-                //  Utilities.showToast(MainActivity.this,refreshedToken);
+
                 Utilities.savePref(HomeActivity.this,"Fcm_Token",refreshedToken);
             }
         });
@@ -230,10 +264,10 @@ public class HomeActivity extends AppCompatActivity {
 
                                             Intent intent = new Intent(HomeActivity.this, CustomView.class);
                                             //bundle.putStringArrayList();
-                                            intent.putExtra("acckey", names);
-                                            intent.putExtra("topkey", topnames);
-                                            intent.putExtra("bottomkey", bottomnames);
-                                            intent.putExtra("footkey", footnames);
+                                            intent.putIntegerArrayListExtra("acckey", names);
+                                            intent.putIntegerArrayListExtra("topkey", topnames);
+                                            intent.putIntegerArrayListExtra("bottomkey", bottomnames);
+                                            intent.putIntegerArrayListExtra("footkey", footnames);
                                             startActivity(intent);
 
 
@@ -244,7 +278,7 @@ public class HomeActivity extends AppCompatActivity {
                     private boolean firstClick = true;
 
                     @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    public boolean onNavigationItemSelected(MenuItem item) {
 
                         if (firstClick) {
                             int position = item.getItemId();
@@ -307,8 +341,93 @@ public class HomeActivity extends AppCompatActivity {
                 });
 
 
-        loadFragment(new HomeFragment());
+       // loadFragment(new HomeFragment());
+     /*   new MaterialTapTargetPrompt.Builder(new HomeFragment())
+                .setTarget(R.id.upload_menu)
+                .setSecondaryText("Click Here to add Clothes")
+                .setIcon(R.drawable.ic_add)
+                .setFocalPadding(R.dimen.dp40)
+                .setAnimationInterpolator(new LinearOutSlowInInterpolator())
 
+                .show(); */
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+       // int i = getIntent().getExtras().getInt("position");
+        SharedPreferences sharedPreferences = getSharedPreferences("preference",MODE_PRIVATE);
+        boolean dialog = sharedPreferences.getBoolean("dialog",true);
+
+        if (dialog){
+
+            FirebaseFirestore.getInstance().collection("Default Followers").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                    if (!queryDocumentSnapshots.isEmpty()) {
+
+                        defaultFollowers = queryDocumentSnapshots.toObjects(DefaultFollowers.class);
+                        open_dialog(defaultFollowers);
+                    }
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception e) {
+
+
+
+                }
+            });
+
+
+        }
+
+        if (getIntent()!=null){
+
+            if (Objects.requireNonNull(getIntent().getExtras()).getInt("position")==2) {
+
+                if (getIntent().getExtras().containsKey("celeb")){
+
+                    konfettiView.setVisibility(View.VISIBLE);
+
+                    konfettiView.build()
+                            .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
+                            .setDirection(0.0, 359.0)
+                            .setSpeed(1f, 5f)
+                            .setFadeOutEnabled(true)
+                            .setTimeToLive(2000L)
+                            .addShapes(Shape.RECT, Shape.CIRCLE)
+                            .addSizes(new Size(12,5f))
+                            .setPosition(-50f, konfettiView.getWidth() + 50f, -50f, -50f)
+                            .stream(300, 5000L);
+
+                    loadFragment(new ClosetFragment());
+
+
+
+
+                }else {
+
+                    loadFragment(new ClosetFragment());
+                }
+
+            } else if (getIntent().getExtras().getInt("position") == 3){
+
+                loadFragment(new LookbookFragment());
+
+
+            } else {
+
+                loadFragment(new HomeFragment());
+            }
+        }else {
+
+           // loadFragment(new HomeFragment());
+        }
     }
 
     private void loadFragment(Fragment fragment) {
@@ -386,6 +505,15 @@ public class HomeActivity extends AppCompatActivity {
         return false;
     }
 
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
+
     private boolean hasPermissions(Context context, String[] permissions) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
             for (String permission : permissions) {
@@ -402,5 +530,47 @@ public class HomeActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    private void open_dialog(List<DefaultFollowers> defaultFollowers) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+
+
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.dialog_listview_deaultusers,null);
+
+        RecyclerView listView = (RecyclerView) view.findViewById(R.id.dialog_list_default_followers);
+        listView.setLayoutManager(linearLayoutManager);
+        ok_text = (TextView) view.findViewById(R.id.ok_text);
+        DefaultFollowersAdapter defaultFollowersAdapter = new DefaultFollowersAdapter(this,defaultFollowers);
+        listView.setAdapter(defaultFollowersAdapter);
+        listView.setHasFixedSize(true);
+
+        defaultFollowersAdapter.notifyDataSetChanged();
+        builder.setView(view);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.setCanceledOnTouchOutside(false);
+
+
+
+        ok_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SharedPreferences preferences = getSharedPreferences("preference",MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("dialog",false);
+                editor.apply();
+
+                dialog.dismiss();
+
+            }
+        });
+
+
+    }
+
 
 }

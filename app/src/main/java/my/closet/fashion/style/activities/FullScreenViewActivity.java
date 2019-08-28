@@ -4,32 +4,35 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
@@ -38,6 +41,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -47,16 +51,23 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
+
+import javax.annotation.Nonnull;
 
 import co.lujun.androidtagview.ColorFactory;
 import co.lujun.androidtagview.TagContainerLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
-import my.closet.fashion.style.fragments.MyProfileFragment;
+import my.closet.fashion.style.adapters.BottomSheetViewAdapter;
+import my.closet.fashion.style.modesl.Dresses;
 import my.closet.fashion.style.modesl.FeedResponse;
 import xyz.hanks.library.bang.SmallBangView;
 
@@ -91,11 +102,71 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
     private String key="";
     private FragmentTransaction transaction;
     private FragmentManager manager;
+    AdView madview;
+    CoordinatorLayout coordinatorLayout;
+
+    int lookid;
+    ArrayList<String> data = new ArrayList<>();
+    private int n;
+
+    final String black = "Black";
+    final String white = "White";
+    final String grey = "Grey";
+    final String beige = "Beige";
+    final String red = "Red";
+    final String pink = "Pink";
+    final String blue = "Blue";
+    final String green = "Green";
+    final String yellow = "Yellow";
+    final String orange = "Orange";
+    final String brown = "Brown";
+    final String purple = "Purple";
+    final String silver = "Silver";
+    final String gold = "Gold";
+    final String nooption = " ";
+
+    String cblack;
+    String cwhite;
+    String cgrey;
+    String cbeige;
+    String cred;
+    String cpink;
+    String cblue;
+    String cgreen;
+    String cyellow;
+    String corange;
+    String cbrown;
+    String cpurple;
+    String csilver;
+    String cgold;
+
+    RealmResults<Dresses> r1;
+    RealmResults<Dresses> r2;
+    ArrayList<Dresses> dressesArrayList = new ArrayList<>();
+
+    GridView gridView;
+    BottomSheetBehavior behavior;
+
+    Realm realm;
+    ArrayList<String> finaldata = new ArrayList<>();
+    private String dbkey;
+    private Toolbar bottomsheet_tab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_screen_view);
+
+        Realm.init(this);
+        realm = Realm.getDefaultInstance();
+
+
+     /*   MobileAds.initialize(this,"ca-app-pub-3828826031268173~5645990144");
+
+        madview = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        madview.loadAd(adRequest); */
 
 
         manager = getSupportFragmentManager();
@@ -114,6 +185,8 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                 .placeholder(R.drawable.white_border);
 
         i = getIntent();
+
+
         if (i != null) {
             feedResponse_obj = (FeedResponse) i.getSerializableExtra("position");
             if (feedResponse_obj.getImage() != null) {
@@ -123,10 +196,30 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
             if (feedResponse_obj.getDocumentId() != null && !feedResponse_obj.getDocumentId().equalsIgnoreCase("")) {
                 blogPostId = feedResponse_obj.getDocumentId();
             }
+
+            if (feedResponse_obj!=null && !String.valueOf(feedResponse_obj.getLookid()).equalsIgnoreCase("")){
+
+                lookid = feedResponse_obj.getLookid();
+
+            }
+
+
+            if (feedResponse_obj != null && feedResponse_obj.getDbkey()!=null){
+
+                dbkey = feedResponse_obj.getDbkey();
+            }
         }
 
+        if (Objects.requireNonNull(feedResponse_obj).getDbkey() != null) {
+
+           }
+
+
         findViews();
+
+
     }
+
 
     private void findViews() {
 
@@ -175,6 +268,7 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                 mixpanelAPI.track("Bookmarked");
                 if (bookmark_anim.isSelected()) {
                     bookmark_anim.setSelected(false);
+                    Toast.makeText(FullScreenViewActivity.this, finaldata.toString(), Toast.LENGTH_SHORT).show();
                 } else {
                     bookmark_anim.setSelected(true);
                     bookmark_anim.likeAnimation();
@@ -196,6 +290,56 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
         selectedTags.setTagBackgroundColor(Color.TRANSPARENT);
         selectedTags.setBorderColor(Color.TRANSPARENT);
 
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.root_layout);
+        View persitentview = coordinatorLayout.findViewById(R.id.bottomsheetframe);
+        gridView = (GridView) persitentview.findViewById(R.id.bottom_grid);
+
+        bottomsheet_tab = (Toolbar) persitentview.findViewById(R.id.bottomsheettab);
+
+
+
+
+        final BottomSheetBehavior behavior = BottomSheetBehavior.from(persitentview);
+        behavior.setPeekHeight(100);
+        behavior.isHideable();
+        //behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+
+        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@Nonnull View view, int i) {
+
+            }
+
+            @Override
+            public void onSlide(View view, float v) {
+
+            }
+        });
+
+        bottomsheet_tab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (behavior.getState() == BottomSheetBehavior.STATE_COLLAPSED){
+
+                    mixpanelAPI.track("BottomSheet Click");
+
+                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                }else{
+
+                    behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+
+            }
+        });
+
+
+
+
+
+
 
         profile_pic = (CircleImageView) findViewById(R.id.profile_pic);
         profile_pic.setBackgroundResource(R.drawable.ic_user_profile);
@@ -207,7 +351,7 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
         follow_btn = (Button) findViewById(R.id.follow_btn);
         follow_btn.setText("Follow");
         follow_btn.setOnClickListener(this);
-        follow_btn.setVisibility(View.GONE);
+
 
         if (!Utilities.loadPref(FullScreenViewActivity.this, "email", "").equalsIgnoreCase("")) {
             if (!feedResponse_obj.getEmail().equalsIgnoreCase("") && feedResponse_obj.getEmail() != null) {
@@ -252,8 +396,9 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                     .document(My_DbKey).collection("Bookmarks")
                     .document(blogPostId);
 
+
             bookmark.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
                 @Override
                 public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                     if (e != null) {
@@ -276,7 +421,7 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                     .document(myemail);
 
             likereference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
                 @Override
                 public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                     if (e != null) {
@@ -309,6 +454,175 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
         }
 
     }
+
+
+
+    public void checkcolors(ArrayList<String> data, String cat) {
+
+        for (String s : data) {
+
+
+
+                if (s.equals(black)) {
+
+                    cblack = black;
+                }
+
+                if (s.equals(white)) {
+
+                    cwhite = white;
+                }
+
+                if (s.equals(grey)) {
+
+                    cgrey = grey;
+                }
+
+                if (s.equals(beige)) {
+
+                    cbeige = beige;
+                }
+
+                if (s.equals(red)) {
+
+                    cred = red;
+                }
+
+                if (s.equals(pink)) {
+
+                    cpink = pink;
+                }
+
+                if (s.equals(silver)) {
+
+                    csilver = silver;
+                }
+
+                if (s.equals(green)) {
+
+                    cgreen = green;
+
+                }
+
+                if (s.equals(blue)) {
+
+                    cblue = blue;
+                }
+
+                if (s.equals(yellow)) {
+
+                    cyellow = yellow;
+                }
+
+                if (s.equals(orange)) {
+
+                    corange = orange;
+                }
+
+                if (s.equals(brown)) {
+
+                    cbrown = brown;
+                }
+
+                if (s.equals(purple)) {
+
+                    cpurple = purple;
+                }
+
+                if (s.equals(gold)) {
+
+                    cgold = gold;
+                }
+        }
+
+        r1 = realm.where(Dresses.class).equalTo("colorsRealmList.black", cblack).or()
+                .equalTo("colorsRealmList.white", cwhite).or()
+                .equalTo("colorsRealmList.grey", cgrey).or()
+                .equalTo("colorsRealmList.beige", cbeige).or()
+                .equalTo("colorsRealmList.red", cred).or()
+                .equalTo("colorsRealmList.pink", cpink).or()
+                .equalTo("colorsRealmList.blue", cblue).or()
+                .equalTo("colorsRealmList.green", cgreen).or()
+                .equalTo("colorsRealmList.yellow", cyellow).or()
+                .equalTo("colorsRealmList.orange", corange).or()
+                .equalTo("colorsRealmList.brown", cbrown).or()
+                .equalTo("colorsRealmList.purple", cpurple).or()
+                .equalTo("colorsRealmList.gold", cgold).or()
+                .equalTo("colorsRealmList.silver", csilver)
+                .findAll();
+
+
+
+
+        if (cat.equals("Accessories")){
+
+            r2 = r1.where().contains("category",cat).findAll();
+
+            for (Dresses dresses : r2){
+
+                dressesArrayList.add(dresses);
+            }
+
+        }else if (cat.equals("Tops")) {
+
+            r2 = r1.where().contains("category", cat).findAll();
+
+            for (Dresses dresses : r2) {
+
+                dressesArrayList.add(dresses);
+            }
+
+        }else if (cat.equals("Bottoms")) {
+
+            r2 = r1.where().contains("category", cat).findAll();
+
+            for (Dresses dresses : r2) {
+
+                dressesArrayList.add(dresses);
+            }
+
+        }else if (cat.equals("Footwear")) {
+
+            r2 = r1.where().contains("category", cat).findAll();
+
+            for (Dresses dresses : r2) {
+
+                dressesArrayList.add(dresses);
+            }
+
+        }else {
+
+            for (Dresses dresses : r1){
+
+                dressesArrayList.add(dresses);
+            }
+        }
+
+        cblack = null;
+        cwhite = null;
+        cgrey = null;
+        cbeige = null;
+        cred = null;
+        cpink = null;
+        cblue = null;
+        cgreen = null;
+        cyellow = null;
+        corange = null;
+        cbrown = null;
+        cpurple = null;
+        csilver = null;
+        cgold = null;
+
+
+
+        BottomSheetViewAdapter bottomSheetViewAdapter = new BottomSheetViewAdapter(this,R.layout.card_accessories,dressesArrayList);
+        gridView.setAdapter(bottomSheetViewAdapter);
+        bottomSheetViewAdapter.notifyDataSetChanged();
+
+
+
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -351,11 +665,10 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
 
                     if (feedResponse_obj.getEmail().equalsIgnoreCase(Utilities.loadPref(FullScreenViewActivity.this, "email", ""))) {
 
-                        MyProfileFragment myProfileFragment = new MyProfileFragment();
-                        transaction = manager.beginTransaction();
-                        transaction.replace(R.id.container, myProfileFragment);
-                        transaction.addToBackStack("MyProfileFragment");
-                        transaction.commit();
+                        Intent ii = new Intent(FullScreenViewActivity.this, UserPersonalActivity.class);
+                        ii.putExtra("key", (Serializable) feedResponse_obj);
+                        startActivity(ii);
+                        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
 
                     } else {
                         if (key != null) {
@@ -382,7 +695,7 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                 .whereEqualTo("Email", feedResponse_obj.getEmail())
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(@Nonnull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     progressBar.setVisibility(View.GONE);
                     for (DocumentSnapshot document : task.getResult()) {
@@ -404,9 +717,9 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                         if (key != null && !key.equalsIgnoreCase("")) {
 
                             DocumentReference followreference = userCollection.collection("UsersList")
-                                    .document(key).collection("FollowCollection").document(myemail);
+                                    .document(My_DbKey).collection("Followee").document(feedResponse_obj.getEmail());
                             followreference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
                                 @Override
                                 public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                                     if (e != null) {
@@ -415,7 +728,7 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                                     }
                                     if (documentSnapshot.exists()) {
                                         follow_btn.setText("Following");
-                                        //follow_btn.setBackgroundResource(R.drawable.following_btn);
+                                        follow_btn.setBackgroundResource(R.drawable.following_btn);
                                         follow_btn.setTextColor(ContextCompat.getColor(FullScreenViewActivity.this, R.color.selected_tab));
                                     } else {
                                         follow_btn.setText("Follow");
@@ -431,10 +744,67 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                     progressBar.setVisibility(View.GONE);
                     // Log.d(TAG, "Error getting documents: ", task.getException());
                 }
+
+                userCollection.collection("UsersList").document(key).collection("MetaData").whereEqualTo("lookid", lookid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@Nonnull Task<QuerySnapshot> task) {
+
+                        if (task.isSuccessful()) {
+
+                            if (!Objects.requireNonNull(task.getResult()).isEmpty()) {
+
+
+                                for (QueryDocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
+
+                                    if (documentSnapshot.contains("Accessories")) {
+
+                                        data = (ArrayList<String>) documentSnapshot.get("Accessories");
+                                        checkcolors(data,"Accessories");
+
+                                    }
+
+                                    if (documentSnapshot.contains("Tops")){
+
+                                        data = (ArrayList<String>) documentSnapshot.get("Tops");
+                                        checkcolors(data,"Tops");
+
+                                    }
+
+                                    if (documentSnapshot.contains("Bottoms")){
+
+                                        data = (ArrayList<String>) documentSnapshot.get("Bottoms");
+                                        checkcolors(data,"Bottoms");
+
+                                    }
+
+                                    if (documentSnapshot.contains("Footwear")){
+
+                                        data = (ArrayList<String>) documentSnapshot.get("Footwear");
+                                        checkcolors(data,"Footwear");
+
+                                    }
+
+                                    if (documentSnapshot.contains("data")){
+
+                                        data = (ArrayList<String>) documentSnapshot.get("data");
+                                        if(data!=null) {
+                                            checkcolors(data, "Data");
+                                        }
+                                    }
+
+
+
+                                }
+                            }
+
+                        }
+                    }
+                });
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
+            public void onFailure(@Nonnull Exception e) {
                 progressBar.setVisibility(View.GONE);
             }
         });
@@ -443,9 +813,9 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
     private void Likepost() {
         userCollection.collection("CommonFeed/" + blogPostId + "/Likes").document(myemail).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            public void onComplete(@Nonnull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    if (!task.getResult().exists()) {
+                    if (!Objects.requireNonNull(task.getResult()).exists()) {
 
                         Map<String, Object> data = new HashMap<>();
                         String id = UUID.randomUUID().toString();
@@ -469,12 +839,12 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
     private void Bookmarksave() {
 
         if (imageUri != null) {
-            userCollection.collection("UsersList/" + My_DbKey + "/Bookmarks").
+            userCollection.collection("UsersList").document(My_DbKey).collection("Bookmarks").
                     document(blogPostId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                public void onComplete( Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
-                        if (!task.getResult().exists()) {
+                        if (!Objects.requireNonNull(task.getResult()).exists()) {
 
                             Map<String, Object> data = new HashMap<>();
                             String id = UUID.randomUUID().toString();
@@ -486,12 +856,14 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                             data.put("image", imageUri);
                             data.put("email", feedResponse_obj.getEmail());
                             data.put("timestamp",timestamp);
-                            userCollection.collection("UsersList/" + My_DbKey + "/Bookmarks").document(blogPostId).set(data);
+                            userCollection.collection("UsersList").document(My_DbKey).collection("Bookmarks").document(blogPostId).set(data);
+                            Utilities.showToast(FullScreenViewActivity.this, "Saved");
+                            //Toast.makeText(FullScreenViewActivity.this, R.string.bookmark_saved, Toast.LENGTH_SHORT).show();
                         } else {
-                            userCollection.collection("UsersList/" + My_DbKey + "/Bookmarks").document(blogPostId).delete();
+                            userCollection.collection("UsersList").document(My_DbKey).collection("Bookmarks").document(blogPostId).delete();
                         }
                     } else {
-                        Log.i("LikeError", task.getException().getMessage());
+                        Log.i("LikeError", Objects.requireNonNull(task.getException()).getMessage());
                         Toast.makeText(FullScreenViewActivity.this, "Please check your connection", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -503,10 +875,42 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
 
     private void FollowingAction() {
 
+        userCollection.collection("UsersList").document(My_DbKey).collection("Followee").document(feedResponse_obj.getEmail()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()){
+
+                    if (!Objects.requireNonNull(task.getResult()).exists()){
+
+                        String id = UUID.randomUUID().toString();
+
+                        HashMap<String,Object> hashMap = new HashMap<>();
+
+                        hashMap.put("id",id);
+                        hashMap.put("email",feedResponse_obj.getEmail());
+                        hashMap.put("name",feedResponse_obj.getPenname());
+                        hashMap.put("imgname",feedResponse_obj.getImage());
+
+                        userCollection.collection("UsersList").document(My_DbKey).collection("Followee").document(feedResponse_obj.getEmail()).set(hashMap);
+                        getPosts();
+
+
+
+                    }else {
+
+                        userCollection.collection("UsersList").document(My_DbKey).collection("Followee").document(feedResponse_obj.getEmail()).delete();
+
+                    }
+                }
+
+            }
+        });
+
         if (!Utilities.loadPref(FullScreenViewActivity.this, "email", "").equalsIgnoreCase(feedResponse_obj.getEmail())) {
             userCollection.collection("UsersList/" + key + "/FollowCollection").document(myemail).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                public void onComplete(Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
                         if (!task.getResult().exists()) {
 
@@ -515,6 +919,8 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
 
                             data.put("id", id);
                             data.put("email", Utilities.loadPref(FullScreenViewActivity.this, "email", ""));
+                            data.put("imgname",Utilities.loadPref(FullScreenViewActivity.this, "Profile_Pic", ""));
+                            data.put("name",Utilities.loadPref(FullScreenViewActivity.this, "Pen_Name","" ));
 
                             userCollection.collection("UsersList/" + key + "/FollowCollection").document(myemail).set(data);
 
@@ -528,6 +934,41 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                 }
             });
         }
+
+        }
+
+    private void getPosts() {
+
+        userCollection.collection("UsersList").document(key).collection("Posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(Task<QuerySnapshot> task) {
+
+                if (task.isSuccessful()){
+
+                    for(DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())){
+
+                        FeedResponse feedResponse = documentSnapshot.toObject(FeedResponse.class);
+                        if (feedResponse != null) {
+                            userCollection.collection("UsersList").document(My_DbKey).collection("Feed").add(feedResponse);
+                        }
+                    }
+
+
+                }else {
+
+                    Toast.makeText(FullScreenViewActivity.this,"Check your connection",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
+
+                Log.i("Get Post Error", e.getMessage());
+
+            }
+        });
+
     }
 
     private void shareImage(final String imagePath) {
@@ -538,12 +979,12 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                     .load(imagePath)
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
-                        public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                             myUri = getLocalBitmapUri(resource);
                             if (myUri != null) {
                                 Utilities.hideLoading();
                                 Intent i = new Intent(Intent.ACTION_SEND);
-                                i.putExtra(Intent.EXTRA_TEXT, R.string.sharequote + "https://play.google.com/store/apps/details?id=my.closet.fashion.style");
+                                i.putExtra(Intent.EXTRA_TEXT, "I thought you would like this, click here" + " " +  "https://play.google.com/store/apps/details?id=my.closet.fashion.style");
                                 i.setType("image/*");
                                 i.putExtra(Intent.EXTRA_STREAM, myUri);
                                 startActivity(Intent.createChooser(i, "Share Image"));

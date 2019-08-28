@@ -1,7 +1,6 @@
 package my.closet.fashion.style;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,11 +9,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.support.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -23,6 +20,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.exifinterface.media.ExifInterface;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,11 +35,11 @@ import smartdevelop.ir.eram.showcaseviewlib.GuideView;
 import smartdevelop.ir.eram.showcaseviewlib.config.DismissType;
 import smartdevelop.ir.eram.showcaseviewlib.listener.GuideListener;
 
-public class EraserActivity extends Activity implements OnClickListener {
+public class EraserActivity extends AppCompatActivity implements OnClickListener {
     private String imagePath;
     private Intent intent;
     private ContentResolver mContentResolver;
-    private Bitmap mBitmap;
+    Bitmap mBitmap;
 
     HoverView hoverView;
     double mDensity;
@@ -83,8 +84,8 @@ public class EraserActivity extends Activity implements OnClickListener {
             mBitmap = getBitmapfromUri(uri);
         }else {
 
-            String path = getIntent().getStringExtra("path");
-            mBitmap = getBitmap(path);
+            Uri uri = (Uri) getIntent().getExtras().get("path");
+            mBitmap = getBitmapfromUri(uri);
         }
 
 
@@ -121,14 +122,14 @@ public class EraserActivity extends Activity implements OnClickListener {
         }
 
 
-        if (mBitmap != null) {
-            mBitmap = Bitmap.createScaledBitmap(mBitmap, bmWidth, bmHeight, false);
-        }
 
-        if (mBitmap!=null) {
+            mBitmap = Bitmap.createScaledBitmap(mBitmap, bmWidth, bmHeight, false);
+
+
+
 
             hoverView = new HoverView(this, mBitmap, bmWidth, bmHeight, viewWidth, viewHeight);
-        }
+
 
         if (hoverView!=null) {
 
@@ -164,11 +165,12 @@ public class EraserActivity extends Activity implements OnClickListener {
             showtutorial();
         }
 
-        hoverView.switchMode(HoverView.MOVING_MODE);
+
         findViewById(R.id.magicWand_layout).setVisibility(View.GONE);
         findViewById(R.id.eraser_layout).setVisibility(View.GONE);
         resetMainButtonState();
         positionButton.setSelected(true);
+        hoverView.switchMode(hoverView.MOVING_MODE);
 
         eraserSubButton = (ImageView) findViewById(R.id.erase_sub_button);
         eraserSubButton.setOnClickListener(this);
@@ -247,7 +249,7 @@ public class EraserActivity extends Activity implements OnClickListener {
         Uri uri = getImageUri(path);
         InputStream in = null;
         try {
-            final int IMAGE_MAX_SIZE = 600;
+            final int IMAGE_MAX_SIZE = 500;
             in = mContentResolver.openInputStream(uri);
 
             // Decode image size
@@ -286,7 +288,7 @@ public class EraserActivity extends Activity implements OnClickListener {
         //Uri uri = getImageUri(path);
         InputStream in = null;
         try {
-            final int IMAGE_MAX_SIZE = 600;
+            final int IMAGE_MAX_SIZE = 500;
             in = mContentResolver.openInputStream(uri);
 
             // Decode image size
@@ -485,7 +487,7 @@ public class EraserActivity extends Activity implements OnClickListener {
                 hoverView.mirrorImage();
                 break;
             case R.id.positionButton:
-                hoverView.switchMode(HoverView.MOVING_MODE);
+                hoverView.switchMode(hoverView.MOVING_MODE);
                 findViewById(R.id.magicWand_layout).setVisibility(View.GONE);
                 findViewById(R.id.eraser_layout).setVisibility(View.GONE);
                 resetMainButtonState();
@@ -543,7 +545,12 @@ public class EraserActivity extends Activity implements OnClickListener {
 
             case R.id.nextButton:
                 //Intent intent = new Intent(getApplicationContext(), Pic_info.class)
-                hoverView.save();
+                if (hoverView!=null){
+
+                    hoverView.save();
+
+                }
+
                 finish();
                 break;
 

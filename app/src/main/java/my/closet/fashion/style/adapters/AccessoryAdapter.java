@@ -6,11 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +14,12 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
@@ -72,17 +73,17 @@ public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.View
 
     }
 
-    public ArrayList<String> getItems(){
+    public ArrayList<Integer> getItems(){
 
-        ArrayList<String> dressname= new ArrayList<>();
+        ArrayList<Integer> dressname= new ArrayList<>();
         ArrayList<Integer> code = new ArrayList<>();
 
         for (Dresses dresses : mdresses){
 
             if (dresses.isSelected()){
 
-                dressname.add(dresses.getImagename());
-                dressname.add(String.valueOf(dresses.getId()));
+                dressname.add(dresses.getId());
+               // dressname.add(String.valueOf(dresses.getId()));
             }
         }
         return dressname;
@@ -92,7 +93,8 @@ public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.View
 
 
 
-    @NonNull
+    @Override
+
     public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
 
         CardView crd = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.card_accessories, parent, false);
@@ -100,7 +102,7 @@ public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.View
     }
 
 
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder( final ViewHolder holder, int position) {
 
 
         final Dresses dresses1=mdresses.get(position);

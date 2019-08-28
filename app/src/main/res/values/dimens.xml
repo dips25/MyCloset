@@ -30,4 +30,8 @@
     <dimen name="image_loader_post_width">450dp</dimen>
     <dimen name="post_text">15sp</dimen>
     <dimen name="post_title">16sp</dimen>
+    <dimen name="dp40">40dp</dimen>
+    <dimen name="dp60">60</dimen>
+    <dimen name="dp80">80</dimen>
 </resources>
+

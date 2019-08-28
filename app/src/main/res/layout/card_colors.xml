@@ -8,7 +8,7 @@
     android:elevation="2dp"
     tools:targetApi="lollipop">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/crd3"
         android:layout_width="match_parent"
         android:layout_height="130dp"
@@ -61,7 +61,7 @@
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="10dp"
                     android:clickable="true"
-                    android:src="@drawable/ic_handbag"
+                    app:srcCompat="@drawable/ic_handbag"
                     android:background="?attr/selectableItemBackgroundBorderless"/>
 
                 <ImageView
@@ -72,7 +72,7 @@
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="10dp"
                     android:clickable="true"
-                    android:src="@drawable/ic_handbag_selected"
+                    app:srcCompat="@drawable/ic_handbag_selected"
                     android:background="?attr/selectableItemBackgroundBorderless"/>
 
                 <TextView
@@ -107,7 +107,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_toRightOf="@+id/accselect"
                     android:clickable="true"
-                    android:src="@drawable/ic_shirt"
+                    app:srcCompat="@drawable/ic_shirt"
                     android:background="?attr/selectableItemBackgroundBorderless"/>
 
                 <ImageView
@@ -119,7 +119,7 @@
                     android:layout_toRightOf="@+id/accselect"
                     android:clickable="true"
 
-                    android:src="@drawable/ic_shirt_selected"
+                    app:srcCompat="@drawable/ic_shirt_selected"
                     android:background="?attr/selectableItemBackgroundBorderless"/>
 
                 <TextView
@@ -158,7 +158,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_toRightOf="@+id/topselect"
                     android:clickable="true"
-                    android:src="@drawable/ic_trousers"
+                    app:srcCompat="@drawable/ic_trousers"
                     android:background="?attr/selectableItemBackgroundBorderless"
 
 
@@ -173,7 +173,7 @@
                     android:layout_toRightOf="@id/topselect"
                     android:clickable="true"
 
-                    android:src="@drawable/ic_pants_selected"
+                    app:srcCompat="@drawable/ic_pants_selected"
                     android:background="?attr/selectableItemBackgroundBorderless"/>
 
                 <TextView
@@ -212,7 +212,7 @@
                     android:layout_marginTop="10dp"
                     android:clickable="true"
 
-                    android:src="@drawable/ic_high_heels"
+                    app:srcCompat="@drawable/ic_high_heels"
                     android:background="?attr/selectableItemBackgroundBorderless"/>
 
                 <ImageView
@@ -224,7 +224,7 @@
                     android:layout_marginTop="10dp"
                     android:clickable="true"
 
-                    android:src="@drawable/ic_high_heels_selected"
+                    app:srcCompat="@drawable/ic_high_heels_selected"
                     android:background="?attr/selectableItemBackgroundBorderless"/>
 
                 <TextView
@@ -257,10 +257,10 @@
             </RelativeLayout>
         </RelativeLayout>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/crd4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -408,9 +408,8 @@
             </RelativeLayout>
         </RelativeLayout>
 
-    </android.support.v7.widget.CardView>
-    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
 
         android:id="@+id/colourcard"
         android:layout_width="match_parent"
@@ -472,13 +471,13 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@mipmap/black"
+                                app:srcCompat="@mipmap/black"
                                 android:id="@+id/blacksq"/>
 
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/tk"
+                                app:srcCompat="@drawable/tk"
                                 android:layout_centerInParent="true"
                                 android:id="@+id/blacksqtck"/>
                         </RelativeLayout>
@@ -490,13 +489,13 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@mipmap/white"
+                                app:srcCompat="@mipmap/white"
                                 android:id="@+id/whitesq"/>
 
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/tk"
+                                app:srcCompat="@drawable/tk"
                                 android:layout_centerInParent="true"
                                 android:id="@+id/whitesqtck"/>
                         </RelativeLayout>
@@ -508,13 +507,13 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@mipmap/grey"
+                                app:srcCompat="@mipmap/grey"
                                 android:id="@+id/greysq"/>
 
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/tk"
+                                app:srcCompat="@drawable/tk"
                                 android:layout_centerInParent="true"
                                 android:id="@+id/greysqtck"/>
                         </RelativeLayout>
@@ -526,13 +525,13 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@mipmap/beige"
+                                app:srcCompat="@mipmap/beige"
                                 android:id="@+id/beigesq"/>
 
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/tk"
+                                app:srcCompat="@drawable/tk"
                                 android:layout_centerInParent="true"
                                 android:id="@+id/beigesqtck"/>
                         </RelativeLayout>
@@ -544,13 +543,13 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@mipmap/red"
+                                app:srcCompat="@mipmap/red"
                                 android:id="@+id/redsq"/>
 
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/tk"
+                                app:srcCompat="@drawable/tk"
                                 android:layout_centerInParent="true"
                                 android:id="@+id/redsqtck"/>
                         </RelativeLayout>
@@ -562,13 +561,13 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@mipmap/pink"
+                                app:srcCompat="@mipmap/pink"
                                 android:id="@+id/pinksq"/>
 
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/tk"
+                                app:srcCompat="@drawable/tk"
                                 android:layout_centerInParent="true"
                                 android:id="@+id/pinksqtck"/>
                         </RelativeLayout>
@@ -581,13 +580,13 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@mipmap/silver"
+                                app:srcCompat="@mipmap/silver"
                                 android:id="@+id/silversq"/>
 
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/tk"
+                                app:srcCompat="@drawable/tk"
                                 android:layout_centerInParent="true"
                                 android:id="@+id/silversqtck"/>
                         </RelativeLayout>
@@ -614,13 +613,13 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@mipmap/green"
+                                app:srcCompat="@mipmap/green"
                                 android:id="@+id/greensq"/>
 
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/tk"
+                                app:srcCompat="@drawable/tk"
                                 android:layout_centerInParent="true"
                                 android:id="@+id/greensqtck"/>
                         </RelativeLayout>
@@ -632,13 +631,13 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@mipmap/blue"
+                                app:srcCompat="@mipmap/blue"
                                 android:id="@+id/bluesq"/>
 
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/tk"
+                                app:srcCompat="@drawable/tk"
                                 android:layout_centerInParent="true"
                                 android:id="@+id/bluesqtck"/>
                         </RelativeLayout>
@@ -650,13 +649,13 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@mipmap/yellow"
+                                app:srcCompat="@mipmap/yellow"
                                 android:id="@+id/yellowsq"/>
 
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/tk"
+                                app:srcCompat="@drawable/tk"
                                 android:layout_centerInParent="true"
                                 android:id="@+id/yellowsqtck"/>
                         </RelativeLayout>
@@ -668,13 +667,13 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@mipmap/orange"
+                                app:srcCompat="@mipmap/orange"
                                 android:id="@+id/orangesq"/>
 
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/tk"
+                                app:srcCompat="@drawable/tk"
                                 android:layout_centerInParent="true"
                                 android:id="@+id/orangesqtck"/>
                         </RelativeLayout>
@@ -686,13 +685,13 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@mipmap/brown"
+                                app:srcCompat="@mipmap/brown"
                                 android:id="@+id/brownsq"/>
 
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/tk"
+                                app:srcCompat="@drawable/tk"
                                 android:layout_centerInParent="true"
                                 android:id="@+id/brownsqtck"/>
                         </RelativeLayout>
@@ -704,13 +703,13 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@mipmap/purple"
+                                app:srcCompat="@mipmap/purple"
                                 android:id="@+id/purplesq"/>
 
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/tk"
+                                app:srcCompat="@drawable/tk"
                                 android:layout_centerInParent="true"
                                 android:id="@+id/purplesqtck"/>
                         </RelativeLayout>
@@ -723,13 +722,13 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@mipmap/gold"
+                                app:srcCompat="@mipmap/gold"
                                 android:id="@+id/goldsq"/>
 
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:src="@drawable/tk"
+                                app:srcCompat="@drawable/tk"
                                 android:layout_centerInParent="true"
                                 android:id="@+id/goldsqtck"
                                 />
@@ -744,7 +743,7 @@
         </RelativeLayout>
 
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
     <RelativeLayout
         android:layout_width="match_parent"

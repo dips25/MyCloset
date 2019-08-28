@@ -1,15 +1,12 @@
 package my.closet.fashion.style.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,6 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.PopupMenu;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
@@ -34,16 +35,16 @@ import my.closet.fashion.style.modesl.Colors;
 import my.closet.fashion.style.modesl.Dresses;
 import my.closet.fashion.style.modesl.Styles;
 
-import static my.closet.fashion.style.fragments.ClosetFragment.madapter;
-import static my.closet.fashion.style.fragments.ClosetFragment.mbottomadapter;
-import static my.closet.fashion.style.fragments.ClosetFragment.mfootwearadapter;
-import static my.closet.fashion.style.fragments.ClosetFragment.mtopadapter;
 import static my.closet.fashion.style.adapters.AccessoryAdapter.mcontext;
 import static my.closet.fashion.style.adapters.BottomAdapter.mbcontext;
 import static my.closet.fashion.style.adapters.TopAdapter.ccontext;
 import static my.closet.fashion.style.fragments.ClosetFragment.accrecycler;
 import static my.closet.fashion.style.fragments.ClosetFragment.bottomrecycler;
 import static my.closet.fashion.style.fragments.ClosetFragment.footrecycler;
+import static my.closet.fashion.style.fragments.ClosetFragment.madapter;
+import static my.closet.fashion.style.fragments.ClosetFragment.mbottomadapter;
+import static my.closet.fashion.style.fragments.ClosetFragment.mfootwearadapter;
+import static my.closet.fashion.style.fragments.ClosetFragment.mtopadapter;
 import static my.closet.fashion.style.fragments.ClosetFragment.toprecycler;
 
 /**
@@ -66,17 +67,18 @@ public class FootWearAdapter extends RecyclerView.Adapter<FootWearAdapter.ViewHo
         this.mdresses = dresses;
     }
 
-    public ArrayList<String> getItems(){
+    public ArrayList<Integer> getItems(){
 
-        ArrayList<String> footdressname=new ArrayList<>();
+        ArrayList<Integer> footdressname=new ArrayList<>();
 
         for (Dresses dresses : mdresses){
 
             if (dresses.isSelected()){
 
-                footdressname.add(dresses.getImagename());
+                footdressname.add(dresses.getId());
             }
         }
+//        Toast.makeText(mfcontext, footdressname.toString(), Toast.LENGTH_SHORT).show();
         return footdressname;
     }
 

@@ -1,15 +1,8 @@
 package my.closet.fashion.style.fragments;
 
 
-import android.arch.paging.PagedList;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.paging.PagedList;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -41,7 +39,9 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -50,6 +50,7 @@ import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
 import my.closet.fashion.style.activities.FbGmailActivity;
 import my.closet.fashion.style.activities.FullScreenViewActivity;
+import my.closet.fashion.style.adapters.FeedsAdapter;
 import my.closet.fashion.style.adapters.FeedsViewHolder;
 import my.closet.fashion.style.customs.SpacesItemDecoration;
 import my.closet.fashion.style.modesl.FeedResponse;
@@ -65,11 +66,12 @@ public class HomeFragment extends Fragment {
 
     private static final int REQUEST_CHOOSE_PHOTO = 1;
     private static final int REQUEST_STORAGE_PERMISSION = 9;
+    FeedsAdapter feedsAdapter;
     View view;
     private TextView toolbar_title;
     private RequestOptions requestOptions;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference feedRef;
+
     private String myemail="";
     private RecyclerView homerecyleview;
     private ProgressBar prbLoading;
@@ -77,6 +79,17 @@ public class HomeFragment extends Fragment {
     private StaggeredGridLayoutManager mLayoutManager;
     private FirestorePagingAdapter<FeedResponse, FeedsViewHolder> adapter;
     private MixpanelAPI mixpanelAPI;
+    private String My_DbKey;
+    private List<FeedResponse> feedResponses = new ArrayList<>();
+    List<String> followeenameslist = new ArrayList<>();
+    private DocumentSnapshot lastvisible;
+    private boolean isScrolling;
+    private int[] into;
+    private int lastvisibleitem;
+    private boolean isLastItemReached;
+    List<FeedResponse> items = new ArrayList<>();
+    FirebaseFirestore ref = FirebaseFirestore.getInstance();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,14 +103,34 @@ public class HomeFragment extends Fragment {
                 .fitCenter()
                 .diskCacheStrategy(DiskCacheStrategy.ALL);
 
-        feedRef = db.collection("CommonFeed");
-         myemail = Utilities.loadPref(getActivity(), "email", "");
-         findView(view);
 
-         return view;
-    }
 
-    private void findView(View view) {
+
+        My_DbKey = Utilities.loadPref(getActivity(), "My_DbKey", "");
+        myemail = Utilities.loadPref(getActivity(), "email", "");
+
+       /* CollectionReference feedRef = FirebaseFirestore.getInstance()
+                .collection("UsersList")
+                .document(My_DbKey)
+                .collection("Feed"); */
+
+        if (myemail==null && Objects.requireNonNull(myemail).equalsIgnoreCase("")) {
+
+            Intent intent = new Intent(getActivity(),FbGmailActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+
+        }else {
+
+            Toast.makeText(getActivity(), "You are now signed in." + My_DbKey, Toast.LENGTH_SHORT).show();
+        }
+
+
+
+
+
+
+
 
         toolbar_title = (TextView) Objects.requireNonNull(getActivity()).findViewById(R.id.title);
         if (toolbar_title!=null) {
@@ -112,7 +145,8 @@ public class HomeFragment extends Fragment {
         homerecyleview.setLayoutManager(mLayoutManager);
         homerecyleview.addItemDecoration(new SpacesItemDecoration(20));
 
-        query = feedRef.orderBy("timestamp", Query.Direction.DESCENDING);
+        query = ref.collection("UsersList").document(My_DbKey).collection("Feed").orderBy("timestamp", Query.Direction.DESCENDING);
+        SetUpRecycleView(query);
 
         homerecyleview.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
@@ -130,6 +164,9 @@ public class HomeFragment extends Fragment {
                     bottomnav.setVisibility(View.VISIBLE);
 
                 }
+
+
+
             }
 
             @Override
@@ -140,8 +177,11 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        SetUpRecycleView(query);
+
+        return view;
     }
+
+
 
     private void SetUpRecycleView(Query query) {
 
@@ -153,11 +193,11 @@ public class HomeFragment extends Fragment {
 
         FirestorePagingOptions<FeedResponse> options = new FirestorePagingOptions.Builder<FeedResponse>()
                 .setQuery(query, config, new SnapshotParser<FeedResponse>() {
-                    @NonNull
+
                     @Override
-                    public FeedResponse parseSnapshot(@NonNull DocumentSnapshot snapshot) {
+                    public FeedResponse parseSnapshot( DocumentSnapshot snapshot) {
                         FeedResponse chat = snapshot.toObject(FeedResponse.class);
-                        chat.setDocumentId(snapshot.getId());
+                        Objects.requireNonNull(chat).setDocumentId(snapshot.getId());
                         return chat;
                     }
                 }).setLifecycleOwner(this)
@@ -165,19 +205,18 @@ public class HomeFragment extends Fragment {
 
 
         adapter = new FirestorePagingAdapter<FeedResponse, FeedsViewHolder>(options) {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-            @NonNull
+
             @Override
-            public FeedsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public FeedsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.home_item, parent, false);
 
                 return new FeedsViewHolder(view);
             }
 
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
             @Override
-            public void onBindViewHolder(@NonNull final FeedsViewHolder holder, int position, final FeedResponse model) {
+            public void onBindViewHolder(final FeedsViewHolder holder, int position, final FeedResponse model) {
 
                 holder.bind(getActivity(), model);
 
@@ -189,7 +228,7 @@ public class HomeFragment extends Fragment {
                         mixpanelAPI.track("Full Screen");
                         Intent textint = new Intent(getActivity(), FullScreenViewActivity.class);
                         textint.putExtra("position", model);
-                        getActivity().startActivity(textint);
+                        Objects.requireNonNull(getActivity()).startActivity(textint);
 
                     }
                 });
@@ -226,7 +265,7 @@ public class HomeFragment extends Fragment {
                             .document(myemail);
 
                     likereference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
                         @Override
                         public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                             if (e != null) {
@@ -251,7 +290,7 @@ public class HomeFragment extends Fragment {
                             holder.like_text.setSelected(true);
                             holder.like_text.likeAnimation();
                         }
-                        if (!Utilities.loadPref(getActivity(), "email", "").equalsIgnoreCase("")) {
+                        if (!Utilities.loadPref(Objects.requireNonNull(getActivity()), "email", "").equalsIgnoreCase("")) {
                             Likepost(model);
                         } else {
                             Intent ii = new Intent(getActivity(), FbGmailActivity.class);
@@ -267,17 +306,17 @@ public class HomeFragment extends Fragment {
                     db.collection("UsersList")
                             .whereEqualTo("Email", model.getEmail()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        public void onComplete(Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
 
-                                for (DocumentSnapshot document : task.getResult()) {
+                                for (DocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
 
-                                    if (document.get("Profile_Pic") != null && !document.get("Profile_Pic").toString().equalsIgnoreCase("")) {
-                                        Glide.with(getActivity()).load(document.get("Profile_Pic")).apply(requestOptions).into(holder.profile_pic);
+                                    if (document.get("Profile_Pic") != null && !Objects.requireNonNull(document.get("Profile_Pic")).toString().equalsIgnoreCase("")) {
+                                        Glide.with(Objects.requireNonNull(getContext())).load(document.get("Profile_Pic")).apply(requestOptions).into(holder.profile_pic);
                                     } else {
                                         holder.profile_pic.setBackgroundResource(R.drawable.ic_user_profile);
                                     }
-                                    holder.username_txt.setText(document.get("Pen_Name").toString());
+                                    holder.username_txt.setText(Objects.requireNonNull(document.get("Pen_Name")).toString());
 
                                 }
                             }
@@ -289,8 +328,8 @@ public class HomeFragment extends Fragment {
 
             }
 
-            @Override
-            protected void onLoadingStateChanged(@NonNull LoadingState state) {
+
+            protected void onLoadingStateChanged(LoadingState state) {
                 switch (state) {
                     case LOADING_INITIAL:
                     case LOADING_MORE:
@@ -315,9 +354,9 @@ public class HomeFragment extends Fragment {
     private void Likepost(final FeedResponse model) {
         db.collection("CommonFeed/" + model.getDocumentId() + "/Likes").document(myemail).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            public void onComplete(Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    if (!task.getResult().exists()) {
+                    if (!Objects.requireNonNull(task.getResult()).exists()) {
 
                         Map<String, Object> data = new HashMap<>();
                         String id = UUID.randomUUID().toString();
@@ -342,19 +381,24 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onStart() {
+
         super.onStart();
-        if (adapter != null) {
+        if(adapter!=null) {
             adapter.startListening();
         }
+
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (adapter != null) {
+        if(adapter!=null) {
             adapter.stopListening();
         }
+
     }
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -376,7 +420,7 @@ public class HomeFragment extends Fragment {
 
             case R.id.action_search:
 
-                return true;
+                return false;
 
             default:
                 break;

@@ -10,7 +10,7 @@
     android:layout_height="56dp"
     android:id="@+id/chathead_img"
     android:background="@drawable/circle"
-    android:src="@drawable/ic_crop_free_black_16dp"
+    app:srcCompat="@drawable/ic_crop_free_black_16dp"
     android:scaleType="center"
     tools:targetApi="lollipop" />
 
