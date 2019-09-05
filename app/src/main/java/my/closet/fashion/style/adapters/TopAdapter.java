@@ -28,8 +28,8 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import my.closet.fashion.style.Pic_info;
 import my.closet.fashion.style.R;
-import my.closet.fashion.style.activities.HomeActivity;
 import my.closet.fashion.style.customs.ImageSaver;
+import my.closet.fashion.style.fragments.ClosetFragment;
 import my.closet.fashion.style.modesl.Colors;
 import my.closet.fashion.style.modesl.Dresses;
 import my.closet.fashion.style.modesl.Styles;
@@ -59,6 +59,7 @@ public class TopAdapter extends RecyclerView.Adapter<TopAdapter.ViewHolder> {
     Realm realm;
 
     MixpanelAPI mixpanel;
+    private MixpanelAPI mixpanelAPI;
 
     public TopAdapter(Context context,ArrayList<Dresses>dresses){
 
@@ -83,6 +84,8 @@ public class TopAdapter extends RecyclerView.Adapter<TopAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
+        mixpanelAPI= MixpanelAPI.getInstance(ccontext,"257c7d2e1c44d7d1ab6105af372f65a6");
+
         CardView cardView=(CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.card_accessories,parent,false);
         return new ViewHolder(cardView);
 
@@ -94,6 +97,7 @@ public class TopAdapter extends RecyclerView.Adapter<TopAdapter.ViewHolder> {
         bitmap=new ImageSaver(ccontext).setFileName(dressesss.getImagename()).setDirectoryName("mycloset").load();
 
         holder.imageview.setImageBitmap(bitmap);
+        holder.tut_clicker.setVisibility(View.GONE);
 
         realm=Realm.getDefaultInstance();
         Realm.init(ccontext);
@@ -119,7 +123,7 @@ public class TopAdapter extends RecyclerView.Adapter<TopAdapter.ViewHolder> {
                 holder.cardView.setBackgroundColor(dressesss.isSelected() ? Color.LTGRAY : Color.WHITE);
                 realm.commitTransaction();
 
-                ((HomeActivity)ccontext).onClickcalled();
+                (ClosetFragment.instance).onClickcalled();
 
 
             }
@@ -147,11 +151,13 @@ public class TopAdapter extends RecyclerView.Adapter<TopAdapter.ViewHolder> {
 
         CardView cardView;
         public ImageView imageview;
+        public ImageView tut_clicker;
 
         ViewHolder(CardView cardd){
             super(cardd);
             cardView=cardd;
             imageview=(ImageView)cardd.findViewById(R.id.img);
+            tut_clicker = (ImageView) cardd.findViewById(R.id.tut_clicker);
             ccontext=cardd.getContext();
 
             imageview.setOnLongClickListener(new View.OnLongClickListener() {

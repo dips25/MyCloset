@@ -4,8 +4,6 @@ package my.closet.fashion.style.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -31,7 +29,7 @@ import my.closet.fashion.style.modesl.Looks;
 public class LookbookFragment extends Fragment {
 
     View view;
-   public static GridView gridView;
+   public  GridView gridView;
     Realm realm;
     ArrayList<Looks> dresses = new ArrayList<>();
     my.closet.fashion.style.adapters.Lookbookadapter Lookbookadapter;
@@ -71,8 +69,10 @@ public class LookbookFragment extends Fragment {
 
         refresh();
 
-        Lookbookadapter = new Lookbookadapter(Objects.requireNonNull(getContext()), R.layout.single_gridview, dresses);
+        Lookbookadapter = new Lookbookadapter(Objects.requireNonNull(getContext()), R.layout.card_accessories, dresses);
         gridView.setAdapter(Lookbookadapter);
+        Lookbookadapter.notifyDataSetChanged();
+
         if (Lookbookadapter.isEmpty()){
 
             lookbook_tutorial_text.setVisibility(View.VISIBLE);
@@ -93,7 +93,7 @@ public class LookbookFragment extends Fragment {
                 id = looks.getId();
 
 
-                Intent intent = new Intent(getContext(), ZoomImage.class);
+                Intent intent = new Intent(getActivity(), ZoomImage.class);
                 intent.putExtra("imgname",dresses.get(position).getImage_name());
                 intent.putExtra("stylename", dresses.get(position).getStyle_name());
                 intent.putExtra("id", dresses.get(position).getId());
@@ -113,15 +113,15 @@ public class LookbookFragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+       // setHasOptionsMenu(true);
 
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.findItem(R.id.action_search).setVisible(false);
-        menu.findItem(R.id.filter).setVisible(false);
-        menu.findItem(R.id.upload_menu).setVisible(false);
+    public void onDestroy() {
+        super.onDestroy();
+        dresses.clear();
     }
+
+
 }

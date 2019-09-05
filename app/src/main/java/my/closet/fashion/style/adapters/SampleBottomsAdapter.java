@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.util.ArrayList;
 
@@ -31,6 +32,7 @@ public class SampleBottomsAdapter extends ArrayAdapter {
     private ArrayList<SamplePics> samplebottoms;
     private Context context;
     private RequestOptions requestOptions;
+    private MixpanelAPI mixpanelAPI;
 
 
     public SampleBottomsAdapter( Context context, int resource, ArrayList<SamplePics> samplebottoms) {
@@ -46,6 +48,7 @@ public class SampleBottomsAdapter extends ArrayAdapter {
 
         SharedPreferences sharedPreferences = context.getSharedPreferences("prefs",Context.MODE_PRIVATE);
         boolean firstsamplebottom = sharedPreferences.getBoolean("firstsamplebottom",true);
+        mixpanelAPI= MixpanelAPI.getInstance(context,"257c7d2e1c44d7d1ab6105af372f65a6");
 
         View view = convertView;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -57,16 +60,19 @@ public class SampleBottomsAdapter extends ArrayAdapter {
                 .placeholder(R.drawable.white_border);
 
         ImageView img = (ImageView) view.findViewById(R.id.img);
+        ImageView tut_clicker = (ImageView) view.findViewById(R.id.tut_clicker);
+        tut_clicker.setVisibility(View.GONE);
 
         Glide.with(context).load(samplebottoms.get(position).getImgurl()).apply(requestOptions).into(img);
 
-        if (firstsamplebottom) {
+        if (firstsamplebottom && !sharedPreferences.getBoolean("firstsampletop",true)) {
+
 
             View v = parent.getChildAt(0);
 
-            new MaterialTapTargetPrompt.Builder((Activity) getContext(),R.style.MaterialTapTargetPromptTheme)
+            new MaterialTapTargetPrompt.Builder((Activity) getContext(),R.style.MaterialTapTargetPromptTheme_MaterialTapTargetSimple)
                     .setTarget(v)
-                    .setSecondaryText("Click Here")
+                    .setSecondaryText("")
                     .setPromptBackground(new RectanglePromptBackground())
                     .setPromptFocal(new RectanglePromptFocal())
                     .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
@@ -74,6 +80,11 @@ public class SampleBottomsAdapter extends ArrayAdapter {
                         public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
 
                             if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED){
+
+                                if (mixpanelAPI!=null){
+
+                                    mixpanelAPI.track("SampleBottomTutorialClicked");
+                                }
 
                                 SharedPreferences preferences = context.getSharedPreferences("prefs",MODE_PRIVATE);
                                 SharedPreferences.Editor editor = preferences.edit();

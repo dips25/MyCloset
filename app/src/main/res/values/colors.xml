@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="pinktrans">#75FEDBD0</color>
     <color name="colorPrimary">#FEDBD0</color>
     <color name="colorPrimaryDark">#f2b39f</color>
     <color name="colorAccent">#442C2E</color>
+    <color name="brightcoloraccent">#55442C2E</color>
     <color name="secondarycolor">#FEEAE6</color>
     <color name="black">#000000</color>
     <color name="toolbar">#ffffff</color>
@@ -34,7 +36,7 @@
     <color name="red">#FF0000</color>
     <color name="nude">#CA9F7F</color>
     <color name="hexgrey">#607d8b</color>
-    <color name="transparent">#00000000</color>
+    <color name="transparent">#000000</color>
     <color name="tutolayout">#95009688</color>
     <color name="chatheadcolor">#FFF9C4</color>
 

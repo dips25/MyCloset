@@ -1,6 +1,5 @@
 package my.closet.fashion.style;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -11,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -57,6 +57,7 @@ import my.closet.fashion.style.customs.StickerImageView;
 import my.closet.fashion.style.modesl.Colors;
 import my.closet.fashion.style.modesl.Dresses;
 import my.closet.fashion.style.modesl.Looks;
+import nl.dionsegijn.konfetti.KonfettiView;
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 
@@ -96,6 +97,7 @@ public class CustomView extends AppCompatActivity {
     StickerImageView stickerImageView5;
     StickerImageView stickerImageView6;
     HashMap<String,Object> valuemap = new HashMap<>();
+    KonfettiView konfettiView;
 
 
     ArrayList<Integer> finaldress=new ArrayList<>();
@@ -108,6 +110,7 @@ public class CustomView extends AppCompatActivity {
     private String My_DbKey;
     private FirebaseStorage storage;
     private StorageReference storageRef;
+    SharedPreferences sharedPreferences;
 
 
     protected void onCreate(Bundle savedInstanceState){
@@ -118,6 +121,7 @@ public class CustomView extends AppCompatActivity {
 
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReferenceFromUrl("gs://my-closet-fashion-style.appspot.com/");
+        sharedPreferences = getSharedPreferences("prefs",MODE_PRIVATE);
 
         Realm.init(this);
         realm=Realm.getDefaultInstance();
@@ -126,10 +130,13 @@ public class CustomView extends AppCompatActivity {
 
         frameLayout=(StickerView) findViewById(R.id.frame);
         checkBox = (CheckBox) findViewById(R.id.chk_post);
+        konfettiView = (KonfettiView) findViewById(R.id.custom_konfetti);
+        konfettiView.setVisibility(View.GONE);
+
 
         checkBox.setChecked(true);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        //SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
         boolean createlooktut = sharedPreferences.getBoolean("createlooktut",true);
 
 
@@ -481,7 +488,7 @@ public class CustomView extends AppCompatActivity {
                     frameLayout.setDrawingCacheEnabled(false);
 
                     final String s = look_name.getText().toString();
-                    if (s.length() > 0) {
+
 
                         Utilities.showLoading(CustomView.this, "Uploading...");
 
@@ -531,14 +538,23 @@ public class CustomView extends AppCompatActivity {
 
                                 if (task.isSuccessful()){
 
+                                    boolean post_tut = sharedPreferences.getBoolean("post",true);
+
                                     Utilities.hideLoading();
-                                    Utilities.showToast(CustomView.this,"Posted");
+
 
                                     Intent intent = new Intent(CustomView.this, HomeActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    if(post_tut){
+
+                                        intent.putExtra("celebration","celeb");
+                                    }
                                     startActivity(intent);
+                                    finish();
 
-
+                                    Utilities.showToast(CustomView.this,"Posted");
+                                    overridePendingTransition(R.anim.fade_in, R.anim.slide_out_down);
 
 
                                 }
@@ -558,12 +574,7 @@ public class CustomView extends AppCompatActivity {
                         return true;
 
 
-                    }else {
 
-                        Toast.makeText(CustomView.this, "Give a name to look created", Toast.LENGTH_LONG).show();
-
-
-                    }
 
 
 
@@ -639,7 +650,10 @@ public class CustomView extends AppCompatActivity {
 
                                 }
 
-                            }
+
+                                }
+
+
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(Exception e) {
@@ -670,7 +684,7 @@ public class CustomView extends AppCompatActivity {
     private void updatepost(byte[] b) {
 
 
-        final StorageReference ref = storageRef.child(new StringBuilder("images/").append(UUID.randomUUID().toString()).toString());
+        final StorageReference ref = storageRef.child("images/" + UUID.randomUUID().toString());
 
         uploadTask = ref.putBytes(b);
 

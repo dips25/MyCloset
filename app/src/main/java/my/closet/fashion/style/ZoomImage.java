@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.chrisbanes.photoview.PhotoView;
@@ -32,7 +31,6 @@ import io.realm.Sort;
 import my.closet.fashion.style.activities.PostFeedActivity;
 import my.closet.fashion.style.adapters.Lookbookadapter;
 import my.closet.fashion.style.customs.ImageSaver;
-import my.closet.fashion.style.fragments.LookbookFragment;
 import my.closet.fashion.style.modesl.Looks;
 
 public class ZoomImage extends AppCompatActivity {
@@ -47,7 +45,7 @@ public class ZoomImage extends AppCompatActivity {
     int newid;
     Realm realm;
     ImageView lookupdt;
-    ImageView share;
+
     RelativeLayout looksvbttn;
     ArrayList<Looks> looksArrayList=new ArrayList<>();
     MixpanelAPI mixpanelAPI;
@@ -65,13 +63,13 @@ public class ZoomImage extends AppCompatActivity {
         realm=Realm.getDefaultInstance();
 
         photoView=(PhotoView) findViewById(R.id.zoom_image);
-        share=(ImageView) findViewById(R.id.share);
+
 
         looksvbttn=(RelativeLayout) findViewById(R.id.looksvbttn);
         looksvbttn.setVisibility(View.INVISIBLE);
 
         lookedit=(EditText) findViewById(R.id.look_edit);
-        lookedit.setVisibility(View.INVISIBLE);
+       // lookedit.setVisibility(View.INVISIBLE);
 
         lookupdt=(ImageView) findViewById(R.id.look_updt);
         finalname= Objects.requireNonNull(getIntent().getExtras()).getString("imgname");
@@ -81,21 +79,10 @@ public class ZoomImage extends AppCompatActivity {
         lookid = getIntent().getExtras().getInt("lookid");
         bitmap=new ImageSaver(this).setFileName(finalname).setDirectoryName("mycloset").load();
 
+        lookedit.setText(edtlook);
+
         photoView.setImageBitmap(bitmap);
 
-        share.setOnClickListener(new View.OnClickListener() {
-                                     @Override
-                                     public void onClick(View v) {
-
-                                         Intent shareintent=new Intent();
-                                         shareintent.setAction(Intent.ACTION_SEND);
-                                         shareintent.putExtra(Intent.EXTRA_STREAM,getImgFile());
-                                         shareintent.setType("image/*");
-                                         startActivity(Intent.createChooser(shareintent,"Share image via"));
-
-
-                                     }
-                                 });
 
 
                 lookupdt.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +96,7 @@ public class ZoomImage extends AppCompatActivity {
                         Looks looks=realm.where(Looks.class).equalTo("id",newid).findFirst();
 
                         if (looks!=null) {
-                            looks.setId(newid);
+                           // looks.setId(newid);
                             looks.setStyle_name(lookedit.getText().toString());
                             looks.setImage_name(finalname);
                             looks.setLookid(lookid);
@@ -144,7 +131,7 @@ public class ZoomImage extends AppCompatActivity {
 
 
         Lookbookadapter lookbookadapter=new Lookbookadapter(getApplicationContext(),R.layout.single_gridview,looksArrayList);
-        LookbookFragment.gridView.setAdapter(lookbookadapter);
+       // LookbookFragment.gridView.setAdapter(lookbookadapter);
         lookbookadapter.notifyDataSetChanged();
 
     }
@@ -168,7 +155,7 @@ public class ZoomImage extends AppCompatActivity {
                 Looks looke = realm.where(Looks.class).equalTo("id", newid).findFirst();
                 looke.deleteFromRealm();
                 realm.commitTransaction();
-                refreshlayout();
+               // refreshlayout();
 
               // Intent intent=new Intent(getApplicationContext(),Lookbook.class);
               // startActivity(intent);
@@ -179,8 +166,8 @@ public class ZoomImage extends AppCompatActivity {
 
                 mixpanelAPI.track("ZoomActivity Edit");
 
-                lookedit.setVisibility(View.VISIBLE);
-                lookedit.setText(edtlook);
+                //lookedit.setVisibility(View.VISIBLE);
+                //lookedit.setText(edtlook);
                 looksvbttn.setVisibility(View.VISIBLE);
                 return true;
 

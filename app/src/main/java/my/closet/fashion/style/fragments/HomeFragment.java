@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.firebase.ui.firestore.paging.LoadingState;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -55,8 +57,7 @@ import my.closet.fashion.style.adapters.FeedsViewHolder;
 import my.closet.fashion.style.customs.SpacesItemDecoration;
 import my.closet.fashion.style.modesl.FeedResponse;
 
-import static my.closet.fashion.style.activities.HomeActivity.bottomnav;
-import static my.closet.fashion.style.activities.HomeActivity.look_tab;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -89,6 +90,8 @@ public class HomeFragment extends Fragment {
     private boolean isLastItemReached;
     List<FeedResponse> items = new ArrayList<>();
     FirebaseFirestore ref = FirebaseFirestore.getInstance();
+    private RelativeLayout look_tab;
+    private BottomNavigationView bottomnav;
 
 
     @Override
@@ -102,6 +105,9 @@ public class HomeFragment extends Fragment {
         requestOptions = new RequestOptions()
                 .fitCenter()
                 .diskCacheStrategy(DiskCacheStrategy.ALL);
+
+        look_tab = (RelativeLayout) getActivity().findViewById(R.id.linear);
+        bottomnav = (BottomNavigationView) getActivity().findViewById(R.id.bnve_icon_selector);
 
 
 
@@ -122,7 +128,7 @@ public class HomeFragment extends Fragment {
 
         }else {
 
-            Toast.makeText(getActivity(), "You are now signed in." + My_DbKey, Toast.LENGTH_SHORT).show();
+
         }
 
 

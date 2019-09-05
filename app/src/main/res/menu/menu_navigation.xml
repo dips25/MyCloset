@@ -12,10 +12,7 @@
         android:icon="@drawable/selector_closet"
         android:title="@string/closet" />
 
-    <item
-        android:id="@+id/lookbook"
-        android:icon="@drawable/selector_lookbook"
-        android:title="@string/lookbook" />
+
 
 
     <item

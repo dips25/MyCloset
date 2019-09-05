@@ -15,7 +15,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
@@ -30,8 +29,8 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import my.closet.fashion.style.Pic_info;
 import my.closet.fashion.style.R;
-import my.closet.fashion.style.activities.HomeActivity;
 import my.closet.fashion.style.customs.ImageSaver;
+import my.closet.fashion.style.fragments.ClosetFragment;
 import my.closet.fashion.style.modesl.Colors;
 import my.closet.fashion.style.modesl.Dresses;
 import my.closet.fashion.style.modesl.Styles;
@@ -108,7 +107,8 @@ public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.View
         final Dresses dresses1=mdresses.get(position);
         bitmap = new ImageSaver(mcontext).setFileName(dresses1.getImagename()).setDirectoryName("mycloset").load();
         holder.imageview.setImageBitmap(bitmap);
-        //holder.cardView.setBackgroundColor(dresses1.isSelected() ? Color.CYAN : Color.WHITE);
+        holder.tut_clicker.setVisibility(View.GONE);
+
         realm=Realm.getDefaultInstance();
         Realm.init(mcontext);
 
@@ -128,7 +128,7 @@ public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.View
                 holder.cardView.setBackgroundColor(dresses1.isSelected() ? Color.LTGRAY : Color.WHITE);
                 realm.commitTransaction();
 
-                ((HomeActivity)mcontext).onClickcalled();
+                (ClosetFragment.instance).onClickcalled();
 
 
             }
@@ -160,6 +160,7 @@ public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.View
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public static final int MULTISELECTION = 2 ;
+        public ImageView tut_clicker;
         CardView cardView;
         ImageView imageview;
 
@@ -173,6 +174,7 @@ public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.View
 
             checkBox = card.findViewById(R.id.checkbox);
             imageview = (ImageView) card.findViewById(R.id.img);
+            tut_clicker = (ImageView) card.findViewById(R.id.tut_clicker);
            mcontext = card.getContext();
             imageview.setOnLongClickListener(new View.OnLongClickListener() {
                                             @Override

@@ -81,14 +81,14 @@ public class FollowerFollowingAdapter extends RecyclerView.Adapter<FollowerFollo
                 if (Objects.requireNonNull(documentSnapshot).exists()){
 
                     holder.follow_button.setText("Following");
-                    holder.follow_button.setBackgroundResource(R.drawable.following_btn);
+                    holder.follow_button.setBackgroundResource(R.drawable.following_button_square);
                     holder.follow_button.setTextColor(ContextCompat.getColor(context,R.color.colorAccent));
 
 
                 }else {
 
                     holder.follow_button.setText("Follow");
-                    holder.follow_button.setBackgroundResource(R.drawable.follow_btn);
+                    holder.follow_button.setBackgroundResource(R.drawable.follow_button_square);
                     holder.follow_button.setTextColor(ContextCompat.getColor(context,R.color.white));
 
                 }
@@ -123,13 +123,13 @@ public class FollowerFollowingAdapter extends RecyclerView.Adapter<FollowerFollo
         if (followerFollowing.getEmail().equals(myemail)){
 
             holder.follow_button.setText("Following");
-            holder.follow_button.setBackgroundResource(R.drawable.following_btn);
+            holder.follow_button.setBackgroundResource(R.drawable.following_button_square);
             holder.follow_button.setTextColor(ContextCompat.getColor(context,R.color.colorAccent));
 
         }else {
 
             holder.follow_button.setText("Follow");
-            holder.follow_button.setBackgroundResource(R.drawable.follow_btn);
+            holder.follow_button.setBackgroundResource(R.drawable.follow_button_square);
             holder.follow_button.setTextColor(ContextCompat.getColor(context,R.color.white));
 
 

@@ -5,19 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -33,10 +33,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -46,37 +49,33 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmResults;
-import my.closet.fashion.style.CustomView;
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.Realm_database.MyMigration;
 import my.closet.fashion.style.Utilities;
 import my.closet.fashion.style.adapters.DefaultFollowersAdapter;
 import my.closet.fashion.style.fragments.ClosetFragment;
 import my.closet.fashion.style.fragments.HomeFragment;
-import my.closet.fashion.style.fragments.LookbookFragment;
 import my.closet.fashion.style.fragments.MyProfileFragment;
 import my.closet.fashion.style.modesl.DefaultFollowers;
 import my.closet.fashion.style.modesl.Dresses;
+import my.closet.fashion.style.modesl.FeedResponse;
 import nl.dionsegijn.konfetti.KonfettiView;
 import nl.dionsegijn.konfetti.models.Shape;
 import nl.dionsegijn.konfetti.models.Size;
 
-import static my.closet.fashion.style.fragments.ClosetFragment.clearrefresh;
-import static my.closet.fashion.style.fragments.ClosetFragment.madapter;
-import static my.closet.fashion.style.fragments.ClosetFragment.mbottomadapter;
-import static my.closet.fashion.style.fragments.ClosetFragment.mfootwearadapter;
-import static my.closet.fashion.style.fragments.ClosetFragment.mtopadapter;
-
 public class HomeActivity extends AppCompatActivity {
 
     private static final int PERMISSION_ALL = 1111;
+    private static final int ACTIVITY_INDEX = 0;
 
     Realm realm;
     private File rootDir;
@@ -84,7 +83,7 @@ public class HomeActivity extends AppCompatActivity {
     private static FragmentManager manager;
     private MixpanelAPI mixpanelAPI;
     private FragmentTransaction transaction;
-    public static BottomNavigationView bottomnav;
+    public  BottomNavigationView bottomnav;
     public static DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
@@ -97,13 +96,6 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-    public static LinearLayout looktext;
-
-    ArrayList<Integer> names = new ArrayList<>();
-    ArrayList<Integer> topnames = new ArrayList<>();
-    ArrayList<Integer> bottomnames = new ArrayList<>();
-    ArrayList<Integer> footnames = new ArrayList<>();
-    public static RelativeLayout look_tab;
 
     String[] PERMISSIONS = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -114,6 +106,9 @@ public class HomeActivity extends AppCompatActivity {
     private List<DefaultFollowers> defaultFollowers;
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(HomeActivity.this);
     KonfettiView konfettiView;
+    private Button follow_all;
+    private String My_Dbkey;
+    private String my_email;
 
 
     @Override
@@ -121,6 +116,9 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Fabric.with(this,new Crashlytics());
         setContentView( R.layout.activity_home);
+
+        My_Dbkey = Utilities.loadPref(this, "My_DbKey", "");;
+        my_email = Utilities.loadPref(HomeActivity.this,"email","");
 
 
 
@@ -148,22 +146,21 @@ public class HomeActivity extends AppCompatActivity {
         ActionBar avy = getSupportActionBar();
         Objects.requireNonNull(avy).setTitle(null);
 
-        cross = (ImageView) findViewById(R.id.cross);
+       /* final Fragment fragment1 = new HomeFragment();
+        final Fragment fragment2 = new ClosetFragment();
+        final Fragment fragment3 = new LookbookFragment();
+        final Fragment fragment4 = new MyProfileFragment();
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        final Fragment[] active_fragment = {fragment1}; */
+
+       /* fragmentManager.beginTransaction().add(R.id.container,fragment1,"1").commit();
+        fragmentManager.beginTransaction().add(R.id.container,fragment2,"2").hide(fragment2).commit();
+        fragmentManager.beginTransaction().add(R.id.container,fragment3,"3").hide(fragment3).commit();
+        fragmentManager.beginTransaction().add(R.id.container,fragment4,"4").hide(fragment4).commit(); */
 
         konfettiView = (KonfettiView) findViewById(R.id.viewKonfetti);
         konfettiView.setVisibility(View.GONE);
 
-
-        cross.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                clearrefresh();
-                look_tab.setVisibility(View.GONE);
-                bottomnav.setVisibility(View.VISIBLE);
-            }
-        });
 
 
         mixpanelAPI= MixpanelAPI.getInstance(HomeActivity.this,"257c7d2e1c44d7d1ab6105af372f65a6");
@@ -183,30 +180,7 @@ public class HomeActivity extends AppCompatActivity {
         firestore.setFirestoreSettings(settings);
 
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close){
 
-            @Override
-            public void onDrawerClosed(View view) {
-
-                //fab_plus.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-
-                //fab_plus.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-
-                //fab_plus.setAlpha(1-slideOffset);
-            }
-
-
-
-        };
       //  toggle.setDrawerIndicatorEnabled(false);
        // toolbar.setNavigationIcon(R.drawable.ic_toggle_icon);
        /* if (Utilities.getBooleanPref(getApplicationContext(), "HasLogged_In", false)) {
@@ -245,34 +219,6 @@ public class HomeActivity extends AppCompatActivity {
 
         bottomnav = (BottomNavigationView) findViewById(R.id.bnve_icon_selector);
 
-        look_tab = (RelativeLayout) findViewById(R.id.linear);
-        looktext = (LinearLayout) findViewById(R.id.create_lay);
-
-        looktext.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-
-                                            if (mixpanelAPI!=null) {
-
-                                                mixpanelAPI.track("Create Look Tab");
-                                            }
-
-                                            names = madapter.getItems();
-                                            topnames = mtopadapter.getItems();
-                                            bottomnames = mbottomadapter.getItems();
-                                            footnames = mfootwearadapter.getItems();
-
-                                            Intent intent = new Intent(HomeActivity.this, CustomView.class);
-                                            //bundle.putStringArrayList();
-                                            intent.putIntegerArrayListExtra("acckey", names);
-                                            intent.putIntegerArrayListExtra("topkey", topnames);
-                                            intent.putIntegerArrayListExtra("bottomkey", bottomnames);
-                                            intent.putIntegerArrayListExtra("footkey", footnames);
-                                            startActivity(intent);
-
-
-                                        }
-                                    });
 
                 bottomnav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                     private boolean firstClick = true;
@@ -285,43 +231,46 @@ public class HomeActivity extends AppCompatActivity {
                             if (position == R.id.home) {
                                 //firstClick = false;
 
+                               /* fragmentManager.beginTransaction().hide(active_fragment[0]).show(fragment1).commit();
+                                active_fragment[0] = fragment1; */
+
                                 mixpanelAPI.track("Home");
                                 HomeFragment homeFragment = new HomeFragment();
                                 transaction = manager.beginTransaction();
                                 transaction.replace(R.id.container, homeFragment);
-                                transaction.addToBackStack("HomeFragment");
+                               // transaction.addToBackStack("HomeFragment");
                                 transaction.commit();
-                                closeDrawer();
+                               // closeDrawer();
                                 return true;
 
                             } else if (position == R.id.closet) {
                                 mixpanelAPI.track("Closet");
+
+
+
                                 ClosetFragment closetFragment = new ClosetFragment();
                                 transaction = manager.beginTransaction();
                                 transaction.replace(R.id.container, closetFragment);
-                                transaction.addToBackStack("ClosetFragment");
+                               // transaction.addToBackStack("ClosetFragment");
                                 transaction.commit();
-                                closeDrawer();
-                                return true;
-                            } else if (position == R.id.lookbook) {
+                               // closeDrawer();
 
-                                mixpanelAPI.track("Lookbook");
-                                LookbookFragment lookbookFragment = new LookbookFragment();
-                                transaction = manager.beginTransaction();
-                                transaction.replace(R.id.container, lookbookFragment);
-                                transaction.addToBackStack("LookbookFragment");
-                                transaction.commit();
-                                closeDrawer();
                                 return true;
 
-                            } else if (position == R.id.profile) {
+                            }  else if (position == R.id.profile) {
 
                                 mixpanelAPI.track("Profile");
+
+
                                 if (!Utilities.loadPref(HomeActivity.this, "email", "").equalsIgnoreCase("")) {
+
+                                  /*  fragmentManager.beginTransaction().hide(active_fragment[0]).show(fragment4).commit();
+                                    active_fragment[0] = fragment4; */
+
                                     MyProfileFragment myProfileFragment = new MyProfileFragment();
                                     transaction = manager.beginTransaction();
                                     transaction.replace(R.id.container, myProfileFragment);
-                                    transaction.addToBackStack("MyProfileFragment");
+                                   // transaction.addToBackStack("MyProfileFragment");
                                     transaction.commit();
                                     closeDrawer();
                                     return true;
@@ -341,15 +290,8 @@ public class HomeActivity extends AppCompatActivity {
                 });
 
 
-       // loadFragment(new HomeFragment());
-     /*   new MaterialTapTargetPrompt.Builder(new HomeFragment())
-                .setTarget(R.id.upload_menu)
-                .setSecondaryText("Click Here to add Clothes")
-                .setIcon(R.drawable.ic_add)
-                .setFocalPadding(R.dimen.dp40)
-                .setAnimationInterpolator(new LinearOutSlowInInterpolator())
+       loadFragment(new HomeFragment());
 
-                .show(); */
 
 
     }
@@ -358,6 +300,11 @@ public class HomeActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
        // int i = getIntent().getExtras().getInt("position");
+
+        Menu menu = bottomnav.getMenu();
+        MenuItem menuItem = menu.getItem(ACTIVITY_INDEX);
+        menuItem.setChecked(true);
+
         SharedPreferences sharedPreferences = getSharedPreferences("preference",MODE_PRIVATE);
         boolean dialog = sharedPreferences.getBoolean("dialog",true);
 
@@ -392,20 +339,42 @@ public class HomeActivity extends AppCompatActivity {
 
                 if (getIntent().getExtras().containsKey("celeb")){
 
-                    konfettiView.setVisibility(View.VISIBLE);
+                    if(!getSharedPreferences("prefs",MODE_PRIVATE).getBoolean("firsttimelaunch",true)
+                    || getSharedPreferences("prefs",MODE_PRIVATE).getBoolean("secondtimelaunch",true)){
 
-                    konfettiView.build()
-                            .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
-                            .setDirection(0.0, 359.0)
-                            .setSpeed(1f, 5f)
-                            .setFadeOutEnabled(true)
-                            .setTimeToLive(2000L)
-                            .addShapes(Shape.RECT, Shape.CIRCLE)
-                            .addSizes(new Size(12,5f))
-                            .setPosition(-50f, konfettiView.getWidth() + 50f, -50f, -50f)
-                            .stream(300, 5000L);
+                        konfettiView.setVisibility(View.VISIBLE);
 
-                    loadFragment(new ClosetFragment());
+
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+
+
+
+                                konfettiView.build().addColors(getResources().getColor(R.color.colorPrimary),getResources().getColor(R.color.colorAccent),getResources().getColor(R.color.gold))
+                                        .setDirection(0.0, 359.0)
+                                        .setSpeed(2f, 5f)
+                                        .setFadeOutEnabled(true)
+                                        .setTimeToLive(4000L)
+                                        .addShapes(Shape.RECT, Shape.CIRCLE)
+                                        .addSizes(new Size(12,6f),new  Size(16, 6f))
+
+                                        .setPosition(konfettiView.getX()+ konfettiView.getWidth()/2 ,konfettiView.getY() + konfettiView.getHeight()/3)
+                                        .burst(150);
+
+
+
+
+
+                            }
+                        });
+
+                        loadFragment(new ClosetFragment());
+
+
+
+
+                    }
 
 
 
@@ -417,13 +386,56 @@ public class HomeActivity extends AppCompatActivity {
 
             } else if (getIntent().getExtras().getInt("position") == 3){
 
-                loadFragment(new LookbookFragment());
+                loadFragment(new MyProfileFragment());
 
 
             } else {
 
-                loadFragment(new HomeFragment());
-            }
+
+
+                if (getIntent().getExtras().containsKey("celebration")){
+
+                    if(getSharedPreferences("prefs",MODE_PRIVATE).getBoolean("post",true)) {
+
+                        Utilities.showToast(HomeActivity.this,"Congrats!!You've posted your first picture");
+                        konfettiView.setVisibility(View.VISIBLE);
+
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                konfettiView.build()
+                                        .addColors(getResources().getColor(R.color.colorPrimary), getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.gold))
+                                        .setDirection(0.0, 359.0)
+                                        .setSpeed(2f, 5f)
+                                        .setFadeOutEnabled(true)
+                                        .setTimeToLive(4000L)
+                                        .addShapes(Shape.RECT, Shape.CIRCLE)
+                                        .addSizes(new Size(12, 6f), new Size(16, 6f))
+
+                                        .setPosition(konfettiView.getX() + konfettiView.getWidth() / 2, konfettiView.getY() + konfettiView.getHeight() / 3)
+                                        .burst(150);
+
+
+                                //Utilities.showToast(HomeActivity.this, "Congrats,You've Posted your First Picture");
+
+
+                                SharedPreferences.Editor editor = getSharedPreferences("prefs", MODE_PRIVATE).edit();
+                                editor.putBoolean("post", false);
+                                editor.apply();
+
+
+                            }
+                        });
+                    }
+
+                }
+
+
+
+                }
+
+
         }else {
 
            // loadFragment(new HomeFragment());
@@ -438,23 +450,7 @@ public class HomeActivity extends AppCompatActivity {
       //  closeDrawer();
     }
 
-    public void onClickcalled() {
 
-        RealmResults<Dresses> realmcheck = realm.where(Dresses.class).findAll();
-
-        for (Dresses dresses : realmcheck) {
-
-            if (dresses.isSelected()) {
-                bottomnav.setVisibility(View.GONE);
-                look_tab.setVisibility(View.VISIBLE);
-                break;
-            } else {
-
-                look_tab.setVisibility(View.INVISIBLE);
-                bottomnav.setVisibility(View.VISIBLE);
-            }
-        }
-    }
 
 
 
@@ -466,7 +462,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        toggle.syncState();
+//        toggle.syncState();
     }
 
     public void displayActionBar() {
@@ -540,8 +536,9 @@ public class HomeActivity extends AppCompatActivity {
         View view = inflater.inflate(R.layout.dialog_listview_deaultusers,null);
 
         RecyclerView listView = (RecyclerView) view.findViewById(R.id.dialog_list_default_followers);
-        listView.setLayoutManager(linearLayoutManager);
-        ok_text = (TextView) view.findViewById(R.id.ok_text);
+        listView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
+       // ok_text = (TextView) view.findViewById(R.id.ok_text);
+        follow_all = (Button) view.findViewById(R.id.follow_all_text);
         DefaultFollowersAdapter defaultFollowersAdapter = new DefaultFollowersAdapter(this,defaultFollowers);
         listView.setAdapter(defaultFollowersAdapter);
         listView.setHasFixedSize(true);
@@ -552,10 +549,11 @@ public class HomeActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
         dialog.setCanceledOnTouchOutside(false);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
 
 
 
-        ok_text.setOnClickListener(new View.OnClickListener() {
+     /*   ok_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -567,10 +565,200 @@ public class HomeActivity extends AppCompatActivity {
                 dialog.dismiss();
 
             }
+        }); */
+
+        follow_all.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SharedPreferences preferences = getSharedPreferences("preference",MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("dialog",false);
+                editor.apply();
+
+                FirebaseFirestore.getInstance().collection("Default Followers").get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(Task<QuerySnapshot> task) {
+
+                        if (task.isSuccessful()){
+
+                            Utilities.showLoading(HomeActivity.this,"Loading");
+
+                            for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()){
+
+                                FirebaseFirestore.getInstance()
+                                        .collection("UsersList")
+                                        .document(My_Dbkey)
+                                        .collection("Followee")
+                                        .document(Objects.requireNonNull(documentSnapshot.get("email")).toString())
+                                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(Task<DocumentSnapshot> task) {
+
+                                        if (task.isSuccessful()){
+
+                                            if (!Objects.requireNonNull(task.getResult()).exists()){
+
+                                                String id = UUID.randomUUID().toString();
+
+                                                HashMap<String,Object> hashMap = new HashMap<>();
+
+                                                hashMap.put("id",id);
+                                                hashMap.put("email", Objects.requireNonNull(documentSnapshot.get("email")).toString());
+                                                hashMap.put("name", Objects.requireNonNull(documentSnapshot.get("name")).toString());
+
+                                                if (documentSnapshot.get("profile_pic")!=null){
+
+                                                    hashMap.put("imgname", Objects.requireNonNull(documentSnapshot.get("profile_pic")).toString());
+
+                                                }else {
+
+                                                    hashMap.put("imgname","");
+                                                }
+
+
+
+
+
+
+                                                FirebaseFirestore.getInstance().collection("UsersList").document(My_Dbkey)
+                                                        .collection("Followee")
+                                                        .document(documentSnapshot.get("email").toString()).set(hashMap);
+
+
+                                                getPosts(documentSnapshot.get("key").toString());
+
+
+                                            }
+
+
+                                        }
+
+                                    }
+                                });
+
+
+                                FirebaseFirestore.getInstance().collection("UsersList")
+                                        .document(documentSnapshot.get("key").toString())
+                                        .collection("FollowCollection").document(my_email).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(Task<DocumentSnapshot> task) {
+
+                                        if (task.isSuccessful()){
+
+                                            if (!task.getResult().exists()){
+
+                                                Map<String, Object> data = new HashMap<>();
+                                                String id = UUID.randomUUID().toString();
+
+                                                data.put("id", id);
+                                                data.put("email", Utilities.loadPref(HomeActivity.this, "email", ""));
+                                                data.put("imgname",Utilities.loadPref(HomeActivity.this, "Profile_Pic", ""));
+                                                data.put("name",Utilities.loadPref(HomeActivity.this, "Pen_Name","" ));
+
+                                                FirebaseFirestore.getInstance().collection("UsersList")
+                                                        .document(documentSnapshot.get("key").toString())
+                                                        .collection("FollowCollection").document(my_email).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+
+                                                        Utilities.hideLoading();
+                                                       // dialog.dismiss();
+
+                                                    }
+                                                });
+
+
+                                            }
+                                        }
+
+                                    }
+                                });
+
+
+                            }
+                        }
+
+                        Utilities.hideLoading();
+                        dialog.dismiss();
+
+                    }
+                });
+
+            }
         });
+
+
 
 
     }
 
 
+
+    @Override
+    public void onBackPressed() {
+
+        List<Fragment> mraglist = getSupportFragmentManager().getFragments();
+        for (Fragment f : mraglist){
+
+            if (f instanceof ClosetFragment){
+
+
+
+                ((ClosetFragment) f).onBackPressed();
+            }
+        }
+        super.onBackPressed();
+    }
+
+    private void getPosts(String key) {
+
+        FirebaseFirestore.getInstance().collection("UsersList").document(key).collection("Posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(Task<QuerySnapshot> task) {
+
+                if (task.isSuccessful()){
+
+                    for(DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())){
+
+                        FeedResponse feedResponse = documentSnapshot.toObject(FeedResponse.class);
+                        if (feedResponse != null) {
+                            FirebaseFirestore.getInstance().collection("UsersList").document(My_Dbkey).collection("Feed").add(feedResponse);
+                        }
+                    }
+
+
+
+
+                }else {
+
+                    Toast.makeText(HomeActivity.this,"Check your connection",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+    }
+
+    private void fireLongToast() {
+
+        Thread t = new Thread() {
+            public void run() {
+                int count = 0;
+                try {
+                    while (true && count < 10) {
+                      //  toast.show();
+                        sleep(1850);
+                        count++;
+
+                        // DO SOME LOGIC THAT BREAKS OUT OF THE WHILE LOOP
+                    }
+                } catch (Exception e) {
+                   // Log.e("LongToast", "", e);
+                }
+            }
+        };
+        t.start();
+    }
 }

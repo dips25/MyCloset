@@ -24,6 +24,7 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 
 import my.closet.fashion.style.R;
+import my.closet.fashion.style.Utilities;
 import my.closet.fashion.style.adapters.SampleAccAdapter;
 import my.closet.fashion.style.modesl.SamplePics;
 
@@ -51,6 +52,12 @@ public class TeesFragment extends Fragment {
 
         SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("prefs", Context.MODE_PRIVATE);
         boolean firstsampletop = sharedPreferences.getBoolean("firstsampletop",true);
+
+        if(firstsampletop){
+
+            Utilities.showToast(getActivity(),"Select a Top");
+
+        }
 
         query = FirebaseFirestore.getInstance().collection("Sample Pics").whereEqualTo("subcategory","Tees");
         getclothes();

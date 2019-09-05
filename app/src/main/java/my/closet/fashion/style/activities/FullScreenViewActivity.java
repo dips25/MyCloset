@@ -728,11 +728,11 @@ public class FullScreenViewActivity extends AppCompatActivity implements View.On
                                     }
                                     if (documentSnapshot.exists()) {
                                         follow_btn.setText("Following");
-                                        follow_btn.setBackgroundResource(R.drawable.following_btn);
+                                        follow_btn.setBackgroundResource(R.drawable.following_button_square);
                                         follow_btn.setTextColor(ContextCompat.getColor(FullScreenViewActivity.this, R.color.selected_tab));
                                     } else {
                                         follow_btn.setText("Follow");
-                                        follow_btn.setBackgroundResource(R.drawable.follow_btn);
+                                        follow_btn.setBackgroundResource(R.drawable.follow_button_square);
                                         follow_btn.setTextColor(ContextCompat.getColor(FullScreenViewActivity.this, R.color.white));
                                     }
                                 }

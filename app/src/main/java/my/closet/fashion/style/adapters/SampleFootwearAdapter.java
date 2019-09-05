@@ -47,6 +47,8 @@ public class SampleFootwearAdapter extends ArrayAdapter {
                 .placeholder(R.drawable.white_border);
 
         ImageView img = (ImageView) view.findViewById(R.id.img);
+        ImageView tut_clicker = (ImageView) view.findViewById(R.id.tut_clicker);
+        tut_clicker.setVisibility(View.GONE);
 
         Glide.with(context).load(samplefootwear.get(position).getImgurl()).apply(requestOptions).into(img);
 

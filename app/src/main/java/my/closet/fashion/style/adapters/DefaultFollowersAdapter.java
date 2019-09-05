@@ -94,7 +94,7 @@ public class DefaultFollowersAdapter extends RecyclerView.Adapter<DefaultFollowe
                 if (Objects.requireNonNull(documentSnapshot).exists()){
 
                     holder.follow_button.setText("Following");
-                    holder.follow_button.setBackgroundResource(R.drawable.following_btn);
+                    holder.follow_button.setBackgroundResource(R.drawable.following_button_square_dialog);
                     holder.follow_button.setTextColor(ContextCompat.getColor(context,R.color.colorAccent));
 
 
@@ -102,7 +102,7 @@ public class DefaultFollowersAdapter extends RecyclerView.Adapter<DefaultFollowe
                 }else {
 
                     holder.follow_button.setText("Follow");
-                    holder.follow_button.setBackgroundResource(R.drawable.follow_btn);
+                    holder.follow_button.setBackgroundResource(R.drawable.follow_button_square_dialog);
                     holder.follow_button.setTextColor(ContextCompat.getColor(context,R.color.white));
 
                 }

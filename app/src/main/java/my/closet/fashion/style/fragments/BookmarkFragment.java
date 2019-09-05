@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -19,6 +20,7 @@ import com.firebase.ui.firestore.SnapshotParser;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.firebase.ui.firestore.paging.LoadingState;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,9 +34,6 @@ import my.closet.fashion.style.activities.PictureDeletingActivity;
 import my.closet.fashion.style.adapters.BookmarkViewHolder;
 import my.closet.fashion.style.customs.SpacesItemDecoration;
 import my.closet.fashion.style.modesl.BookmarkResponse;
-
-import static my.closet.fashion.style.activities.HomeActivity.bottomnav;
-import static my.closet.fashion.style.activities.HomeActivity.look_tab;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +49,8 @@ public class BookmarkFragment extends Fragment {
     private ProgressBar prbLoading;
     private StaggeredGridLayoutManager mLayoutManager;
     private FirestorePagingAdapter<BookmarkResponse, BookmarkViewHolder> adapter;
+    private RelativeLayout look_tab;
+    private BottomNavigationView bottomnav;
 
     public BookmarkFragment() {
         // Required empty public constructor
@@ -79,6 +80,9 @@ public class BookmarkFragment extends Fragment {
         mLayoutManager = new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL);
         bookmarkrecyleview.setLayoutManager(mLayoutManager);
         bookmarkrecyleview.addItemDecoration(new SpacesItemDecoration(20));
+
+        look_tab = getActivity().findViewById(R.id.linear);
+        bottomnav = (BottomNavigationView) getActivity().findViewById(R.id.bnve_icon_selector);
 
         bookmarkrecyleview.addOnScrollListener(new RecyclerView.OnScrollListener()
         {

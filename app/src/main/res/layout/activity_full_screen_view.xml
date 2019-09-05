@@ -74,7 +74,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="5dp"
                 android:layout_weight="0.5"
-                android:background="@drawable/follow_btn"
+                android:background="@drawable/follow_button_square"
                 android:text="Follow"
                 android:textAllCaps="false"
                 android:textColor="@color/colorAccent"

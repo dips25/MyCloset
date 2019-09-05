@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.firebase.ui.firestore.paging.LoadingState;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -31,9 +33,6 @@ import my.closet.fashion.style.activities.PictureDeletingActivity;
 import my.closet.fashion.style.adapters.UserFeedsViewHolder;
 import my.closet.fashion.style.customs.SpacesItemDecoration;
 import my.closet.fashion.style.modesl.FeedResponse;
-
-import static my.closet.fashion.style.activities.HomeActivity.bottomnav;
-import static my.closet.fashion.style.activities.HomeActivity.look_tab;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +50,8 @@ public class MyPicsFragment extends Fragment {
     private CollectionReference feedRef;
     private Query query;
     private FirestorePagingAdapter<FeedResponse, UserFeedsViewHolder> adapter;
+    private RelativeLayout look_tab;
+    private BottomNavigationView bottomnav;
 
     public MyPicsFragment() {
         // Required empty public constructor
@@ -81,6 +82,10 @@ public class MyPicsFragment extends Fragment {
         mLayoutManager = new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL);
         mypicsrecyleview.setLayoutManager(mLayoutManager);
         mypicsrecyleview.addItemDecoration(new SpacesItemDecoration(20));
+
+        look_tab = getActivity().findViewById(R.id.linear);
+        bottomnav = (BottomNavigationView) getActivity().findViewById(R.id.bnve_icon_selector);
+
 
         mypicsrecyleview.addOnScrollListener(new RecyclerView.OnScrollListener()
         {

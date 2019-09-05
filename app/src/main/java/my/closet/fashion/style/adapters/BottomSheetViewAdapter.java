@@ -45,6 +45,9 @@ public class BottomSheetViewAdapter extends ArrayAdapter {
 
         ImageView imageView = (ImageView) v.findViewById(R.id.img);
 
+        ImageView tut_clicker = (ImageView) v.findViewById(R.id.tut_clicker);
+        tut_clicker.setVisibility(View.GONE);
+
         Bitmap bitmap = new ImageSaver(context).setFileName(dressesArrayList.get(position).getImagename()).setDirectoryName("mycloset").load();
         imageView.setImageBitmap(bitmap);
 

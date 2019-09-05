@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="3"
+    android:layout_height="450dp"
+
     android:background="@drawable/dialog_background">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/button_holder">
-
+        android:layout_height="wrap_content"
+        android:id="@+id/recycler">
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/dialog_list_default_followers">
 
     </androidx.recyclerview.widget.RecyclerView>
@@ -24,21 +23,25 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/recycler"
         android:id="@+id/button_holder"
-        >
+        android:layout_marginTop="30dp">
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Follow All"
         android:textSize="18dp"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/white"
         android:textStyle="bold"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/follow_all_button"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textAllCaps="false"
         android:id="@+id/follow_all_text"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
+
         />
 
         <TextView
@@ -52,6 +55,9 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:id="@+id/ok_text"
+            android:background="@color/white"
+            android:visibility="gone"
+
 
             />
 

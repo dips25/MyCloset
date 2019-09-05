@@ -60,12 +60,12 @@
     <style name="MaterialTapTargetPromptTheme">
         <!--Add custom base styling in here -->
 
-        <item name="mttp_backgroundColour">@color/colorPrimary</item>
-        <item name="mttp_focalColour">@android:color/transparent</item>
-        <item name="mttp_focalRadius">88dp</item>
+        <item name="mttp_backgroundColour">@color/pinktrans</item>
+        <item name="mttp_focalColour">@color/white</item>
+        <item name="mttp_focalRadius">50dp</item>
         <item name="mttp_primaryTextSize">10sp</item>
         <item name="mttp_secondaryTextColour">@color/colorAccent</item>
-        <item name="mttp_secondaryTextSize">18sp</item>
+        <item name="mttp_secondaryTextSize">14sp</item>
         <item name="mttp_maxTextWidth">600dp</item>
         <item name="mttp_textPadding">80dp</item>
         <item name="mttp_focalToTextPadding">12dp</item>
@@ -74,9 +74,31 @@
         <item name="mttp_secondaryTextTypeface">monospace</item>
     </style>
 
+    <style name="MaterialTapTargetPromptTheme.MaterialTapTargetSimple">
+
+        <item name="mttp_backgroundColour">@color/pinktrans</item>
+        <item name="mttp_focalColour">@color/pinktrans</item>
+        <item name="mttp_focalRadius">20dp</item>
+        <item name="mttp_primaryTextSize">10sp</item>
+        <item name="mttp_secondaryTextColour">@color/colorAccent</item>
+        <item name="mttp_secondaryTextSize">0dp</item>
+        <item name="mttp_maxTextWidth">600dp</item>
+        <item name="mttp_textPadding">0dp</item>
+        <item name="mttp_focalToTextPadding">0dp</item>
+        <item name="mttp_textSeparation">0dp</item>
+        <item name="mttp_primaryTextTypeface">serif</item>
+        <item name="mttp_secondaryTextTypeface">monospace</item>
+
+
+
+
+
+    </style>
+
 
 
 
     <color name="heading">#442B20</color>
+    <color name="colortrans" />
 
 </resources>

@@ -325,7 +325,7 @@ public class PictureDeletingActivity extends AppCompatActivity implements View.O
                         String fkey = documentSnapshot.getId();
                         if (fkey!=null){
 
-                            db.collection("UsersList").document(My_DbKey).collection("_Feed").document(fkey).delete();
+                            db.collection("UsersList").document(My_DbKey).collection("Feed").document(fkey).delete();
                         }
                     }
                 }

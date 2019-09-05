@@ -48,6 +48,7 @@ import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
 import my.closet.fashion.style.customs.ImageSaver;
 import my.closet.fashion.style.modesl.Looks;
+import nl.dionsegijn.konfetti.KonfettiView;
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 
@@ -75,6 +76,9 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
     int metaid;
     Looks looks;
     Realm realm;
+    SharedPreferences sharedPreferences;
+    boolean post_tut;
+    KonfettiView konfettiView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +97,11 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
         profCollection = FirebaseFirestore.getInstance();
         i = getIntent();
         b = getIntent().getExtras();
+
+        sharedPreferences = getSharedPreferences("prefs",MODE_PRIVATE);
+        konfettiView = (KonfettiView) findViewById(R.id.home_celeb);
+        konfettiView.setVisibility(View.GONE);
+
 
         //metaid = Objects.requireNonNull(getIntent().getExtras()).getInt("id");
         //looks = realm.where(Looks.class).equalTo("id",metaid).findFirst();
@@ -138,6 +147,14 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
                         public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
 
                             if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED){
+
+                                if (mixpanelAPI!=null){
+
+                                    mixpanelAPI.track("PostTutorialClicked");
+
+                                }
+
+
 
                                 SharedPreferences preferences = getSharedPreferences("prefs", MODE_PRIVATE);
                                 SharedPreferences.Editor editor = preferences.edit();
@@ -340,15 +357,25 @@ public class PostFeedActivity extends AppCompatActivity implements View.OnClickL
                                     }
                                     Utilities.showToast(PostFeedActivity.this, "Posted...");
 
+
                                     Utilities.hideLoading();
                                     DeletePath();
+                                    boolean post_tut = sharedPreferences.getBoolean("post",true);
 
                                     Intent returnTOLogin = new Intent(getApplicationContext(), HomeActivity.class);
                                     returnTOLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     returnTOLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    if (post_tut){
+
+                                        returnTOLogin.putExtra("celebration","celeb");
+                                    }
                                     startActivity(returnTOLogin);
                                     finish();
                                     overridePendingTransition(R.anim.fade_in, R.anim.slide_out_down);
+
+
+
+
                                 } else {
                                     DeletePath();
                                     Utilities.hideLoading();

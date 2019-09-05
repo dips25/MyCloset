@@ -135,7 +135,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
 
 
         bio_txt = (TextView) view.findViewById(R.id.bio_txt);
-        post_count_txt = (TextView) view.findViewById(R.id.post_count_txt);
+       // post_count_txt = (TextView) view.findViewById(R.id.post_count_txt);
         follower_count_txt = (TextView) view.findViewById(R.id.follower_count_txt);
         followerss_count_txt = (TextView) view.findViewById(R.id.followerss_count_txt);
 
@@ -190,7 +190,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
 
                 assert queryDocumentSnapshots != null;
 
-                post_count_txt.setText(String.valueOf(queryDocumentSnapshots.size()));
+               // post_count_txt.setText(String.valueOf(queryDocumentSnapshots.size()));
 
             }
         });
@@ -240,7 +240,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
                         if (key != null && !key.equalsIgnoreCase("")) {
                             FollowerCount();
                             FolloweeCount();
-                            postCount();
+                           // postCount();
 
                         }
 
@@ -301,9 +301,11 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
 
     private void setupViewPager() {
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(Objects.requireNonNull(getActivity()).getSupportFragmentManager());
+        adapter.addFrag(new LookbookFragment(),"LookBook");
         adapter.addFrag(new MyPicsFragment(), getString(R.string.my_uploads));
         adapter.addFrag(new BookmarkFragment(), getString(R.string.bookmarks));
+
         frame.setAdapter(adapter);
     }
 
@@ -313,7 +315,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.edit_profile_btn:
                 mixpanelAPI.track("FBandGoogle or Profile");
-                if (!Utilities.loadPref(getActivity(), "email", "").equalsIgnoreCase("")) {
+                if (!Utilities.loadPref(Objects.requireNonNull(getActivity()), "email", "").equalsIgnoreCase("")) {
                     Intent ii = new Intent(getActivity(), UserProfileActivity.class);
                     ii.putExtra("LoginData", fbGmailData);
                     startActivity(ii);

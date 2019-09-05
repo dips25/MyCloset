@@ -51,9 +51,10 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/follow_btn"
+            android:background="@drawable/follow_button_square"
             android:text="Follow"
-
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:id="@+id/list_followers_button"
             android:textAllCaps="false"
             android:textColor="@color/white"

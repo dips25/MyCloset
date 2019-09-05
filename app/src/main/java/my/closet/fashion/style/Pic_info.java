@@ -257,6 +257,7 @@ public class Pic_info extends AppCompatActivity {
     int k;
 
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pic_info);
@@ -292,6 +293,8 @@ public class Pic_info extends AppCompatActivity {
         silver=nooption;
         gold=nooption;
 
+
+
         save = (ImageView)findViewById(R.id.crtxt1);
         acctexttt= findViewById(R.id.acctext);
         acctextslct= findViewById(R.id.acctext1);
@@ -308,9 +311,10 @@ public class Pic_info extends AppCompatActivity {
         foottxtslct.setVisibility(View.INVISIBLE);
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("prefs", Context.MODE_PRIVATE);
-        boolean firsttimepicinfo = sharedPreferences.getBoolean("firsttimepicinfo",true);
+        //boolean firsttimepicinfo = sharedPreferences.getBoolean("firsttimepicinfo",true);
 
-        if (firsttimepicinfo) {
+        if (sharedPreferences.getBoolean("firsttimelaunch",true)
+           || sharedPreferences.getBoolean("secondtimelaunch",true)) {
 
             new MaterialTapTargetPrompt.Builder(Pic_info.this,R.style.MaterialTapTargetPromptTheme)
                     .setTarget(save)
@@ -1826,17 +1830,23 @@ public class Pic_info extends AppCompatActivity {
                                 SharedPreferences.Editor editor = preferences.edit();
                                 editor.putBoolean("firsttimelaunch",false);
                                 editor.apply();
-                                Toast.makeText(Pic_info.this, "Congrats,You've added a new Cloth", Toast.LENGTH_SHORT).show();
+
+                                Utilities.showToast(Pic_info.this,"Congrats!!You've added your first cloth");
+
+
 
                             }else if (getSharedPreferences("prefs",MODE_PRIVATE).getBoolean("secondtimelaunch",true)){
 
                                 intent1.putExtra("celeb","celeb");
 
-                                SharedPreferences preferences = Pic_info.this.getSharedPreferences("prefs",MODE_PRIVATE);
+                                SharedPreferences preferences = getSharedPreferences("prefs",MODE_PRIVATE);
                                 SharedPreferences.Editor editor = preferences.edit();
                                 editor.putBoolean("secondtimelaunch",false);
                                 editor.apply();
-                                Toast.makeText(Pic_info.this, "Congrats,You've added a new Cloth", Toast.LENGTH_SHORT).show();
+
+
+
+                                Utilities.showToast(Pic_info.this,"Congrats!!You've added your second cloth");
 
 
                             }
@@ -2031,6 +2041,8 @@ public class Pic_info extends AppCompatActivity {
 
 
     }
+
+
 
 
 }

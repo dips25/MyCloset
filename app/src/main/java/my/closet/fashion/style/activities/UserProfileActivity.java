@@ -54,10 +54,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -359,13 +359,12 @@ public class UserProfileActivity extends AppCompatActivity implements
                 }
             } else {
 
-                Glide.with(UserProfileActivity.this)
-                        .load(fBGmailData_obj.getPicture()).apply(requestOptions)
-                        .into(profile_image);
+                profile_image.setBackgroundResource(R.drawable.ic_user_profile);
+
 
                 Glide.with(UserProfileActivity.this)
                         .asBitmap()
-                        .load(fBGmailData_obj.getPicture()).into(new SimpleTarget<Bitmap>() {
+                        .load(R.drawable.ic_user_profile).into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
 
@@ -724,6 +723,8 @@ public class UserProfileActivity extends AppCompatActivity implements
 
             } else {
 
+
+
                 final StorageReference ref = storageRef.child("Profiles/" +
                         UUID.randomUUID().toString());
 
@@ -745,7 +746,7 @@ public class UserProfileActivity extends AppCompatActivity implements
                     @Override
                     public void onComplete(Task<Uri> task) {
                         if (task.isComplete()) {
-                            downloaded_url = Objects.requireNonNull(task.getResult()).toString();
+                            downloaded_url = task.getResult().toString();
 
                             saveuserDetails(downloaded_url);
                         }
@@ -808,36 +809,30 @@ public class UserProfileActivity extends AppCompatActivity implements
                             });
                 } else {
 
-                    profCollection.collection("UsersList").add(Details).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+
+                    profCollection.collection("UsersList").document(uid).set(Details).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
-                        public void onComplete(Task<DocumentReference> task) {
+                        public void onSuccess(Void aVoid) {
 
-                            if (task.isSuccessful()){
+                            String dbid = UUID.randomUUID().toString();
+                            Utilities.savebooleanPref(UserProfileActivity.this, "HasLogged_In", true);
+                            Utilities.savePref(UserProfileActivity.this, "Profile_Pic", url);
+                            Utilities.savePref(UserProfileActivity.this, "Pen_Name", penname_edittext.getText().toString());
+                            Utilities.savePref(UserProfileActivity.this, "email", email_edittext.getText().toString());
+                            Utilities.savePref(UserProfileActivity.this,"My_DbKey", uid);
 
-                               // String id = task.getResult().getId();
+                            Utilities.hideLoading();
+                            Utilities.showToast(UserProfileActivity.this, "Profile Saved");
+                            Intent login_Intent = new Intent(UserProfileActivity.this, HomeActivity.class);
+                            startActivity(login_Intent);
+                            finish();
+                            overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
+                            Toast.makeText(UserProfileActivity.this, "key:" + dbid, Toast.LENGTH_SHORT).show();
 
-                                Utilities.hideLoading();
-                                Utilities.showToast(UserProfileActivity.this, "Profile Saved");
-                                Utilities.savebooleanPref(UserProfileActivity.this, "HasLogged_In", true);
-                                Utilities.savePref(UserProfileActivity.this, "Profile_Pic", url);
-                                Utilities.savePref(UserProfileActivity.this, "Pen_Name", penname_edittext.getText().toString());
-                                Utilities.savePref(UserProfileActivity.this, "email", email_edittext.getText().toString());
-                                Utilities.savePref(UserProfileActivity.this,"My_DbKey", Objects.requireNonNull(task.getResult()).getId());
-                                Intent login_Intent = new Intent(UserProfileActivity.this, HomeActivity.class);
-                                startActivity(login_Intent);
-                                finish();
-                                overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
-                                Toast.makeText(UserProfileActivity.this, "key:" + Objects.requireNonNull(task.getResult()).getId(), Toast.LENGTH_SHORT).show();
-                            }else {
-
-                                Utilities.showToast(UserProfileActivity.this, "Try again later");
-                                Utilities.hideLoading();
-
-                            }
 
                         }
                     });
-
 
                 }
 

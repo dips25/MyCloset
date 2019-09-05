@@ -104,6 +104,7 @@
     <string name="bookmark_saved">Saved</string>
     <string name="matching_apparel_from_your_closet">Matching apparel from your Closet</string>
     <string name="sample_pics">Sample Pics</string>
+    <string name="sample_pics_heading">Sample Pics</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>
