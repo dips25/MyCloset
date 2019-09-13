@@ -89,7 +89,7 @@
     <string name="profile">轮廓</string>
     <string name="describe_with_tags">与 标签</string>
     <string name="post">ENVIAR</string>
-    <string name="create_look">모양 만들기</string>
+    <string name="create_look">적합 아웃 만들기</string>
     <string name="background_color">배경색</string>
     <string name="my_uploads">내 게시물</string>
     <string name="bookmarks">즐겨 찾기</string>
@@ -100,6 +100,9 @@
     <string name="sharequote">나는 당신이하고 싶은 생각은 여기를 클릭</string>
     <string name="bookmark_saved">저장된</string>
     <string name="matching_apparel_from_your_closet">당신의 옷장에서 의류를 일치</string>
+    <string name="first_celebration">축하합니다! 당신은 당신의 첫번째 의류를 추가 한</string>
+    <string name="second_celebration">둘째 의류는 이제 모양을 만들 수 있습니다 추가</string>
+    <string name="post_celeb">만세! 당신은 당신의 첫번째 포스트를 게시</string>
 
 
 </resources>

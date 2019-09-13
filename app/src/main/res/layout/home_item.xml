@@ -21,7 +21,7 @@
             app:cardCornerRadius="10dp"
             app:cardElevation="0dp">
 
-            <ImageView
+            <my.closet.fashion.style.customs.ZoomImageView
                 android:id="@+id/picture"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

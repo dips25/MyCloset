@@ -2,6 +2,7 @@ package my.closet.fashion.style.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -23,6 +24,7 @@ public class FollowerFollowingViewActivity extends AppCompatActivity {
     Intent intent;
     String key;
     Toolbar toolbar;
+    TextView toolbar_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +38,14 @@ public class FollowerFollowingViewActivity extends AppCompatActivity {
         key = Objects.requireNonNull(getIntent().getExtras()).getString("key");
 
         toolbar = (Toolbar) findViewById(R.id.follower_following_toolbar);
+        toolbar_text = (TextView) findViewById(R.id.follower_following_toolbar_text);
        // toolbar.setTitle(intent.getStringExtra("name"));
        // toolbar.setTitleTextColor(getResources().getColor(R.color.colorAccent));
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(Objects.requireNonNull(intent.getExtras()).getString("name"));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().isTitleTruncated();
-
-
-
-
-
+        toolbar_text.setText(Objects.requireNonNull(intent.getExtras()).getString("name"));
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(null);
+        toolbar.isTitleTruncated();
 
 
 

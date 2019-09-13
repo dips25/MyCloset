@@ -495,8 +495,7 @@ public class CustomView extends AppCompatActivity {
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         bitmap.compress(Bitmap.CompressFormat.PNG,100,baos);
                         byte[] b = baos.toByteArray();
-                        updatepost(b);
-                        new ImageSaver(CustomView.this).setFileName(imagename).setDirectoryName("mycloset").saveImage(bitmap);
+                    new ImageSaver(CustomView.this).setFileName(imagename).setDirectoryName("mycloset").saveImage(bitmap);
 
 
                         RealmResults<Looks> lookid = realm.where(Looks.class).findAll();
@@ -527,47 +526,15 @@ public class CustomView extends AppCompatActivity {
                         Looks finallooks = realm.copyToRealm(looks);
                         realm.commitTransaction();
 
-
-                        valuemap.put("lookid", n);
-                        valuemap.put("stylename", s);
-
-
-                        FirebaseFirestore.getInstance().collection("UsersList").document(My_DbKey).collection("MetaData").add(valuemap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        new Handler().post(new Runnable() {
                             @Override
-                            public void onComplete(Task<DocumentReference> task) {
+                            public void run() {
 
-                                if (task.isSuccessful()){
-
-                                    boolean post_tut = sharedPreferences.getBoolean("post",true);
-
-                                    Utilities.hideLoading();
-
-
-                                    Intent intent = new Intent(CustomView.this, HomeActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    if(post_tut){
-
-                                        intent.putExtra("celebration","celeb");
-                                    }
-                                    startActivity(intent);
-                                    finish();
-
-                                    Utilities.showToast(CustomView.this,"Posted");
-                                    overridePendingTransition(R.anim.fade_in, R.anim.slide_out_down);
-
-
-                                }
-
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(Exception e) {
-
-                                Toast.makeText(CustomView.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-
+                                updatepost(b);
                             }
                         });
+
+
 
 
 
@@ -593,7 +560,6 @@ public class CustomView extends AppCompatActivity {
 
                         new ImageSaver(CustomView.this).setFileName(imagename).setDirectoryName("mycloset").saveImage(bitmap);
 
-                       // final String s = look_name.getText().toString();
 
                         RealmResults<Looks> lookid = realm.where(Looks.class).findAll();
 
@@ -616,6 +582,7 @@ public class CustomView extends AppCompatActivity {
 
                         looks.setId(id);
                         looks.setImage_name(imagename);
+
                         if (s!=null) {
                             looks.setStyle_name(s);
                         } else {
@@ -628,42 +595,47 @@ public class CustomView extends AppCompatActivity {
                         Looks finallooks = realm.copyToRealm(looks);
                         realm.commitTransaction();
 
-
-                        valuemap.put("lookid", n);
-                        valuemap.put("stylename", s);
-
-
-                        FirebaseFirestore.getInstance().collection("UsersList").document(My_DbKey).collection("MetaData").add(valuemap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                            @Override
-                            public void onComplete(Task<DocumentReference> task) {
-
-                                if (task.isSuccessful()) {
-
-                                    // Utilities.hideLoading();
-                                    // Utilities.showToast(CustomView.this,"Posted");
-
-                                    Intent intent = new Intent(CustomView.this,HomeActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.putExtra("position",3);
-                                    startActivity(intent);
+                    valuemap.put("lookid", n);
+                    valuemap.put("stylename",s);
 
 
-                                }
+                    FirebaseFirestore.getInstance().collection("UsersList").document(My_DbKey).collection("MetaData").add(valuemap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        @Override
+                        public void onComplete(Task<DocumentReference> task) {
+
+                            if (task.isSuccessful()) {
 
 
-                                }
+
+                                Utilities.hideLoading();
 
 
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(Exception e) {
+                                Intent intent = new Intent(CustomView.this, HomeActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.putExtra("position",3);
+                                startActivity(intent);
+                                finish();
 
-                                Toast.makeText(CustomView.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                overridePendingTransition(R.anim.fade_in, R.anim.slide_out_down);
+
 
                             }
-                        });
 
-                        return true;
+
+                        }
+
+
+                    });
+
+
+
+
+
+
+
+                    return true;
 
 
 
@@ -682,6 +654,8 @@ public class CustomView extends AppCompatActivity {
     }
 
     private void updatepost(byte[] b) {
+
+        Utilities.showLoading(CustomView.this,"Posting");
 
 
         final StorageReference ref = storageRef.child("images/" + UUID.randomUUID().toString());
@@ -728,53 +702,127 @@ public class CustomView extends AppCompatActivity {
                             @Override
                             public void onComplete(Task<DocumentReference> task) {
 
-                            }
-                        });
-
-
-                        FirebaseFirestore.getInstance().collection("UsersList").document(My_DbKey).collection("FollowCollection").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(Task<QuerySnapshot> task) {
-
                                 if (task.isSuccessful()){
 
-                                    if (!Objects.requireNonNull(task.getResult()).isEmpty()){
+                                    FirebaseFirestore.getInstance().collection("UsersList").document(My_DbKey).collection("FollowCollection").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(Task<QuerySnapshot> task) {
 
-                                        for (DocumentSnapshot documentSnapshot : task.getResult()){
+                                            if (task.isSuccessful()){
 
-                                            FirebaseFirestore.getInstance().collection("UsersList").whereEqualTo("Email",documentSnapshot.get("email")).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                @Override
-                                                public void onComplete(Task<QuerySnapshot> task) {
+                                                if (!Objects.requireNonNull(task.getResult()).isEmpty()){
 
-                                                    if (task.isSuccessful()){
+                                                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()){
 
-                                                        for (DocumentSnapshot documentSnapshot1 : Objects.requireNonNull(task.getResult())){
+                                                        FirebaseFirestore.getInstance().collection("UsersList").whereEqualTo("Email",documentSnapshot.get("email")).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                            @Override
+                                                            public void onComplete(Task<QuerySnapshot> task) {
 
-                                                            FirebaseFirestore.getInstance().collection("UsersList").document(documentSnapshot1.getId()).collection("Feed").add(data);
-                                                        }
+                                                                if (task.isSuccessful()){
+
+                                                                    for (DocumentSnapshot documentSnapshot1 : Objects.requireNonNull(task.getResult())){
+
+                                                                        FirebaseFirestore.getInstance().collection("UsersList").document(documentSnapshot1.getId()).collection("Feed").add(data);
+                                                                    }
+
+
+
+
+                                                                }
+
+
+                                                            }
+                                                        });
+
                                                     }
 
+
                                                 }
-                                            });
+
+                                                FirebaseFirestore.getInstance().collection("UsersList").document(My_DbKey).collection("Posts").add(data).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                    @Override
+                                                    public void onComplete(Task<DocumentReference> task) {
+
+                                                        if (task.isSuccessful()){
+
+                                                            valuemap.put("lookid", n);
+                                                            valuemap.put("stylename",look_name.getText().toString());
+
+                                                            FirebaseFirestore.getInstance().collection("UsersList").document(My_DbKey).collection("MetaData").add(valuemap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                                @Override
+                                                                public void onComplete(Task<DocumentReference> task) {
+
+                                                                    if (task.isSuccessful()) {
+
+                                                                        boolean post_tut = sharedPreferences.getBoolean("post",true);
+
+                                                                        Utilities.hideLoading();
+
+
+                                                                        Intent intent = new Intent(CustomView.this, HomeActivity.class);
+                                                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                                        if(post_tut){
+
+                                                                            intent.putExtra("celebration","celeb");
+                                                                        }
+                                                                        startActivity(intent);
+                                                                        finish();
+
+                                                                        Utilities.showToast(CustomView.this,"Posted");
+                                                                        overridePendingTransition(R.anim.fade_in, R.anim.slide_out_down);
+
+
+                                                                    }
+
+
+                                                                }
+
+
+                                                            });
+
+
+
+                                                        }
+
+                                                    }
+                                                });
+
+
+
+                                            }
 
                                         }
+                                    });
 
 
-                                    }
+
                                 }
 
                             }
                         });
 
-                        FirebaseFirestore.getInstance().collection("CommonFeed").add(data);
-                        FirebaseFirestore.getInstance().collection("UsersList").document(My_DbKey).collection("Posts").add(data);
+
+
+
+
 
 
                     }
                 }
 
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
+
+                Utilities.hideLoading();
+                Toast.makeText(CustomView.this, "Error: " + e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+
+            }
         });
+
+        Utilities.hideLoading();
 
 
 

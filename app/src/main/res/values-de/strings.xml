@@ -88,7 +88,7 @@
     <string name="profile">Profil</string>
     <string name="describe_with_tags">Beschreiben Sie mit Tags</string>
     <string name="post">POST</string>
-    <string name="create_look">Erstellen Sie einen Blick</string>
+    <string name="create_look">Erstellen Out fit</string>
     <string name="background_color">Hintergrundfarbe</string>
     <string name="my_uploads">Mein Post</string>
     <string name="bookmarks">Lesezeichen</string>
@@ -99,4 +99,7 @@
     <string name="sharequote">Ich dachte, Sie würden es mögen, klicken Sie hier</string>
     <string name="bookmark_saved">Gerettet</string>
     <string name="matching_apparel_from_your_closet">Passende Kleidung aus Ihrem Kleiderschrank</string>
+    <string name="first_celebration">Herzliche Glückwünsche! Sie haben Ihre erste Kleidung hinzugefügt</string>
+    <string name="second_celebration">Zweite Kleidung hinzugefügt, kann nun einen Blick erstellen</string>
+    <string name="post_celeb">Hurra! Sie haben Ihren ersten Beitrag geschrieben</string>
 </resources>

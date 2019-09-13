@@ -89,7 +89,7 @@
     <string name="name_the_look">Look nom</string>
     <string name="profile">Profil</string>
     <string name="post">PÓSTER</string>
-    <string name="create_look">Criar um olhar</string>
+    <string name="create_look">Criar Out ajuste</string>
     <string name="background_color">Cor de fundo</string>
     <string name="my_uploads">Minha publicação</string>
     <string name="bookmarks">Favoritos</string>
@@ -100,4 +100,7 @@
     <string name="sharequote">Achei que você gostaria que este, clique aqui</string>
     <string name="bookmark_saved">Salvou</string>
     <string name="matching_apparel_from_your_closet">Combinando roupas de seu armário</string>
+    <string name="first_celebration">Parabéns! Você adicionou o 1º de roupas</string>
+    <string name="second_celebration">Segundo vestuário acrescentou: Agora vamos criar uma aparência</string>
+    <string name="post_celeb">Hurrah! Você postou sua 1ª Publicar</string>
 </resources>

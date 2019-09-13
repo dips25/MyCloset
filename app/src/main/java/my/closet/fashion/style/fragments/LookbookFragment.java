@@ -57,10 +57,7 @@ public class LookbookFragment extends Fragment {
 
     private void findView(View v) {
 
-        toolbar_title = (TextView) Objects.requireNonNull(getActivity()).findViewById(R.id.title);
-        if (toolbar_title!=null) {
-            toolbar_title.setText(R.string.lookbook);
-        }
+
 
         lookbook_tutorial_text = (TextView)v.findViewById(R.id.lookbook_tutorial_text);
 

@@ -1,7 +1,9 @@
 package my.closet.fashion.style.fragments;
 
 
+import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +26,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.firebase.ui.firestore.SnapshotParser;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
@@ -51,10 +55,11 @@ import java.util.UUID;
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
 import my.closet.fashion.style.activities.FbGmailActivity;
-import my.closet.fashion.style.activities.FullScreenViewActivity;
 import my.closet.fashion.style.adapters.FeedsAdapter;
 import my.closet.fashion.style.adapters.FeedsViewHolder;
+import my.closet.fashion.style.customs.CallBack;
 import my.closet.fashion.style.customs.SpacesItemDecoration;
+import my.closet.fashion.style.customs.ZoomImageView;
 import my.closet.fashion.style.modesl.FeedResponse;
 
 
@@ -92,6 +97,9 @@ public class HomeFragment extends Fragment {
     FirebaseFirestore ref = FirebaseFirestore.getInstance();
     private RelativeLayout look_tab;
     private BottomNavigationView bottomnav;
+    ZoomImageView zoomImageView;
+    private RelativeLayout zoomlayout;
+    private LinearLayout preViewGroup;
 
 
     @Override
@@ -106,8 +114,21 @@ public class HomeFragment extends Fragment {
                 .fitCenter()
                 .diskCacheStrategy(DiskCacheStrategy.ALL);
 
+        preViewGroup = (LinearLayout) view.findViewById(R.id.mainlayout);
+
         look_tab = (RelativeLayout) getActivity().findViewById(R.id.linear);
+        //bottomnav = (BottomNavigationView) getActivity().findViewById(R.id.bnve_icon_selector);
+
         bottomnav = (BottomNavigationView) getActivity().findViewById(R.id.bnve_icon_selector);
+        bottomnav.getMenu().getItem(0).setChecked(true);
+
+        zoomlayout = (RelativeLayout)view.findViewById(R.id.relative_zoom_sample);
+        zoomlayout.setVisibility(View.GONE);
+
+
+        zoomImageView = (ZoomImageView)view.findViewById(R.id.zoomimagetest);
+
+
 
 
 
@@ -147,8 +168,8 @@ public class HomeFragment extends Fragment {
         prbLoading = (ProgressBar) view.findViewById(R.id.prbLoading);
 
         homerecyleview.setHasFixedSize(true);
-        mLayoutManager = new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL);
-        homerecyleview.setLayoutManager(mLayoutManager);
+        //mLayoutManager = new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL);
+        homerecyleview.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL));
         homerecyleview.addItemDecoration(new SpacesItemDecoration(20));
 
         query = ref.collection("UsersList").document(My_DbKey).collection("Feed").orderBy("timestamp", Query.Direction.DESCENDING);
@@ -226,15 +247,60 @@ public class HomeFragment extends Fragment {
 
                 holder.bind(getActivity(), model);
 
+                holder.picture.setZoomAnimationKey(model.getImage());
+
+
 
 
                 holder.picture.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mixpanelAPI.track("Full Screen");
-                        Intent textint = new Intent(getActivity(), FullScreenViewActivity.class);
+
+                        zoomlayout.setVisibility(View.VISIBLE);
+                        zoomlayout.getBackground().setAlpha(0);
+                        //zoomImageView.setVisibility(View.VISIBLE);
+
+                        Glide.with(Objects.requireNonNull(getActivity()))
+                                .asBitmap()
+                                .load(model.getImage())
+                                .into(new SimpleTarget<Bitmap>() {
+                                    @Override
+                                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+
+                                        zoomImageView.setImageBitmap(resource);
+
+                                        zoomImageView.setZoomAnimationKey(holder.picture.zoomAnimationKey());
+
+
+                                        zoomImageView.setOriginalHeight(resource.getHeight());
+                                        zoomImageView.setOriginalWidth(resource.getWidth());
+
+                                        ValueAnimator valueAnimator = zoomImageView.zoomInAnimation(preViewGroup,
+                                                new CallBack<Float>() {
+                                                    @Override
+                                                    public void call(Float t) {
+                                                        zoomlayout.getBackground().setAlpha(Math.round(255 * t));
+                                                    }
+                                                }
+                                        );
+                                        valueAnimator.start();
+
+
+
+
+                                    }
+                                });
+
+
+
+
+
+
+
+                      /*  Intent textint = new Intent(getActivity(), FullScreenViewActivity.class);
                         textint.putExtra("position", model);
-                        Objects.requireNonNull(getActivity()).startActivity(textint);
+                        Objects.requireNonNull(getActivity()).startActivity(textint); */
 
                     }
                 });
@@ -318,7 +384,7 @@ public class HomeFragment extends Fragment {
                                 for (DocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
 
                                     if (document.get("Profile_Pic") != null && !Objects.requireNonNull(document.get("Profile_Pic")).toString().equalsIgnoreCase("")) {
-                                        Glide.with(Objects.requireNonNull(getContext())).load(document.get("Profile_Pic")).apply(requestOptions).into(holder.profile_pic);
+                                       // Glide.with(Objects.requireNonNull(getContext())).load(document.get("Profile_Pic")).apply(requestOptions).into(holder.profile_pic);
                                     } else {
                                         holder.profile_pic.setBackgroundResource(R.drawable.ic_user_profile);
                                     }

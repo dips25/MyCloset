@@ -93,7 +93,7 @@
     <string name="click_here_to_add_clothes">Click here to add clothes</string>
     <string name="post">Post</string>
     <string name="describe_with_tags">Describe with Tags</string>
-    <string name="create_look">CREATE LOOK</string>
+    <string name="create_look">CREATE OUTFIT</string>
     <string name="my_uploads">My Uploads</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="user_name">user name</string>
@@ -105,6 +105,14 @@
     <string name="matching_apparel_from_your_closet">Matching apparel from your Closet</string>
     <string name="sample_pics">Sample Pics</string>
     <string name="sample_pics_heading">Sample Pics</string>
+    <string name="outfits">Outfits</string>
+    <string name="first_celebration">Congratulations! You have added your 1st apparel</string>
+    <string name="second_celebration">Second apparel added, Now lets create a Look</string>
+    <string name="post_celeb">Hurray! You have posted your 1st Post.</string>
+
+    <string name="facebook_app_id">979389419115381</string>
+    <string name="fb_login_protocol_scheme">fb979389419115381</string>
+
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>

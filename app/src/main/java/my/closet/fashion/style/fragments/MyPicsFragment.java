@@ -79,8 +79,8 @@ public class MyPicsFragment extends Fragment {
         prbLoading = (ProgressBar) view.findViewById(R.id.prbLoading);
 
         mypicsrecyleview.setHasFixedSize(true);
-        mLayoutManager = new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL);
-        mypicsrecyleview.setLayoutManager(mLayoutManager);
+      //  mLayoutManager = ;
+        mypicsrecyleview.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL));
         mypicsrecyleview.addItemDecoration(new SpacesItemDecoration(20));
 
         look_tab = getActivity().findViewById(R.id.linear);

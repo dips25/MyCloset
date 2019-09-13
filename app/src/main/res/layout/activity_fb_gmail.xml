@@ -83,53 +83,27 @@
         </LinearLayout>
     </FrameLayout>
 
-        <FrameLayout
+        <com.facebook.login.widget.LoginButton
             android:id="@+id/facebook_lyt"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/google_lyt"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:visibility="gone">
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
 
-            <!---      <com.facebook.login.widget.LoginButton
-                android:id="@+id/facebook_login"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:visibility="gone" />-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:orientation="horizontal"
-                android:weightSum="1">
 
-                <ImageView
-                    android:id="@+id/facebook"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:padding="10dp"
-                    app:srcCompat="@drawable/ic_facebook"
-                    tools:ignore="VectorDrawableCompat" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="40dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:text="@string/facebook"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20dp" />
+            android:elevation="10dp">
 
-            </LinearLayout>
-        </FrameLayout>
+
+
+
+        </com.facebook.login.widget.LoginButton>
 
         <TextView
             android:layout_width="wrap_content"

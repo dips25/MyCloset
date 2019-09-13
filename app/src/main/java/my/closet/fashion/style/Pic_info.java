@@ -1831,7 +1831,7 @@ public class Pic_info extends AppCompatActivity {
                                 editor.putBoolean("firsttimelaunch",false);
                                 editor.apply();
 
-                                Utilities.showToast(Pic_info.this,"Congrats!!You've added your first cloth");
+                                Utilities.showToast(Pic_info.this,getString(R.string.first_celebration));
 
 
 
@@ -1846,7 +1846,7 @@ public class Pic_info extends AppCompatActivity {
 
 
 
-                                Utilities.showToast(Pic_info.this,"Congrats!!You've added your second cloth");
+                                Utilities.showToast(Pic_info.this,getString(R.string.second_celebration));
 
 
                             }

@@ -76,6 +76,7 @@ import my.closet.fashion.style.Utilities;
 import my.closet.fashion.style.adapters.UserFeedsViewHolder;
 import my.closet.fashion.style.customs.SpacesItemDecoration;
 import my.closet.fashion.style.modesl.FeedResponse;
+import my.closet.fashion.style.modesl.FollowerFollowing;
 
 import static io.fabric.sdk.android.Fabric.TAG;
 
@@ -83,6 +84,7 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
 
     private Intent i;
     private FeedResponse feedResponse_obj;
+    FollowerFollowing followerFollowing;
     private Toolbar toolbar;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference feedRef;
@@ -131,7 +133,16 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
 
         i = getIntent();
         if (i != null) {
-            feedResponse_obj = (FeedResponse) i.getSerializableExtra("key");
+            if (Objects.requireNonNull(getIntent().getExtras()).containsKey("key")) {
+
+                feedResponse_obj = (FeedResponse) i.getSerializableExtra("key");
+
+            }else if(getIntent().getExtras().containsKey("followerkey")) {
+
+                followerFollowing = (FollowerFollowing) i.getSerializableExtra("follower");
+
+
+            }
         }
 
 
@@ -177,10 +188,21 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(UserPersonalActivity.this,FollowerFollowingViewActivity.class);
-                intent.putExtra("key",key);
-                intent.putExtra("name",feedResponse_obj.getPenname());
-                startActivity(intent);
+                if (feedResponse_obj!=null){
+
+                    Intent intent = new Intent(UserPersonalActivity.this,FollowerFollowingViewActivity.class);
+                    intent.putExtra("key",key);
+                    intent.putExtra("name",feedResponse_obj.getPenname());
+                    startActivity(intent);
+
+
+                } else {
+
+                    Intent intent = new Intent(UserPersonalActivity.this,FollowerFollowingViewActivity.class);
+                    intent.putExtra("key",key);
+                    intent.putExtra("name",followerFollowing.getName());
+                    startActivity(intent);
+                }
 
             }
         });
@@ -189,10 +211,23 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(UserPersonalActivity.this,FollowerFollowingViewActivity.class);
-                intent.putExtra("key",key);
-                intent.putExtra("name",feedResponse_obj.getPenname());
-                startActivity(intent);
+                if (feedResponse_obj!=null){
+
+                    Intent intent = new Intent(UserPersonalActivity.this,FollowerFollowingViewActivity.class);
+                    intent.putExtra("key",key);
+                    intent.putExtra("name",feedResponse_obj.getPenname());
+                    startActivity(intent);
+
+
+                } else {
+
+                    Intent intent = new Intent(UserPersonalActivity.this,FollowerFollowingViewActivity.class);
+                    intent.putExtra("key", key);
+                    intent.putExtra("name",followerFollowing.getName());
+                    startActivity(intent);
+                }
+
+
             }
         });
 
@@ -208,15 +243,27 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
 
 
 
-        if (feedResponse_obj.getProfile() != null) {
+        if (feedResponse_obj!=null) {
             Glide.with(UserPersonalActivity.this).load(feedResponse_obj.getProfile()).into(profile_image);
-        } else {
+
+        } else if (followerFollowing!=null){
+
+            Glide.with(UserPersonalActivity.this).load(followerFollowing.getImgname()).into(profile_image);
+
+        }else {
+
             profile_image.setBackgroundResource(R.drawable.ic_user_profile);
+
+
         }
 
         username_txt = (TextView) findViewById(R.id.username_txt);
-        if (feedResponse_obj.getPenname() != null) {
+
+        if (feedResponse_obj != null) {
             username_txt.setText(feedResponse_obj.getPenname());
+        } else {
+
+            username_txt.setText(followerFollowing.getName());
         }
 
         recyclerView = (RecyclerView) findViewById(R.id.rvVideos);
@@ -226,7 +273,7 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
 
         follower_count_txt.setOnClickListener(this);
 
-        postCount();
+      //  postCount();
         SetUpRecycleView();
        // checkFollowers();
 
@@ -260,7 +307,9 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
 
     private void getUserData() {
         Utilities.showLoading(UserPersonalActivity.this, "Loading");
-        db.collection("UsersList").whereEqualTo("Email", feedResponse_obj.getEmail()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("UsersList")
+                .whereEqualTo("Email", (feedResponse_obj!=null) ? feedResponse_obj.getEmail() : followerFollowing.getEmail())
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -409,7 +458,7 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
     private void SetUpRecycleView() {
 
         Query query = feedRef
-                .whereEqualTo("email", feedResponse_obj.getEmail())
+                .whereEqualTo("email", (feedResponse_obj!=null) ? feedResponse_obj.getEmail() : followerFollowing.getEmail())
                 .orderBy("timestamp", Query.Direction.DESCENDING);
 
         PagedList.Config config = new PagedList.Config.Builder()

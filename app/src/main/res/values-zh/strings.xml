@@ -79,7 +79,7 @@
     <string name="profile">轮廓</string>
     <string name="describe_with_tags">与标签</string>
     <string name="post">POST</string>
-    <string name="create_look">创建一起来看看</string>
+    <string name="create_look">创建出适合</string>
     <string name="background_color">背景颜色</string>
     <string name="my_uploads">我的文章</string>
     <string name="bookmarks">书签</string>
@@ -90,4 +90,7 @@
     <string name="sharequote">我以为你会喜欢这个，请点击这里</string>
     <string name="bookmark_saved">保存</string>
     <string name="matching_apparel_from_your_closet">从你的衣柜里的服装配套</string>
+    <string name="first_celebration">恭喜！您已经添加了您的第一个服装</string>
+    <string name="second_celebration">其次服装加，现在让我们建立一个场景</string>
+    <string name="post_celeb">欢呼！您已经张贴您的第一邮报</string>
 </resources>

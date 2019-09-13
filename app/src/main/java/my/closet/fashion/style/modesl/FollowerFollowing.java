@@ -1,6 +1,8 @@
 package my.closet.fashion.style.modesl;
 
-public class FollowerFollowing {
+import java.io.Serializable;
+
+public class FollowerFollowing implements Serializable {
 
     String id;
     String email;

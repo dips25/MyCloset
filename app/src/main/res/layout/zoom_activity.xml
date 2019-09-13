@@ -13,7 +13,7 @@
         android:id="@+id/infoholder">
 
 
-   <EditText
+   <TextView
        android:layout_width="match_parent"
        android:layout_height="50dp"
        android:layout_margin="5dp"
@@ -22,7 +22,7 @@
        android:layout_marginTop="15dp"
        android:id="@+id/look_edit"
        android:textSize="14dp"
-       android:hint="Enter Here"
+       android:hint="Description"
        />
         <View
             android:layout_width="match_parent"

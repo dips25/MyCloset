@@ -1,6 +1,7 @@
 package my.closet.fashion.style.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,7 @@ import javax.annotation.Nullable;
 import de.hdodenhof.circleimageview.CircleImageView;
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
+import my.closet.fashion.style.activities.UserPersonalActivity;
 import my.closet.fashion.style.modesl.FeedResponse;
 import my.closet.fashion.style.modesl.FollowerFollowing;
 
@@ -138,6 +141,17 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.ViewHo
 
 
         }
+
+        holder.textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(context, UserPersonalActivity.class);
+                intent.putExtra("followerkey",key);
+                intent.putExtra("follower",(Serializable) following);
+                context.startActivity(intent);
+            }
+        });
 
 
         holder.follow_button.setOnClickListener(new View.OnClickListener() {

@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -38,7 +38,7 @@ public class ZoomImage extends AppCompatActivity {
     PhotoView photoView;
     String finalname;
     String edtlook;
-    EditText lookedit;
+    TextView lookedit;
     private static String STORE_DIRECTORY;
     Bitmap bitmap;
     //Button bttn;
@@ -68,7 +68,7 @@ public class ZoomImage extends AppCompatActivity {
         looksvbttn=(RelativeLayout) findViewById(R.id.looksvbttn);
         looksvbttn.setVisibility(View.INVISIBLE);
 
-        lookedit=(EditText) findViewById(R.id.look_edit);
+        lookedit=(TextView) findViewById(R.id.look_edit);
        // lookedit.setVisibility(View.INVISIBLE);
 
         lookupdt=(ImageView) findViewById(R.id.look_updt);

@@ -86,7 +86,7 @@ public class Utilities {
         txt.setText(ToastMessage);
 
         Toast toast = new Toast(context);
-        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setDuration(Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, 250);
         toast.setView(child);
         toast.show();

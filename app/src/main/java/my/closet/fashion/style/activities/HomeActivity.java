@@ -132,11 +132,11 @@ public class HomeActivity extends AppCompatActivity {
 
         realm = Realm.getDefaultInstance();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!hasPermissions(this, PERMISSIONS)) {
                 ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
             }
-        }
+        } */
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -238,9 +238,9 @@ public class HomeActivity extends AppCompatActivity {
                                 HomeFragment homeFragment = new HomeFragment();
                                 transaction = manager.beginTransaction();
                                 transaction.replace(R.id.container, homeFragment);
-                               // transaction.addToBackStack("HomeFragment");
+                                transaction.addToBackStack(null);
                                 transaction.commit();
-                               // closeDrawer();
+                                closeDrawer();
                                 return true;
 
                             } else if (position == R.id.closet) {
@@ -251,9 +251,9 @@ public class HomeActivity extends AppCompatActivity {
                                 ClosetFragment closetFragment = new ClosetFragment();
                                 transaction = manager.beginTransaction();
                                 transaction.replace(R.id.container, closetFragment);
-                               // transaction.addToBackStack("ClosetFragment");
+                                transaction.addToBackStack("ClosetFragment");
                                 transaction.commit();
-                               // closeDrawer();
+                                closeDrawer();
 
                                 return true;
 
@@ -270,7 +270,7 @@ public class HomeActivity extends AppCompatActivity {
                                     MyProfileFragment myProfileFragment = new MyProfileFragment();
                                     transaction = manager.beginTransaction();
                                     transaction.replace(R.id.container, myProfileFragment);
-                                   // transaction.addToBackStack("MyProfileFragment");
+                                    transaction.addToBackStack("MyProfileFragment");
                                     transaction.commit();
                                     closeDrawer();
                                     return true;
@@ -279,7 +279,7 @@ public class HomeActivity extends AppCompatActivity {
                                     Intent ii = new Intent(HomeActivity.this, FbGmailActivity.class);
                                     startActivity(ii);
                                     overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
-                                    //  closeDrawer();
+                                    closeDrawer();
                                 }
 
                             }
@@ -301,9 +301,9 @@ public class HomeActivity extends AppCompatActivity {
         super.onStart();
        // int i = getIntent().getExtras().getInt("position");
 
-        Menu menu = bottomnav.getMenu();
+       /* Menu menu = bottomnav.getMenu();
         MenuItem menuItem = menu.getItem(ACTIVITY_INDEX);
-        menuItem.setChecked(true);
+        menuItem.setChecked(true); */
 
         SharedPreferences sharedPreferences = getSharedPreferences("preference",MODE_PRIVATE);
         boolean dialog = sharedPreferences.getBoolean("dialog",true);
@@ -333,9 +333,14 @@ public class HomeActivity extends AppCompatActivity {
 
         }
 
-        if (getIntent()!=null){
+        Intent intent = getIntent();
+        Bundle bundle = getIntent().getExtras();
 
-            if (Objects.requireNonNull(getIntent().getExtras()).getInt("position")==2) {
+
+
+        if (bundle!=null && bundle.containsKey("position")){
+
+            if (bundle.getInt("position")==2) {
 
                 if (getIntent().getExtras().containsKey("celeb")){
 
@@ -371,12 +376,7 @@ public class HomeActivity extends AppCompatActivity {
 
                         loadFragment(new ClosetFragment());
 
-
-
-
                     }
-
-
 
 
                 }else {
@@ -384,63 +384,58 @@ public class HomeActivity extends AppCompatActivity {
                     loadFragment(new ClosetFragment());
                 }
 
-            } else if (getIntent().getExtras().getInt("position") == 3){
+            } else if (bundle.getInt("position")==3){
 
                 loadFragment(new MyProfileFragment());
 
 
-            } else {
+            }
 
 
+        }else if (bundle!=null && bundle.containsKey("celebration")){
 
-                if (getIntent().getExtras().containsKey("celebration")){
+            if(getSharedPreferences("prefs",MODE_PRIVATE).getBoolean("post",true)) {
 
-                    if(getSharedPreferences("prefs",MODE_PRIVATE).getBoolean("post",true)) {
+                Utilities.showToast(HomeActivity.this,getString(R.string.post_celeb));
+                konfettiView.setVisibility(View.VISIBLE);
 
-                        Utilities.showToast(HomeActivity.this,"Congrats!!You've posted your first picture");
-                        konfettiView.setVisibility(View.VISIBLE);
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
 
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
+                        konfettiView.build()
+                                .addColors(getResources().getColor(R.color.colorPrimary), getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.gold))
+                                .setDirection(0.0, 359.0)
+                                .setSpeed(2f, 5f)
+                                .setFadeOutEnabled(true)
+                                .setTimeToLive(4000L)
+                                .addShapes(Shape.RECT, Shape.CIRCLE)
+                                .addSizes(new Size(12, 6f), new Size(16, 6f))
 
-                                konfettiView.build()
-                                        .addColors(getResources().getColor(R.color.colorPrimary), getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.gold))
-                                        .setDirection(0.0, 359.0)
-                                        .setSpeed(2f, 5f)
-                                        .setFadeOutEnabled(true)
-                                        .setTimeToLive(4000L)
-                                        .addShapes(Shape.RECT, Shape.CIRCLE)
-                                        .addSizes(new Size(12, 6f), new Size(16, 6f))
-
-                                        .setPosition(konfettiView.getX() + konfettiView.getWidth() / 2, konfettiView.getY() + konfettiView.getHeight() / 3)
-                                        .burst(150);
-
-
-                                //Utilities.showToast(HomeActivity.this, "Congrats,You've Posted your First Picture");
+                                .setPosition(konfettiView.getX() + konfettiView.getWidth() / 2, konfettiView.getY() + konfettiView.getHeight() / 3)
+                                .burst(150);
 
 
-                                SharedPreferences.Editor editor = getSharedPreferences("prefs", MODE_PRIVATE).edit();
-                                editor.putBoolean("post", false);
-                                editor.apply();
+                        //Utilities.showToast(HomeActivity.this, "Congrats,You've Posted your First Picture");
 
 
-                            }
-                        });
+                        SharedPreferences.Editor editor = getSharedPreferences("prefs", MODE_PRIVATE).edit();
+                        editor.putBoolean("post", false);
+                        editor.apply();
+
+
                     }
-
-                }
-
-
-
-                }
+                });
+            }
 
 
-        }else {
 
-           // loadFragment(new HomeFragment());
+
+
+            // loadFragment(new HomeFragment());
+            }
         }
-    }
+
 
     private void loadFragment(Fragment fragment) {
         transaction = manager.beginTransaction();
@@ -709,7 +704,22 @@ public class HomeActivity extends AppCompatActivity {
                 ((ClosetFragment) f).onBackPressed();
             }
         }
-        super.onBackPressed();
+
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        if (count==1){
+
+            finish();
+
+        } else if(getSupportFragmentManager().getBackStackEntryCount()>1) {
+
+            getSupportFragmentManager().popBackStack();
+
+        }else {
+
+            super.onBackPressed();
+
+        }
+
     }
 
     private void getPosts(String key) {

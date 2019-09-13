@@ -88,7 +88,7 @@
     <string name="profile">Profil</string>
     <string name="describe_with_tags">Décrire avec des étiquettes</string>
     <string name="post">POSTER</string>
-    <string name="create_look">Créer un look</string>
+    <string name="create_look">Créer Out ajustement</string>
     <string name="background_color">Couleur de fond</string>
     <string name="my_uploads">Mon message</string>
     <string name="bookmarks">Favoris</string>
@@ -99,4 +99,7 @@
     <string name="sharequote">Je pensais que vous le souhaitez, cliquez ici</string>
     <string name="bookmark_saved">Enregistré</string>
     <string name="matching_apparel_from_your_closet">Correspondant à vêtements de votre garde-robe</string>
+    <string name="first_celebration">Toutes nos félicitations! Vous avez ajouté votre 1er vêtements</string>
+    <string name="second_celebration">Second vêtement ajouté, permet maintenant de créer un coup d\'oeil</string>
+    <string name="post_celeb">Hourra! Vous avez posté votre 1er message</string>
 </resources>

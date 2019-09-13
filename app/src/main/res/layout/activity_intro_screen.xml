@@ -39,7 +39,8 @@
         android:gravity="center"
         android:textAllCaps="false"
         android:text="@string/next"
-        android:textColor="@color/selected_tab" />
+        android:textColor="@color/selected_tab"
+        android:textSize="20dp"/>
 
     <Button
         android:id="@+id/btn_skip"
@@ -51,6 +52,7 @@
         android:textAllCaps="false"
         android:gravity="center"
         android:text="@string/skip"
-        android:textColor="@color/selected_tab"/>
+        android:textColor="@color/selected_tab"
+        android:textSize="20dp"/>
 
 </RelativeLayout>

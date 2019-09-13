@@ -30,6 +30,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -90,6 +91,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
     private Bitmap imageBitmap;
     private String My_DbKey;
     private TextView followerss_count_txt;
+    private BottomNavigationView bottomnav;
 
     public MyProfileFragment() {
         // Required empty public constructor
@@ -120,6 +122,10 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
         if (toolbar_title!=null) {
             toolbar_title.setText(R.string.profile);
         }
+
+        bottomnav = (BottomNavigationView) getActivity().findViewById(R.id.bnve_icon_selector);
+        bottomnav.getMenu().getItem(2).setChecked(true);
+
 
         profile_pic = (CircleImageView) view.findViewById(R.id.profile_pic);
         username_txt = (TextView) view.findViewById(R.id.username_txt);
@@ -302,7 +308,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
     private void setupViewPager() {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(Objects.requireNonNull(getActivity()).getSupportFragmentManager());
-        adapter.addFrag(new LookbookFragment(),"LookBook");
+        adapter.addFrag(new LookbookFragment(),getString(R.string.outfits));
         adapter.addFrag(new MyPicsFragment(), getString(R.string.my_uploads));
         adapter.addFrag(new BookmarkFragment(), getString(R.string.bookmarks));
 
