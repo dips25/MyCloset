@@ -14,7 +14,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
 import my.closet.fashion.style.R;
-import my.closet.fashion.style.customs.ZoomImageView;
 import my.closet.fashion.style.modesl.FeedResponse;
 import xyz.hanks.library.bang.SmallBangView;
 
@@ -22,7 +21,7 @@ import xyz.hanks.library.bang.SmallBangView;
 public class FeedsViewHolder extends RecyclerView.ViewHolder{
     private final RequestOptions requestOptions;
     public SmallBangView like_text;
-    public ZoomImageView picture;
+    public ImageView picture;
     public ImageView profile_pic;
     public TextView username_txt,no_of_likes;
     public CheckBox favorite_button;
@@ -36,7 +35,7 @@ public class FeedsViewHolder extends RecyclerView.ViewHolder{
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .placeholder(R.drawable.white_border);
 
-        picture = (ZoomImageView) itemView.findViewById(R.id.picture);
+        picture = (ImageView) itemView.findViewById(R.id.picture);
         profile_pic=(ImageView)itemView.findViewById(R.id.profile_pic);
         username_txt=(TextView)itemView.findViewById(R.id.username_txt);
         no_of_likes=(TextView)itemView.findViewById(R.id.no_of_likes);

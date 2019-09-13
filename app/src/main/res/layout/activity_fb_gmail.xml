@@ -94,6 +94,7 @@
             android:paddingBottom="15dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
+            android:visibility="invisible"
 
 
 
