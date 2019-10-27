@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
-        android:id="@+id/mainappbar">
+        android:id="@+id/mainappbar"
+        >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

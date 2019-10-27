@@ -50,7 +50,7 @@ import static my.closet.fashion.style.fragments.ClosetFragment.toprecycler;
  * Created by biswa on 6/24/2017.
  */
 
-public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.ViewHolder> {
+public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.ViewHolder>  {
 
     public static Context mcontext;
     Bitmap bitmap;
@@ -59,6 +59,12 @@ public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.View
     private static ArrayList<Dresses> mdresses;
     public Realm realm;
     CheckBox checkBox;
+
+
+
+
+
+
 
     //Boolean isMultiSelectionEnabled=false;
 
@@ -71,6 +77,7 @@ public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.View
 
 
     }
+
 
     public ArrayList<Integer> getItems(){
 
@@ -92,6 +99,8 @@ public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.View
 
 
 
+
+
     @Override
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
@@ -105,9 +114,10 @@ public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.View
 
 
         final Dresses dresses1=mdresses.get(position);
+
         bitmap = new ImageSaver(mcontext).setFileName(dresses1.getImagename()).setDirectoryName("mycloset").load();
         holder.imageview.setImageBitmap(bitmap);
-        holder.tut_clicker.setVisibility(View.GONE);
+
 
         realm=Realm.getDefaultInstance();
         Realm.init(mcontext);
@@ -139,6 +149,8 @@ public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.View
 
 
 
+
+
     @Override
     public long getItemId(int position) {
         return position;
@@ -160,7 +172,6 @@ public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.View
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public static final int MULTISELECTION = 2 ;
-        public ImageView tut_clicker;
         CardView cardView;
         ImageView imageview;
 
@@ -172,13 +183,17 @@ public class AccessoryAdapter extends RecyclerView.Adapter<AccessoryAdapter.View
 
             cardView = card;
 
-            checkBox = card.findViewById(R.id.checkbox);
+
             imageview = (ImageView) card.findViewById(R.id.img);
-            tut_clicker = (ImageView) card.findViewById(R.id.tut_clicker);
-           mcontext = card.getContext();
+
+            mcontext = card.getContext();
             imageview.setOnLongClickListener(new View.OnLongClickListener() {
                                             @Override
                                             public boolean onLongClick(View v) {
+
+                                               // itemClicked.onItemClick(getAdapterPosition());
+
+
 
                                                 PopupMenu menu = new PopupMenu(mcontext, v);
                                                 MenuInflater inflater = menu.getMenuInflater();

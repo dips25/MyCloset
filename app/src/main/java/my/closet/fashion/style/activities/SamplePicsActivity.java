@@ -1,7 +1,5 @@
 package my.closet.fashion.style.activities;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -47,10 +45,10 @@ public class SamplePicsActivity extends AppCompatActivity {
         }
 
         ArrayList<MyTabItem> mainMenuItems = new ArrayList<>();
-        mainMenuItems.add(new MyTabItem("Tops", SampleTopsFragment.class));
-        mainMenuItems.add(new MyTabItem("Bottoms", SampleBottomsFragment.class));
-        mainMenuItems.add(new MyTabItem("Footwear", SampleFootwearFragment.class));
-        mainMenuItems.add(new MyTabItem("Accessories", SampleAccessoriesFragment.class));
+        mainMenuItems.add(new MyTabItem(getResources().getString(R.string.top), SampleTopsFragment.class));
+        mainMenuItems.add(new MyTabItem(getResources().getString(R.string.bottom), SampleBottomsFragment.class));
+        mainMenuItems.add(new MyTabItem(getResources().getString(R.string.footwear), SampleFootwearFragment.class));
+        mainMenuItems.add(new MyTabItem(getResources().getString(R.string.accessories), SampleAccessoriesFragment.class));
 
 
         tabLayout = (SlidingTabLayout) findViewById(R.id.samplepics_tab);
@@ -64,8 +62,7 @@ public class SamplePicsActivity extends AppCompatActivity {
 
             viewPager.setCurrentItem(1);
 
-            SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
-            boolean firstsamplebottom = sharedPreferences.getBoolean("firstsamplebottom",true);
+
         }
 
        // setupViewpager();

@@ -1,6 +1,7 @@
 package my.closet.fashion.style.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,6 +53,7 @@ import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
 import my.closet.fashion.style.activities.FbGmailActivity;
 import my.closet.fashion.style.activities.FullScreenViewActivity;
+import my.closet.fashion.style.activities.SearchActivity;
 import my.closet.fashion.style.adapters.FeedsAdapter;
 import my.closet.fashion.style.adapters.FeedsViewHolder;
 import my.closet.fashion.style.customs.SpacesItemDecoration;
@@ -113,10 +116,12 @@ public class HomeFragment extends Fragment {
 
         look_tab = (RelativeLayout) getActivity().findViewById(R.id.linear);
         look_tab.setVisibility(View.GONE);
-        //bottomnav = (BottomNavigationView) getActivity().findViewById(R.id.bnve_icon_selector);
+
 
         bottomnav = (BottomNavigationView) getActivity().findViewById(R.id.bnve_icon_selector);
         bottomnav.getMenu().getItem(0).setChecked(true);
+
+
 
 
 
@@ -250,9 +255,15 @@ public class HomeFragment extends Fragment {
 
 
 
+                    //  Objects.requireNonNull(getActivity()).getWindow().setExitTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.slide_normal_trans));
+
                         Intent textint = new Intent(getActivity(), FullScreenViewActivity.class);
-                        textint.putExtra("position", model);
-                        Objects.requireNonNull(getActivity()).startActivity(textint);
+                        ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(Objects.requireNonNull(getActivity()),holder.picture,"image");
+
+                        textint.putExtra("model", model);
+                        Objects.requireNonNull(getActivity()).startActivity(textint,activityOptionsCompat.toBundle());
+
+
 
                     }
                 });
@@ -262,6 +273,7 @@ public class HomeFragment extends Fragment {
                 CollectionReference likeCollectionRef = db.collection("CommonFeed")
                         .document(model.getDocumentId()).collection("Likes");
                 likeCollectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                         if (e != null) {
@@ -319,7 +331,7 @@ public class HomeFragment extends Fragment {
                         } else {
                             Intent ii = new Intent(getActivity(), FbGmailActivity.class);
                             startActivity(ii);
-                            getActivity().overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
+                            getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         }
                     }
                 });
@@ -374,6 +386,8 @@ public class HomeFragment extends Fragment {
 
         homerecyleview.setAdapter(adapter);
     }
+
+
 
     private void Likepost(final FeedResponse model) {
         db.collection("CommonFeed/" + model.getDocumentId() + "/Likes").document(myemail).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -436,7 +450,59 @@ public class HomeFragment extends Fragment {
         menu.findItem(R.id.filter).setVisible(false);
         menu.findItem(R.id.upload_menu).setVisible(false);
         menu.findItem(R.id.action_search).setVisible(false);
+
+      /*  MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String queryyy) {
+
+                Query query1 = FirebaseFirestore.getInstance().collection("CommonFeed")
+                                                              .whereEqualTo("description",queryyy.toLowerCase())
+
+                        .orderBy("timestamp", Query.Direction.DESCENDING);
+
+                SetUpRecycleView(query1);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                Query query2 = FirebaseFirestore.getInstance().collection("CommonFeed")
+                        .whereEqualTo("description",newText.toLowerCase())
+                        .orderBy("timestamp", Query.Direction.DESCENDING);
+
+                SetUpRecycleView(query2);
+                return true;
+            }
+        }); */
     }
+
+ /*   private void search(String newText) {
+
+        Query query1 =  FirebaseFirestore.getInstance().collection("CommonFeed")
+                .whereEqualTo("description",newText.toLowerCase())
+                .orderBy("timestamp", Query.Direction.DESCENDING);
+
+
+        SetUpRecycleView(query1);
+
+        FirebaseFirestore.getInstance().collection("CommonFeed")
+                .whereEqualTo("description",newText.toLowerCase())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(Task<QuerySnapshot> task) {
+
+                        if (task.isSuccessful()){
+
+
+                        }
+
+                    }
+                });
+    } */
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -444,7 +510,13 @@ public class HomeFragment extends Fragment {
 
             case R.id.action_search:
 
-                return false;
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+
+
+
+                return true;
 
             default:
                 break;

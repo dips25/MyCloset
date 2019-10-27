@@ -97,7 +97,7 @@ public class TopAdapter extends RecyclerView.Adapter<TopAdapter.ViewHolder> {
         bitmap=new ImageSaver(ccontext).setFileName(dressesss.getImagename()).setDirectoryName("mycloset").load();
 
         holder.imageview.setImageBitmap(bitmap);
-        holder.tut_clicker.setVisibility(View.GONE);
+
 
         realm=Realm.getDefaultInstance();
         Realm.init(ccontext);
@@ -151,13 +151,13 @@ public class TopAdapter extends RecyclerView.Adapter<TopAdapter.ViewHolder> {
 
         CardView cardView;
         public ImageView imageview;
-        public ImageView tut_clicker;
+
 
         ViewHolder(CardView cardd){
             super(cardd);
             cardView=cardd;
             imageview=(ImageView)cardd.findViewById(R.id.img);
-            tut_clicker = (ImageView) cardd.findViewById(R.id.tut_clicker);
+
             ccontext=cardd.getContext();
 
             imageview.setOnLongClickListener(new View.OnLongClickListener() {

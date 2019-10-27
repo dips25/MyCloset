@@ -92,6 +92,8 @@ public class HomeActivity extends AppCompatActivity {
     ImageView cross;
     TextView ok_text;
 
+
+
     ArrayList<Dresses> meta = new ArrayList<>();
 
 
@@ -109,6 +111,7 @@ public class HomeActivity extends AppCompatActivity {
     private Button follow_all;
     private String My_Dbkey;
     private String my_email;
+    private boolean isback;
 
 
     @Override
@@ -299,14 +302,26 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-       // int i = getIntent().getExtras().getInt("position");
+        if (Utilities.loadPref(HomeActivity.this, "email", "")==null
+                || Utilities.loadPref(HomeActivity.this, "email", "").equalsIgnoreCase("")
+       ){
 
-       /* Menu menu = bottomnav.getMenu();
-        MenuItem menuItem = menu.getItem(ACTIVITY_INDEX);
-        menuItem.setChecked(true); */
+            Intent intent = new Intent(HomeActivity.this,UserProfileActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            return;
+           // finish();
+
+
+        }
+
+        Intent i = getIntent();
+        Bundle bundle = i.getExtras();
 
         SharedPreferences sharedPreferences = getSharedPreferences("preference",MODE_PRIVATE);
         boolean dialog = sharedPreferences.getBoolean("dialog",true);
+        boolean lookbook = sharedPreferences.getBoolean("lookbook",true);
+        boolean closet = sharedPreferences.getBoolean("closet",true);
 
         if (dialog){
 
@@ -333,66 +348,69 @@ public class HomeActivity extends AppCompatActivity {
 
         }
 
-        Intent intent = getIntent();
-        Bundle bundle = getIntent().getExtras();
+        if (!lookbook){
+
+            SharedPreferences preferences = getSharedPreferences("preference",MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean("lookbook",true);
+            editor.apply();
+
+            loadFragment(new MyProfileFragment());
 
 
+        }
 
-        if (bundle!=null && bundle.containsKey("position")){
+        if (!closet) {
 
-            if (bundle.getInt("position")==2) {
+            if (getSharedPreferences("prefs", MODE_PRIVATE).getBoolean("firsttimelaunch", true)
+            ) {
 
-                if (getIntent().getExtras().containsKey("celeb")){
+                konfettiView.setVisibility(View.VISIBLE);
 
-                    if(!getSharedPreferences("prefs",MODE_PRIVATE).getBoolean("firsttimelaunch",true)
-                    || getSharedPreferences("prefs",MODE_PRIVATE).getBoolean("secondtimelaunch",true)){
-
-                        konfettiView.setVisibility(View.VISIBLE);
-
-
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
+                SharedPreferences preferences = HomeActivity.this.getSharedPreferences("prefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("firsttimelaunch", false);
+                editor.apply();
 
 
-
-                                konfettiView.build().addColors(getResources().getColor(R.color.colorPrimary),getResources().getColor(R.color.colorAccent),getResources().getColor(R.color.gold))
-                                        .setDirection(0.0, 359.0)
-                                        .setSpeed(2f, 5f)
-                                        .setFadeOutEnabled(true)
-                                        .setTimeToLive(4000L)
-                                        .addShapes(Shape.RECT, Shape.CIRCLE)
-                                        .addSizes(new Size(12,6f),new  Size(16, 6f))
-
-                                        .setPosition(konfettiView.getX()+ konfettiView.getWidth()/2 ,konfettiView.getY() + konfettiView.getHeight()/3)
-                                        .burst(150);
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
 
 
+                        konfettiView.build().addColors(getResources().getColor(R.color.colorPrimary), getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.gold))
+                                .setDirection(0.0, 359.0)
+                                .setSpeed(2f, 5f)
+                                .setFadeOutEnabled(true)
+                                .setTimeToLive(4000L)
+                                .addShapes(Shape.RECT, Shape.CIRCLE)
+                                .addSizes(new Size(12, 6f), new Size(16, 6f))
 
+                                .setPosition(konfettiView.getX() + konfettiView.getWidth() / 2, konfettiView.getY() + konfettiView.getHeight() / 3)
+                                .burst(150);
 
-
-                            }
-                        });
-
-                        loadFragment(new ClosetFragment());
 
                     }
+                });
 
 
-                }else {
 
-                    loadFragment(new ClosetFragment());
-                }
 
-            } else if (bundle.getInt("position")==3){
 
-                loadFragment(new MyProfileFragment());
 
 
             }
+            SharedPreferences pref = getSharedPreferences("preference", MODE_PRIVATE);
+            SharedPreferences.Editor edit = pref.edit();
+            edit.putBoolean("closet", true);
+            edit.apply();
+
+            loadFragment(new ClosetFragment());
+        }
 
 
-        }else if (bundle!=null && bundle.containsKey("celebration")){
+
+         if (bundle!=null && bundle.containsKey("celebration")){
 
             if(getSharedPreferences("prefs",MODE_PRIVATE).getBoolean("post",true)) {
 
@@ -404,7 +422,7 @@ public class HomeActivity extends AppCompatActivity {
                     public void run() {
 
                         konfettiView.build()
-                                .addColors(getResources().getColor(R.color.colorPrimary), getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.gold))
+                                .addColors(getResources().getColor(R.color.colorPrimary),getResources().getColor(R.color.colorAccent),getResources().getColor(R.color.gold))
                                 .setDirection(0.0, 359.0)
                                 .setSpeed(2f, 5f)
                                 .setFadeOutEnabled(true)
@@ -428,13 +446,11 @@ public class HomeActivity extends AppCompatActivity {
                 });
             }
 
-
-
-
-
-            // loadFragment(new HomeFragment());
             }
+
         }
+
+
 
 
     private void loadFragment(Fragment fragment) {
@@ -544,6 +560,10 @@ public class HomeActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
         dialog.setCanceledOnTouchOutside(false);
+
+
+
+
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
 
 
@@ -565,6 +585,8 @@ public class HomeActivity extends AppCompatActivity {
         follow_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                mixpanelAPI.track("Follow All Clicked");
 
                 SharedPreferences preferences = getSharedPreferences("preference",MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
@@ -611,10 +633,6 @@ public class HomeActivity extends AppCompatActivity {
 
                                                     hashMap.put("imgname","");
                                                 }
-
-
-
-
 
 
                                                 FirebaseFirestore.getInstance().collection("UsersList").document(My_Dbkey)
@@ -694,6 +712,31 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+        //isback = true;
+
+     /*   if (!isback){
+
+
+            super.onBackPressed();
+
+        } else {
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    Utilities.showToast(HomeActivity.this,"Follow Users");
+                    isback = false;
+
+                }
+            },2000);
+
+
+        } */
+
+
+
+
         List<Fragment> mraglist = getSupportFragmentManager().getFragments();
         for (Fragment f : mraglist){
 
@@ -751,24 +794,5 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    private void fireLongToast() {
 
-        Thread t = new Thread() {
-            public void run() {
-                int count = 0;
-                try {
-                    while (true && count < 10) {
-                      //  toast.show();
-                        sleep(1850);
-                        count++;
-
-                        // DO SOME LOGIC THAT BREAKS OUT OF THE WHILE LOOP
-                    }
-                } catch (Exception e) {
-                   // Log.e("LongToast", "", e);
-                }
-            }
-        };
-        t.start();
-    }
 }

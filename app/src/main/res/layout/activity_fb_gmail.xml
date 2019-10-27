@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
-    android:gravity="bottom"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"
             android:layout_gravity="center"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="50dp"
             app:srcCompat="@drawable/alldress" />
 
 
@@ -38,19 +38,31 @@
         android:textSize="20dp"
         android:textStyle="bold" />
 
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="6dp"
+            android:id="@+id/google_lytcard">
+
     <FrameLayout
         android:id="@+id/google_lyt"
-        android:layout_below="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:foreground="?attr/selectableItemBackground">
+
+
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/google_login"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:visibility="gone" />
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,39 +84,231 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_marginRight="40dp"
+                android:layout_marginRight="50dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/google"
                 android:textColor="@color/colorAccent"
-                android:textSize="20dp" />
+                android:textSize="16dp" />
 
         </LinearLayout>
+
     </FrameLayout>
+        </androidx.cardview.widget.CardView>
 
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/facebook_lyt"
-            android:layout_width="wrap_content"
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/google_lyt"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
-            android:visibility="invisible"
+            android:layout_below="@+id/google_lytcard"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="6dp"
+            android:id="@+id/fb_lytcard"
+            android:visibility="gone">
+
+        <FrameLayout
+            android:id="@+id/fb_lyt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:visibility="gone">
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <ImageView
+                    android:id="@+id/fb_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="10dp"
+                    app:srcCompat="@drawable/facebook"
+                    tools:ignore="VectorDrawableCompat" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="40dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="FaceBook"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+        </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="6dp"
+            android:id="@+id/phone_lytcard"
+            android:layout_below="@id/fb_lytcard"
+            android:layout_marginTop="10dp">
+
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/backgrnd"
+            android:foreground="?attr/selectableItemBackground"
+            android:id="@+id/phn_no"
+
+           >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <ImageView
+                    android:id="@+id/fb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="10dp"
+                    app:srcCompat="@drawable/ic_phone_black_24dp"
+                    tools:ignore="VectorDrawableCompat" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="40dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="@string/phone_login"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+        </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/phone_lytcard"
+                android:id="@+id/email_layout"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    >
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_margin="2dp"
+                        app:cardElevation="6dp"
+                        app:cardCornerRadius="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorPrimary"
+                        android:orientation="horizontal"
+                        android:id="@+id/email_login_button"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <ImageView
+                            android:id="@+id/emailloginbutton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:padding="10dp"
+                            app:srcCompat="@drawable/ic_email_black_24dp"
+                            tools:ignore="VectorDrawableCompat" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="40dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/signup"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="16dp" />
+
+                    </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_margin="2dp"
+                        app:cardElevation="6dp"
+                        app:cardCornerRadius="10dp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorPrimary"
+                        android:orientation="horizontal"
+                        android:id="@+id/email_signup_button"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:padding="10dp"
+                            app:srcCompat="@drawable/ic_email_black_24dp"
+                            tools:ignore="VectorDrawableCompat"
+                            />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="40dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="@string/login"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="16dp" />
+
+                    </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+
+            </FrameLayout>
 
 
 
 
-            android:elevation="10dp">
 
-
-
-
-        </com.facebook.login.widget.LoginButton>
 
         <TextView
             android:layout_width="wrap_content"
@@ -117,6 +321,7 @@
             android:text="@string/signin_hint_two"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="15dp"
+
             />
     </RelativeLayout>
 

@@ -19,85 +19,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal"
-            android:padding="5dp"
-            android:weightSum="2">
-
-            <LinearLayout
-                android:id="@+id/profile_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.5"
-                android:orientation="horizontal">
-
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profile_pic"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="5dp"
-                    android:src="@drawable/ic_user_profile"
-                    app:civ_border_color="@color/white"
-                    app:civ_border_width="1dp"
-                    tools:ignore="VectorDrawableCompat" />
-
-
-                <TextView
-                    android:id="@+id/username_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:textAllCaps="false"
-                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-                    android:textColor="@color/selected_tab"
-                    android:textSize="@dimen/text_small_size"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-
-            <Button
-                android:id="@+id/follow_btn"
-                android:layout_width="0dp"
-                android:layout_height="38dp"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:layout_weight="0.5"
-                android:background="@drawable/follow_button_square"
-                android:text="Follow"
-                android:textAllCaps="false"
-                android:textColor="@color/colorAccent"
-                />
-
-            <ProgressBar
-                android:id="@+id/connectProgress"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="center"
-                app:layout_constraintBottom_toBottomOf="@+id/follow_btn"
-                app:layout_constraintEnd_toEndOf="@+id/follow_btn"
-                app:layout_constraintStart_toStartOf="@+id/follow_btn"
-                app:layout_constraintTop_toTopOf="@+id/follow_btn" />
-
-
-
-        </LinearLayout>
 
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:fitsSystemWindows="true">
 
             <LinearLayout
@@ -105,26 +33,36 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardview"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginLeft="16dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardElevation="0dp">
+                    android:layout_height="400dp"
+                    android:weightSum="1"
+                    android:gravity="center_horizontal|center_vertical">
 
-                    <my.closet.fashion.style.customs.AspectRatioImageView
-                        android:id="@+id/fullimage"
-                        android:layout_width="match_parent"
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="240dp"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/sample_pic" />
-                </androidx.cardview.widget.CardView>
+                        app:cardCornerRadius="10dp"
+                        android:layout_margin="20dp"  >
+
+                        <ImageView
+                            android:id="@+id/fullimage"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:scaleType="fitCenter"
+                            android:transitionName="image"
+                            android:adjustViewBounds="true"
+
+                            android:src="@drawable/sample_pic"/>
+
+
+                    </androidx.cardview.widget.CardView>
+
+
+
+                </LinearLayout>
+
+
 
 
 
@@ -132,7 +70,86 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp">
+                    android:layout_marginRight="15dp"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="5dp"
+
+                        android:layout_alignParentStart="true"
+                        android:id="@+id/prof_info_holder">
+
+                        <LinearLayout
+                            android:id="@+id/profile_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/profile_pic"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center"
+                                android:layout_margin="5dp"
+                                android:src="@drawable/ic_user_profile"
+                                app:civ_border_color="@color/white"
+                                app:civ_border_width="1dp"
+                                tools:ignore="VectorDrawableCompat" />
+
+
+                            <TextView
+                                android:id="@+id/username_txt"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:gravity="start|center_vertical"
+                                android:padding="5dp"
+                                android:text="DeepuDon"
+                                android:textAllCaps="false"
+                                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                                android:textColor="@color/selected_tab"
+                                android:textSize="@dimen/text_small_size"
+                                android:textStyle="bold" />
+
+
+                        </LinearLayout>
+
+
+                        <Button
+                            android:id="@+id/follow_btn"
+                            android:layout_width="0dp"
+                            android:layout_height="38dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="5dp"
+
+                            android:background="@drawable/follow_button_square"
+                            android:text="Follow"
+                            android:textAllCaps="false"
+                            android:textColor="@color/backgrnd"
+                            android:visibility="gone"/>
+
+
+                        <ProgressBar
+                            android:id="@+id/connectProgress"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center"
+                            app:layout_constraintBottom_toBottomOf="@+id/follow_btn"
+                            app:layout_constraintEnd_toEndOf="@+id/follow_btn"
+                            app:layout_constraintStart_toStartOf="@+id/follow_btn"
+                            app:layout_constraintTop_toTopOf="@+id/follow_btn"
+                            android:backgroundTint="@color/hexgrey"
+                            android:visibility="gone"/>
+
+
+
+                    </LinearLayout>
+
 
 
 
@@ -140,7 +157,9 @@
                         android:id="@+id/like_layout"
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
-                        android:layout_alignParentStart="true"
+                        android:layout_below="@id/prof_info_holder"
+
+
                         android:layout_height="wrap_content"
                         >
 
@@ -149,11 +168,21 @@
                             android:layout_width="56dp"
                             android:layout_height="56dp"
                             android:layout_gravity="center_horizontal"
+                            app:circle_end_color="#fedbd0"
+                            app:circle_start_color="#fedbd0"
+                            app:dots_primary_color="#fedbd0"
+                            app:dots_secondary_color="#fedbd0"
+                            >
+
+
+                          <!---
                             app:circle_end_color="#f0616d"
                             app:circle_start_color="#EF505d"
                             app:dots_primary_color="#EF505d"
                             app:dots_secondary_color="#f0616d"
                             >
+                            -->
+
 
                             <ImageView
                                 android:id="@+id/blog_like_btn"
@@ -161,7 +190,7 @@
                                 android:layout_height="24dp"
                                 android:layout_gravity="center"
                                 app:srcCompat="@drawable/like_selector"
-                                />
+                                android:background="?attr/selectableItemBackgroundBorderless"/>
                         </xyz.hanks.library.bang.SmallBangView>
 
                         <ImageView
@@ -173,7 +202,7 @@
                             android:padding="10dp"
                             android:layout_centerInParent="true"
                             app:srcCompat="@drawable/ic_baseline_share"
-                            />
+                            android:background="?attr/selectableItemBackgroundBorderless"/>
 
                         <xyz.hanks.library.bang.SmallBangView
                             android:id="@+id/bookmark_anim"
@@ -190,7 +219,9 @@
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:layout_gravity="center"
-                                app:srcCompat="@drawable/bookmark_selector" />
+                                app:srcCompat="@drawable/bookmark_selector"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                tools:targetApi="m" />
                         </xyz.hanks.library.bang.SmallBangView>
 
 
@@ -219,7 +250,8 @@
                         android:layout_centerHorizontal="true"
                         android:layout_alignParentBottom="true"
                         ads:adSize="BANNER"
-                        ads:adUnitId="ca-app-pub-3828826031268173/9830855154">
+                        ads:adUnitId="ca-app-pub-3828826031268173/9830855154"
+                        android:visibility="gone">
                     </com.google.android.gms.ads.AdView>
 
 
@@ -269,6 +301,8 @@
 
         </ScrollView>
 
+
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
 
@@ -280,7 +314,7 @@
         app:layout_behavior="@string/bottom_sheet_behavior"
         android:background="@color/white"
 
-        >
+        android:visibility="gone">
 
         <View
             android:layout_width="match_parent"

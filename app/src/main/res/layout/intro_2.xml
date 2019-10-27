@@ -66,7 +66,6 @@
         android:text="@string/appintro_second"
         android:textColor="@color/selected_tab"
         android:textSize="20dp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

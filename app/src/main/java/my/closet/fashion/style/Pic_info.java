@@ -253,6 +253,7 @@ public class Pic_info extends AppCompatActivity {
 
 
 
+
     Toolbar toolbar;
     int k;
 
@@ -262,12 +263,26 @@ public class Pic_info extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pic_info);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.tool1));
+        toolbar = (Toolbar) findViewById(R.id.tool1);
+
+        setSupportActionBar(toolbar);
         ActionBar bar=getSupportActionBar();
         assert bar != null;
-        bar.setDisplayHomeAsUpEnabled(true);
-        bar.setDisplayShowCustomEnabled(true);
-        bar.setTitle(" ");
+       // bar.setDisplayHomeAsUpEnabled(true);
+       // bar.setDisplayShowCustomEnabled(true);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                finish();
+
+                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+
+            }
+        });
+
 
         String projectToken = "257c7d2e1c44d7d1ab6105af372f65a6";
         final MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, projectToken);
@@ -1819,17 +1834,21 @@ public class Pic_info extends AppCompatActivity {
                             //finish();
                             refresh();
 
+                            SharedPreferences pref = getSharedPreferences("preference",MODE_PRIVATE);
+                            SharedPreferences.Editor edit = pref.edit();
+                            edit.putBoolean("closet",false);
+                            edit.apply();
+
                             Intent intent1 = new Intent(Pic_info.this, HomeActivity.class);
                             intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent1.putExtra("position",2);
+
+
+
                             if (getSharedPreferences("prefs",MODE_PRIVATE).getBoolean("firsttimelaunch",true)){
 
-                                intent1.putExtra("celeb","celeb");
 
-                                SharedPreferences preferences = Pic_info.this.getSharedPreferences("prefs",MODE_PRIVATE);
-                                SharedPreferences.Editor editor = preferences.edit();
-                                editor.putBoolean("firsttimelaunch",false);
-                                editor.apply();
+
+
 
                                 Utilities.showToast(Pic_info.this,getString(R.string.first_celebration));
 
@@ -1837,7 +1856,7 @@ public class Pic_info extends AppCompatActivity {
 
                             }else if (getSharedPreferences("prefs",MODE_PRIVATE).getBoolean("secondtimelaunch",true)){
 
-                                intent1.putExtra("celeb","celeb");
+                               // intent1.putExtra("celeb","celeb");
 
                                 SharedPreferences preferences = getSharedPreferences("prefs",MODE_PRIVATE);
                                 SharedPreferences.Editor editor = preferences.edit();
@@ -2042,7 +2061,13 @@ public class Pic_info extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
 
 
+        super.onBackPressed();
 
+
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
 }

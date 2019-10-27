@@ -8,20 +8,16 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <my.closet.fashion.style.extra.SlidingTabLayout
+    <GridView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:id="@+id/bottoms_slidingtab">
+        android:layout_height="match_parent"
+        android:id="@+id/skirts_gridview"
+        android:numColumns="3"
+        android:horizontalSpacing="1dp"
+        android:verticalSpacing="1dp"
+        android:layout_margin="3dp"
+        android:stretchMode="columnWidth">
 
-    </my.closet.fashion.style.extra.SlidingTabLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/bottoms_viewpager">
-
-    </androidx.viewpager.widget.ViewPager>
-
+    </GridView>
 
 </LinearLayout>

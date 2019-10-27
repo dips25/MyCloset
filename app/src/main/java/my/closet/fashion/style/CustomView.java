@@ -8,9 +8,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,6 +19,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.Index;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,15 +36,21 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.shashi.mysticker.BitmapStickerIcon;
 import com.shashi.mysticker.DeleteIconEvent;
 import com.shashi.mysticker.DrawableSticker;
+import com.shashi.mysticker.FlipHorizontallyEvent;
 import com.shashi.mysticker.Sticker;
 import com.shashi.mysticker.StickerView;
 import com.shashi.mysticker.ZoomIconEvent;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
@@ -100,10 +108,12 @@ public class CustomView extends AppCompatActivity {
     KonfettiView konfettiView;
 
 
+
     ArrayList<Integer> finaldress=new ArrayList<>();
 
     int metaid;
     UploadTask uploadTask;
+    Index index;
 
 
 
@@ -123,6 +133,9 @@ public class CustomView extends AppCompatActivity {
         storageRef = storage.getReferenceFromUrl("gs://my-closet-fashion-style.appspot.com/");
         sharedPreferences = getSharedPreferences("prefs",MODE_PRIVATE);
 
+        Client client = new Client("YFQP26YB2I", "81531addb625625c33ed295a72239fca");
+        index = client.getIndex("post");
+
         Realm.init(this);
         realm=Realm.getDefaultInstance();
 
@@ -130,14 +143,15 @@ public class CustomView extends AppCompatActivity {
 
         frameLayout=(StickerView) findViewById(R.id.frame);
         checkBox = (CheckBox) findViewById(R.id.chk_post);
-        konfettiView = (KonfettiView) findViewById(R.id.custom_konfetti);
-        konfettiView.setVisibility(View.GONE);
+
 
 
         checkBox.setChecked(true);
 
         //SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
         boolean createlooktut = sharedPreferences.getBoolean("createlooktut",true);
+
+
 
 
 
@@ -161,18 +175,20 @@ public class CustomView extends AppCompatActivity {
 
 
 
-       /* BitmapStickerIcon flipIcon = new BitmapStickerIcon(ContextCompat.getDrawable(this,
+        BitmapStickerIcon flipIcon = new BitmapStickerIcon(ContextCompat.getDrawable(this,
 
                 R.drawable.ic_flip),
 
                 BitmapStickerIcon.RIGHT_TOP);
 
-        flipIcon.setIconEvent(new FlipHorizontallyEvent()); */
+        flipIcon.setIconEvent(new FlipHorizontallyEvent());
 
 
-        frameLayout.setIcons(Arrays.asList(deleteIcon,zoomIcon));
+        frameLayout.setIcons(Arrays.asList(deleteIcon,zoomIcon,flipIcon));
         frameLayout.setLocked(false);
         frameLayout.setConstrained(true);
+
+
 
         frameLayout.setOnStickerOperationListener(new StickerView.OnStickerOperationListener() {
             @Override
@@ -320,6 +336,8 @@ public class CustomView extends AppCompatActivity {
         if (bitmaparray[3]!=null){
 
             Drawable drawable = new BitmapDrawable(getResources(),bitmaparray[3]);
+
+
             frameLayout.addSticker(new DrawableSticker(drawable));
 
         }
@@ -478,9 +496,16 @@ public class CustomView extends AppCompatActivity {
 
                 if (checkBox.isChecked()){
 
+                    mixpanelAPI.track("Button Checked");
+
+                    frameLayout.setConstrained(false);
+                    frameLayout.setLocked(true);
+
 
 
                     getImagename();
+
+
 
                     frameLayout.setDrawingCacheEnabled(true);
                     frameLayout.buildDrawingCache(true);
@@ -526,13 +551,54 @@ public class CustomView extends AppCompatActivity {
                         Looks finallooks = realm.copyToRealm(looks);
                         realm.commitTransaction();
 
-                        new Handler().post(new Runnable() {
+
+
+
+
+                    try {
+                       JSONObject jsonObject = new JSONObject().put("description",s)
+                                .put("imagename",imagename);
+
+                        index.addObjectAsync(jsonObject,String.valueOf(id),null);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+
+
+
+                        //finish();
+
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            updatepost(b);
+
+                        }
+                    });
+
+                       /* Runnable task = new Runnable() {
                             @Override
                             public void run() {
 
                                 updatepost(b);
+
+
                             }
-                        });
+                        }; */
+
+
+
+                      //  finish();
+
+
+
+
+
+
+
 
 
 
@@ -549,9 +615,17 @@ public class CustomView extends AppCompatActivity {
 
                     final String s = look_name.getText().toString();
 
+                    mixpanelAPI.track("Post Unchecked");
+
+                    frameLayout.setConstrained(false);
+                    frameLayout.setLocked(true);
 
 
-                        getImagename();
+
+
+
+
+                    getImagename();
 
                         frameLayout.setDrawingCacheEnabled(true);
                         frameLayout.buildDrawingCache(true);
@@ -599,7 +673,11 @@ public class CustomView extends AppCompatActivity {
                     valuemap.put("stylename",s);
 
 
-                    FirebaseFirestore.getInstance().collection("UsersList").document(My_DbKey).collection("MetaData").add(valuemap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    FirebaseFirestore.getInstance().collection("UsersList")
+                            .document(My_DbKey)
+                            .collection("MetaData")
+                            .add(valuemap)
+                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                         @Override
                         public void onComplete(Task<DocumentReference> task) {
 
@@ -609,11 +687,16 @@ public class CustomView extends AppCompatActivity {
 
                                 Utilities.hideLoading();
 
+                                SharedPreferences preferences = getSharedPreferences("preference",MODE_PRIVATE);
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putBoolean("lookbook",false);
+                                editor.apply();
+
 
                                 Intent intent = new Intent(CustomView.this, HomeActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                intent.putExtra("position",3);
+
                                 startActivity(intent);
                                 finish();
 
@@ -692,17 +775,48 @@ public class CustomView extends AppCompatActivity {
                         data.put("id", id);
                         data.put("lookid", n);
                         data.put("image", download_url);
-                        data.put("description", look_name.getText().toString());
+                        data.put("description", look_name.getText().toString().toLowerCase());
                         data.put("timestamp", timestamp);
                         data.put("email", Utilities.loadPref(CustomView.this, "email", ""));
                         data.put("languages", "");
                         data.put("dbkey",My_DbKey);
+
+                        List<JSONObject> array = new ArrayList<>();
+                        array.add(new JSONObject(data));
+
+                        index.addObjectsAsync(new JSONArray(array),null);
+
+
+
+
+
 
                         FirebaseFirestore.getInstance().collection("UsersList").document(My_DbKey).collection("Feed").add(data).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                             @Override
                             public void onComplete(Task<DocumentReference> task) {
 
                                 if (task.isSuccessful()){
+
+                                    boolean post_tut = sharedPreferences.getBoolean("post",true);
+
+                                    Utilities.hideLoading();
+
+
+                                    Intent intent = new Intent(CustomView.this, HomeActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    if(post_tut){
+
+                                        intent.putExtra("celebration","celeb");
+                                    }
+                                    startActivity(intent);
+                                   // finish();
+
+                                    Utilities.showToast(CustomView.this,"Posted...");
+                                    overridePendingTransition(R.anim.fade_in, R.anim.slide_out_down);
+
+
+
 
                                     FirebaseFirestore.getInstance().collection("UsersList").document(My_DbKey).collection("FollowCollection").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                         @Override
@@ -722,7 +836,7 @@ public class CustomView extends AppCompatActivity {
 
                                                                     for (DocumentSnapshot documentSnapshot1 : Objects.requireNonNull(task.getResult())){
 
-                                                                        FirebaseFirestore.getInstance().collection("UsersList").document(documentSnapshot1.getId()).collection("Feed").add(data);
+                                                                        FirebaseFirestore.getInstance().collection("UsersList").document(documentSnapshot1.getId()).collection("Feed").document(id).set(data);
                                                                     }
 
 
@@ -754,23 +868,7 @@ public class CustomView extends AppCompatActivity {
 
                                                                     if (task.isSuccessful()) {
 
-                                                                        boolean post_tut = sharedPreferences.getBoolean("post",true);
 
-                                                                        Utilities.hideLoading();
-
-
-                                                                        Intent intent = new Intent(CustomView.this, HomeActivity.class);
-                                                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                                        if(post_tut){
-
-                                                                            intent.putExtra("celebration","celeb");
-                                                                        }
-                                                                        startActivity(intent);
-                                                                        finish();
-
-                                                                        Utilities.showToast(CustomView.this,"Posted");
-                                                                        overridePendingTransition(R.anim.fade_in, R.anim.slide_out_down);
 
 
                                                                     }

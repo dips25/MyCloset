@@ -29,7 +29,7 @@ import java.util.Objects;
 
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
-import my.closet.fashion.style.activities.PictureDeletingActivity;
+import my.closet.fashion.style.activities.MyUploadsDeleting;
 import my.closet.fashion.style.adapters.UserFeedsViewHolder;
 import my.closet.fashion.style.customs.SpacesItemDecoration;
 import my.closet.fashion.style.modesl.FeedResponse;
@@ -154,11 +154,16 @@ public class MyPicsFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
 
-                        Intent textint = new Intent(getActivity(), PictureDeletingActivity.class);
+                        Intent textint = new Intent(getActivity(), MyUploadsDeleting.class);
+                       // ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(Objects.requireNonNull(getActivity()),holder.picture,"image");
                         Utilities.MyTab=true;
                         textint.putExtra("picture", (Serializable) model);
-                        getActivity().startActivity(textint);
-                        getActivity().overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
+                        startActivity(textint);
+
+                        Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+
+
+                        //Objects.requireNonNull(getActivity()).startActivity(textint,activityOptionsCompat.toBundle());
                     }
                 });
 

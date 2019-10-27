@@ -26,34 +26,63 @@
             android:minHeight="?attr/actionBarSize"
             android:gravity="center">
 
-            <LinearLayout
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end">
+                android:src="@drawable/ic_arrow_back"
+                android:layout_marginStart="5dp"
+                android:id="@+id/backeraser"/>
 
-            <ImageButton
-                android:id="@+id/undo"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:background="@drawable/undo_selector"
-                android:layout_marginEnd="20dp"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:padding="10dp">
 
-            <ImageButton
-                android:id="@+id/redo"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:background="@drawable/redo_selector"
-                android:layout_marginEnd="20dp"/>
+
+
+                    <ImageButton
+                        android:id="@+id/undo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/undo_selector"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="10dp"
+
+                        />
+
+
+
+
+
+
+                    <ImageButton
+                        android:id="@+id/redo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:src="@drawable/redo_selector"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="10dp"
+
+                        android:layout_centerInParent="true"/>
+
+
+
+
 
                 <ImageButton
                     android:id="@+id/done"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="end|center_vertical"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerInParent="true"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_done_black_24dp" />
+
 
             </LinearLayout>
 
@@ -81,17 +110,32 @@
                 android:weightSum="3">
 
 
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:id="@+id/eraserlayout">
+
+                    <ImageButton
+                        android:id="@+id/manual_clear_button"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/pencil_selector" />
+
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:id="@+id/autoclearlayout">
 
                     <ImageButton
                         android:id="@+id/auto_clear_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:background="@drawable/magic_selector"
 
                         />
@@ -102,28 +146,16 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center">
-
-                    <ImageButton
-                        android:id="@+id/manual_clear_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/pencil_selector" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:id="@+id/zoomlayout">
 
                     <ImageButton
                         android:id="@+id/zoom_button"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:background="@drawable/magnifier_selector"
-                        tools:ignore="ContentDescription" />
+                        tools:ignore="ContentDescription"
+                        />
 
                 </RelativeLayout>
 

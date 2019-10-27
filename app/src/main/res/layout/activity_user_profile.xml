@@ -204,27 +204,26 @@
                 </LinearLayout>
 
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="10dp"
-                    android:textColor="@color/selected_tab"
-                    android:textColorHint="@color/colorPrimaryDark">
+                    android:text="@string/email"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="12dp"/>
 
-                    <androidx.appcompat.widget.AppCompatEditText
+                    <TextView
                         android:id="@+id/email_edittext"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/gmail"
-                        android:imeOptions="actionNext"
-                        android:inputType="text"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
                         android:textColor="@color/selected_tab"
                         android:textColorHint="@color/colorPrimaryDark"
                         android:textCursorDrawable="@null"
                         android:textSize="@dimen/user_text"
                         app:backgroundTint="@android:color/black" />
-                </com.google.android.material.textfield.TextInputLayout>
+
 
 
                 <com.google.android.material.textfield.TextInputLayout

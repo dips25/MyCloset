@@ -8,6 +8,9 @@ public class BookmarkResponse implements Serializable {
     String email;
     String image;
     String timestamp;
+    String description;
+    private int lookid;
+    String profileimage;
 
     public BookmarkResponse() {
 
@@ -52,5 +55,27 @@ public class BookmarkResponse implements Serializable {
         this.timestamp = timestamp;
     }
 
+    public String getDescription() {
+        return description;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getLookid() {
+        return lookid;
+    }
+
+    public void setLookid(int lookid) {
+        this.lookid = lookid;
+    }
+
+    public String getProfileimage() {
+        return profileimage;
+    }
+
+    public void setProfileimage(String profileimage) {
+        this.profileimage = profileimage;
+    }
 }

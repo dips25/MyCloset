@@ -66,14 +66,6 @@
 
 </LinearLayout>
 
-    <ImageView
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:src="@drawable/ic_clicker"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:id="@+id/tut_clicker"/>
 
 
 </androidx.cardview.widget.CardView>

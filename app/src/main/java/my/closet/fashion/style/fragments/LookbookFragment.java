@@ -29,7 +29,7 @@ import my.closet.fashion.style.modesl.Looks;
 public class LookbookFragment extends Fragment {
 
     View view;
-   public  GridView gridView;
+   public static GridView gridView;
     Realm realm;
     ArrayList<Looks> dresses = new ArrayList<>();
     my.closet.fashion.style.adapters.Lookbookadapter Lookbookadapter;
@@ -96,6 +96,8 @@ public class LookbookFragment extends Fragment {
                 intent.putExtra("id", dresses.get(position).getId());
                 intent.putExtra("lookid",dresses.get(position).getLookid());
                 startActivity(intent);
+
+                Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
             }
         });
     }
@@ -119,6 +121,8 @@ public class LookbookFragment extends Fragment {
         super.onDestroy();
         dresses.clear();
     }
+
+
 
 
 }

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -93,6 +94,9 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
     private TextView followerss_count_txt;
     private BottomNavigationView bottomnav;
 
+    LinearLayout followersection;
+    LinearLayout followingsection;
+
     public MyProfileFragment() {
         // Required empty public constructor
     }
@@ -126,6 +130,10 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
         bottomnav = (BottomNavigationView) getActivity().findViewById(R.id.bnve_icon_selector);
         bottomnav.getMenu().getItem(2).setChecked(true);
 
+        followersection = (LinearLayout) view.findViewById(R.id.followersection);
+        followingsection = (LinearLayout) view.findViewById(R.id.followingsection);
+
+
 
         profile_pic = (CircleImageView) view.findViewById(R.id.profile_pic);
         username_txt = (TextView) view.findViewById(R.id.username_txt);
@@ -145,7 +153,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
         follower_count_txt = (TextView) view.findViewById(R.id.follower_count_txt);
         followerss_count_txt = (TextView) view.findViewById(R.id.followerss_count_txt);
 
-        follower_count_txt.setOnClickListener(new View.OnClickListener() {
+        followersection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -156,7 +164,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
             }
         });
 
-        followerss_count_txt.setOnClickListener(new View.OnClickListener() {
+        followingsection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -205,7 +213,6 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
     }
     private void LoginUsingEmail() {
 
-        Utilities.showLoading(getActivity(), "Please Wait...");
 
         profCollection.collection("UsersList")
                 .whereEqualTo("Email", Utilities.loadPref(getActivity(), "email", ""))
@@ -323,7 +330,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
                 mixpanelAPI.track("FBandGoogle or Profile");
                 if (!Utilities.loadPref(Objects.requireNonNull(getActivity()), "email", "").equalsIgnoreCase("")) {
                     Intent ii = new Intent(getActivity(), UserProfileActivity.class);
-                    ii.putExtra("LoginData", fbGmailData);
+                   // ii.putExtra("LoginData", fbGmailData);
                     startActivity(ii);
                     getActivity().overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
 
@@ -384,6 +391,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CHOOSE_PHOTO && resultCode == AppCompatActivity.RESULT_OK) {
 
+            super.onActivityResult(requestCode, resultCode, data);
+
             selectedImageUri = data.getData();
             String selectedImagePath = "";
             if (requestCode == 1) {
@@ -395,8 +404,9 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
             selectedImageUri = Uri.fromFile(new File(selectedImagePath));
 
             Intent newIntent = new Intent(getActivity(), PostFeedActivity.class);
-            newIntent.putExtra("Bitmap", selectedImageUri.toString());
-            getActivity().startActivity(newIntent);
+            newIntent.putExtra("Bitmap", selectedImagePath);
+
+            Objects.requireNonNull(getActivity()).startActivity(newIntent);
             getActivity().overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
 
         } else {
@@ -407,7 +417,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
 
     public String getPath(Uri uri, String type) {
         String document_id = null;
-        Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
+        Cursor cursor = Objects.requireNonNull(getActivity()).getContentResolver().query(uri, null, null, null, null);
         if (cursor.moveToFirst()) {
             document_id = cursor.getString(0);
             document_id = document_id.substring(document_id.lastIndexOf(":") + 1);

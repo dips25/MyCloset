@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/alldress"
+        android:id="@+id/emailicon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="3dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_centerInParent="true">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/black"
+            android:id="@+id/txtinputemail">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email"
+            android:padding="10dp"
+            android:id="@+id/email_edittext"
+            android:textSize="@dimen/user_text"
+            android:inputType="text"
+            app:backgroundTint="@android:color/black"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/selected_tab"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_below="@id/txtinputemail"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/black"
+            android:id="@+id/txtinputpassword">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:hint="@string/password"
+            android:id="@+id/password_edittext"
+            android:textSize="@dimen/user_text"
+            app:backgroundTint="@android:color/black"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/selected_tab"
+            android:inputType="textPassword"
+            />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:gravity="end"
+            android:hint="@string/forgot_password"
+            android:id="@+id/forgot_password"
+            android:layout_below="@id/txtinputpassword"
+            android:textSize="@dimen/user_text"
+            android:inputType="text"
+            android:background="?attr/selectableItemBackgroundBorderless"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:layout_below="@id/forgot_password"
+            android:layout_centerHorizontal="true"
+            android:paddingStart="50dp"
+            android:paddingEnd="50dp"
+            android:background="@drawable/follow_button_square"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:layout_marginTop="10dp"
+            android:id="@+id/emailloginbutton"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            tools:targetApi="m" />
+
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

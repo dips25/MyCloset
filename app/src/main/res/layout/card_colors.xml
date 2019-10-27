@@ -43,218 +43,254 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/catset"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/clrcategory"
                 android:background="@color/categorybackground"
                 android:orientation="horizontal"
-                android:weightSum="10">
+                android:weightSum="4"
 
+                >
 
-                <ImageView
-                    android:id="@+id/accessories"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginTop="10dp"
-                    android:clickable="true"
-                    app:srcCompat="@drawable/ic_handbag"
-                    android:background="?attr/selectableItemBackgroundBorderless"/>
-
-                <ImageView
-                    android:id="@+id/accselect"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginTop="10dp"
-                    android:clickable="true"
-                    app:srcCompat="@drawable/ic_handbag_selected"
-                    android:background="?attr/selectableItemBackgroundBorderless"/>
-
-                <TextView
-                    android:id="@+id/acctext"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/accselect"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="3dp"
-                    android:gravity="center"
-                    android:text="@string/accessories"
-                    android:textColor="@color/textfontcolorlight"
-                    android:textSize="14sp" />
+                    android:layout_weight="1"
+                    android:gravity="center">
 
-                <TextView
-                    android:id="@+id/acctext1"
+                    <ImageView
+                        android:id="@+id/accessories"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:clickable="true"
+                        app:srcCompat="@drawable/ic_handbag"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:layout_centerInParent="true"
+
+                       />
+
+                    <ImageView
+                        android:id="@+id/accselect"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:clickable="true"
+                        app:srcCompat="@drawable/ic_handbag_selected"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:layout_centerInParent="true"
+                        />
+
+                    <TextView
+                        android:id="@+id/acctext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/accselect"
+                        android:layout_marginTop="15dp"
+                        android:maxLength="11"
+
+
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/accessories"
+                        android:textColor="@color/textfontcolorlight"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/acctext1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/accselect"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15dp"
+                        android:text="@string/accessories"
+                        android:textColor="@color/picinfo_category_color"
+                        android:textSize="14sp"
+                        android:maxLength="11"
+
+                        />
+
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/accselect"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="3dp"
-                    android:gravity="center"
-                    android:text="@string/accessories"
-                    android:textColor="@color/picinfo_category_color"
-                    android:textSize="14sp" />
+                    android:layout_weight="1"
+                    android:gravity="center">
 
-                <ImageView
-                    android:id="@+id/top"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:layout_marginStart="44dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_toRightOf="@+id/accselect"
-                    android:clickable="true"
-                    app:srcCompat="@drawable/ic_shirt"
-                    android:background="?attr/selectableItemBackgroundBorderless"/>
+                    <ImageView
+                        android:id="@+id/top"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:clickable="true"
+                        app:srcCompat="@drawable/ic_shirt"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:layout_centerInParent="true"/>
 
-                <ImageView
-                    android:id="@+id/topselect"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:layout_marginStart="44dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_toRightOf="@+id/accselect"
-                    android:clickable="true"
+                    <ImageView
+                        android:id="@+id/topselect"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:clickable="true"
 
-                    app:srcCompat="@drawable/ic_shirt_selected"
-                    android:background="?attr/selectableItemBackgroundBorderless"/>
+                        android:layout_centerInParent="true"
 
-                <TextView
-                    android:id="@+id/toptext"
+
+                        app:srcCompat="@drawable/ic_shirt_selected"
+                        android:background="?attr/selectableItemBackgroundBorderless"/>
+
+                    <TextView
+                        android:id="@+id/toptext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/topselect"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15dp"
+                        android:text="@string/top"
+                        android:textColor="@color/textfontcolorlight"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/toptext1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15dp"
+                        android:layout_below="@+id/topselect"
+                        android:text="@string/top"
+                        android:textColor="@color/picinfo_category_color"
+                        android:textSize="14sp"
+                        />
+
+                </RelativeLayout>
+
+
+
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignEnd="@id/topselect"
-                    android:layout_alignStart="@+id/topselect"
-                    android:layout_below="@+id/topselect"
-                    android:layout_marginTop="3dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/top"
-                    android:textColor="@color/textfontcolorlight"
-                    android:textSize="14sp" />
+                    android:layout_weight="1"
+                    android:gravity="center">
 
-                <TextView
-                    android:id="@+id/toptext1"
+
+                    <ImageView
+                        android:id="@+id/bottom"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+
+                        android:layout_centerInParent="true"
+
+
+
+                        android:clickable="true"
+                        app:srcCompat="@drawable/ic_trousers"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+
+
+                        />
+
+                    <ImageView
+                        android:id="@+id/bottomselect"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_centerInParent="true"
+
+                        android:clickable="true"
+                        app:srcCompat="@drawable/ic_pants_selected"
+                        android:background="?attr/selectableItemBackgroundBorderless"/>
+
+                    <TextView
+                        android:id="@+id/bottomtext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bottomselect"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15dp"
+                        android:text="@string/bottom"
+                        android:textColor="@color/textfontcolorlight"
+                        android:textSize="14sp"
+                        android:maxLength="6"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/bottomtext1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bottomselect"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15dp"
+                        android:text="@string/bottom"
+                        android:textColor="@color/picinfo_category_color"
+                        android:textSize="14sp"
+                        android:maxLength="6"/>
+
+                </RelativeLayout>
+
+
+
+
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignEnd="@id/topselect"
-                    android:layout_alignStart="@+id/topselect"
-                    android:layout_below="@+id/topselect"
-                    android:layout_marginTop="3dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/top"
-                    android:textColor="@color/picinfo_category_color"
-                    android:textSize="14sp"
-                    />
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/foot"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
 
 
-                <ImageView
-                    android:id="@+id/bottom"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:layout_marginStart="43dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_toRightOf="@+id/topselect"
-                    android:clickable="true"
-                    app:srcCompat="@drawable/ic_trousers"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                        android:layout_centerInParent="true"
+                        android:clickable="true"
+                        app:srcCompat="@drawable/ic_high_heels"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        />
+
+                    <ImageView
+                        android:id="@+id/footselect"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:clickable="true"
 
 
-                    />
+                        android:layout_centerInParent="true"
 
-                <ImageView
-                    android:id="@+id/bottomselect"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:layout_marginStart="43dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_toRightOf="@id/topselect"
-                    android:clickable="true"
+                        app:srcCompat="@drawable/ic_high_heels_selected"
+                        android:background="?attr/selectableItemBackgroundBorderless"/>
 
-                    app:srcCompat="@drawable/ic_pants_selected"
-                    android:background="?attr/selectableItemBackgroundBorderless"/>
+                    <TextView
+                        android:id="@+id/foottext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
 
-                <TextView
-                    android:id="@+id/bottomtext"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                   android:layout_alignStart="@id/bottomselect"
-                    android:layout_below="@id/bottomselect"
-                    android:layout_marginTop="3dp"
-                    android:text="@string/bottom"
-                    android:textColor="@color/textfontcolorlight"
-                    android:textSize="14sp"
-                    android:maxLength="6"
-
-                />
-
-                <TextView
-                    android:id="@+id/bottomtext1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignStart="@id/bottomselect"
-                    android:layout_below="@id/bottomselect"
-                    android:layout_marginTop="3dp"
-                    android:text="@string/bottom"
-                    android:textColor="@color/picinfo_category_color"
-                    android:textSize="14sp"
-                    android:maxLength="6"/>
+                        android:layout_below="@+id/footselect"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15dp"
 
 
-                <ImageView
-                    android:id="@+id/foot"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="33dp"
-                    android:layout_marginTop="10dp"
-                    android:clickable="true"
+                        android:text="@string/footwear"
+                        android:textColor="@color/textfontcolorlight"
+                        android:textSize="14sp" />
 
-                    app:srcCompat="@drawable/ic_high_heels"
-                    android:background="?attr/selectableItemBackgroundBorderless"/>
+                    <TextView
+                        android:id="@+id/foottext1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/footselect"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15dp"
+                        android:text="@string/footwear"
+                        android:textColor="@color/picinfo_category_color"
+                        android:textSize="14sp" />
 
-                <ImageView
-                    android:id="@+id/footselect"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="33dp"
-                    android:layout_marginTop="10dp"
-                    android:clickable="true"
-
-                    app:srcCompat="@drawable/ic_high_heels_selected"
-                    android:background="?attr/selectableItemBackgroundBorderless"/>
-
-                <TextView
-                    android:id="@+id/foottext"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/footselect"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginTop="3dp"
-                    android:gravity="center"
-                    android:text="@string/footwear"
-                    android:textColor="@color/textfontcolorlight"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/foottext1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/footselect"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginTop="3dp"
-                    android:gravity="fill_horizontal"
-                    android:text="@string/footwear"
-                    android:textColor="@color/picinfo_category_color"
-                    android:textSize="14sp" />
+                </RelativeLayout>
 
 
-            </RelativeLayout>
+
+            </LinearLayout>
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

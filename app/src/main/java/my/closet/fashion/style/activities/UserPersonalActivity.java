@@ -75,6 +75,7 @@ import my.closet.fashion.style.R;
 import my.closet.fashion.style.Utilities;
 import my.closet.fashion.style.adapters.UserFeedsViewHolder;
 import my.closet.fashion.style.customs.SpacesItemDecoration;
+import my.closet.fashion.style.modesl.BookmarkResponse;
 import my.closet.fashion.style.modesl.FeedResponse;
 import my.closet.fashion.style.modesl.FollowerFollowing;
 
@@ -117,6 +118,8 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
     private TextView following_count_txt;
     private List followers = new ArrayList();
     LinearLayout follower_layout,following_layout;
+    private BookmarkResponse bookmarkResponse_obj;
+    private String email;
 
 
     @Override
@@ -136,10 +139,19 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
             if (Objects.requireNonNull(getIntent().getExtras()).containsKey("key")) {
 
                 feedResponse_obj = (FeedResponse) i.getSerializableExtra("key");
+                email = feedResponse_obj.getEmail();
 
             }else if(getIntent().getExtras().containsKey("followerkey")) {
 
                 followerFollowing = (FollowerFollowing) i.getSerializableExtra("follower");
+                email = followerFollowing.getEmail();
+
+
+
+            }else {
+
+                bookmarkResponse_obj = (BookmarkResponse) i.getSerializableExtra("bookmark");
+                email = bookmarkResponse_obj.getEmail();
 
 
             }
@@ -169,20 +181,20 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
         toolbar.setBackgroundColor(getResources().getColor(R.color.secondarycolor));
 
 
-        toolbar.setNavigationIcon(R.drawable.ic_arrowback);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
-                overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_from_left);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
 
-        follow_btn = (Button) findViewById(R.id.follow_btn);
-        follow_btn.setText("Follow");
+       // follow_btn = (Button) findViewById(R.id.follow_btn);
+       // follow_btn.setText("Follow");
 
-        follower_layout = (LinearLayout) findViewById(R.id.follower_layout);
-        following_layout = (LinearLayout) findViewById(R.id.following_layout);
+        follower_layout = (LinearLayout) findViewById(R.id.followersection);
+        following_layout = (LinearLayout) findViewById(R.id.followingsection);
 
         follower_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,12 +208,20 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
                     startActivity(intent);
 
 
-                } else {
+                } else if (followerFollowing!=null){
 
                     Intent intent = new Intent(UserPersonalActivity.this,FollowerFollowingViewActivity.class);
                     intent.putExtra("key",key);
                     intent.putExtra("name",followerFollowing.getName());
                     startActivity(intent);
+
+                }else {
+
+                    Intent intent = new Intent(UserPersonalActivity.this,FollowerFollowingViewActivity.class);
+                    intent.putExtra("key",key);
+                    startActivity(intent);
+
+
                 }
 
             }
@@ -219,26 +239,34 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
                     startActivity(intent);
 
 
-                } else {
+                } else if (followerFollowing!=null){
 
                     Intent intent = new Intent(UserPersonalActivity.this,FollowerFollowingViewActivity.class);
-                    intent.putExtra("key", key);
+                    intent.putExtra("key",key);
                     intent.putExtra("name",followerFollowing.getName());
                     startActivity(intent);
+
+                }else {
+
+                    Intent intent = new Intent(UserPersonalActivity.this,FollowerFollowingViewActivity.class);
+                    intent.putExtra("key",key);
+                    startActivity(intent);
+
+
                 }
 
 
             }
         });
 
-        follow_btn.setOnClickListener(this);
+       // follow_btn.setOnClickListener(this);
 
-        following_count_txt = (TextView) findViewById(R.id.following_count_txt);
-        follower_count_txt = (TextView) findViewById(R.id.followers_count_txt);
+        following_count_txt = (TextView) findViewById(R.id.followerss_count_txt);
+        follower_count_txt = (TextView) findViewById(R.id.follower_count_txt);
         profile_image = (CircleImageView) findViewById(R.id.profile_image);
        // profile_image.setBackgroundResource(R.drawable.ic_user_profile);
-        post_count_txt = (TextView) findViewById(R.id.post_count_txt);
-        link_txt = (TextView) findViewById(R.id.link_txt);
+       // post_count_txt = (TextView) findViewById(R.id.post_count_txt);
+      //  link_txt = (TextView) findViewById(R.id.link_txt);
         bio_txt = (TextView) findViewById(R.id.bio_txt);
 
 
@@ -250,9 +278,9 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
 
             Glide.with(UserPersonalActivity.this).load(followerFollowing.getImgname()).into(profile_image);
 
-        }else {
+        }else if(bookmarkResponse_obj!=null) {
 
-            profile_image.setBackgroundResource(R.drawable.ic_user_profile);
+
 
 
         }
@@ -261,20 +289,27 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
 
         if (feedResponse_obj != null) {
             username_txt.setText(feedResponse_obj.getPenname());
-        } else {
+
+        } else if(followerFollowing!= null) {
 
             username_txt.setText(followerFollowing.getName());
+
+        }else if(bookmarkResponse_obj!=null) {
+
+           // Glide.with(UserPersonalActivity.this).load(bookmarkResponse_obj.getProfileimage()).into(profile_image);
+
+
         }
 
         recyclerView = (RecyclerView) findViewById(R.id.rvVideos);
 
-        unfollow_btn = (ImageButton) findViewById(R.id.unfollow_btn);
-        unfollow_btn.setOnClickListener(this);
+       // unfollow_btn = (ImageButton) findViewById(R.id.unfollow_btn);
+       // unfollow_btn.setOnClickListener(this);
 
         follower_count_txt.setOnClickListener(this);
 
       //  postCount();
-        SetUpRecycleView();
+
        // checkFollowers();
 
     }
@@ -308,7 +343,7 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
     private void getUserData() {
         Utilities.showLoading(UserPersonalActivity.this, "Loading");
         db.collection("UsersList")
-                .whereEqualTo("Email", (feedResponse_obj!=null) ? feedResponse_obj.getEmail() : followerFollowing.getEmail())
+                .whereEqualTo("Email", email)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(Task<QuerySnapshot> task) {
@@ -320,7 +355,7 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
                         key = document.getId();
                         username_txt.setText(Objects.requireNonNull(document.get("Pen_Name")).toString());
                         bio_txt.setText(Objects.requireNonNull(document.get("Bio")).toString());
-                        link_txt.setText(Objects.requireNonNull(document.get("Website")).toString());
+                        //link_txt.setText(Objects.requireNonNull(document.get("Website")).toString());
                         toolbar_txt.setText(Objects.requireNonNull(document.get("Display_Name")).toString());
 
                         Glide.with(UserPersonalActivity.this)
@@ -330,6 +365,7 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
                         if (key != null && !key.equalsIgnoreCase("")) {
                             FollowerCount();
                             FollowingCount();
+                            SetUpRecycleView();
                             //checkFollowers();
                         }
 
@@ -349,8 +385,9 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
     private void FollowingCount() {
 
         db.collection("UsersList")
-                .document(key).
-                collection("Followee").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .document(key)
+                .collection("Followee")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -457,9 +494,12 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
 
     private void SetUpRecycleView() {
 
-        Query query = feedRef
-                .whereEqualTo("email", (feedResponse_obj!=null) ? feedResponse_obj.getEmail() : followerFollowing.getEmail())
+
+        Query query = db.collection("UsersList")
+                .document(key)
+                .collection("Posts")
                 .orderBy("timestamp", Query.Direction.DESCENDING);
+
 
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
@@ -488,15 +528,15 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
                                             final FeedResponse model) {
                 holder.bind(UserPersonalActivity.this, model);
 
+
                 holder.picture.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        Intent textint = new Intent(UserPersonalActivity.this, PictureDeletingActivity.class);
-                        Utilities.MyTab=false;
+                        Intent textint = new Intent(UserPersonalActivity.this, UserPersonalFullScreenActivity.class);
                         textint.putExtra("picture", (Serializable) model);
                         startActivity(textint);
-                        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     }
                 });
             }
@@ -696,11 +736,11 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
                 }
                 break;
 
-            case R.id.unfollow_btn:
+           /* case R.id.unfollow_btn:
                 if (Utilities.Following) {
                     UnFollowPopup();
                 }
-                break;
+                break; */
 
             case R.id.follower_count_txt:
                 /*if (followings.size() > 0) {
@@ -864,11 +904,11 @@ public class UserPersonalActivity extends AppCompatActivity implements View.OnCl
                         public void onComplete(Task<DocumentReference> task) {
                             if (task.isComplete()) {
 
-                                follow_btn.setText("Following");
-                                follow_btn.setBackgroundResource(R.drawable.following_btn);
-                                follow_btn.setTextColor(ContextCompat.getColor(UserPersonalActivity.this, R.color.selected_tab));
+                                //follow_btn.setText("Following");
+                                //follow_btn.setBackgroundResource(R.drawable.following_btn);
+                                //follow_btn.setTextColor(ContextCompat.getColor(UserPersonalActivity.this, R.color.selected_tab));
 
-                                follow_btn.setEnabled(false);
+                                //follow_btn.setEnabled(false);
                             } else {
                                 Utilities.showToast(UserPersonalActivity.this, "Try again later");
                             }

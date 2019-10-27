@@ -67,8 +67,9 @@ import java.util.Objects;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import my.closet.fashion.style.Crop;
+import my.closet.fashion.style.CircleImageView;
 import my.closet.fashion.style.CustomView;
+
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.ScreenShotService;
 import my.closet.fashion.style.activities.CutOutActivityOld;
@@ -94,6 +95,8 @@ import static my.closet.fashion.style.adapters.TopAdapter.ccontext;
  * A simple {@link Fragment} subclass.
  */
 public class ClosetFragment extends Fragment implements View.OnClickListener {
+
+
 
 
     private static final int GALLERY_REQUEST = 110 ;
@@ -462,6 +465,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         bottomnav = (BottomNavigationView) getActivity().findViewById(R.id.bnve_icon_selector);
         bottomnav.getMenu().getItem(1).setChecked(true);
 
+
         upload_tutorial = (RelativeLayout)v.findViewById(R.id.upload_tutorial);
         upload_tutorial.setVisibility(View.GONE);
 
@@ -481,7 +485,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
 
                 if (mixpanelAPI!=null) {
 
-                    mixpanelAPI.track("Create Look Tab");
+                    mixpanelAPI.track("Create Look Tab Clicked");
                 }
 
                 names = madapter.getItems();
@@ -496,6 +500,9 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
                 intent.putIntegerArrayListExtra("bottomkey", bottomnames);
                 intent.putIntegerArrayListExtra("footkey", footnames);
                 startActivity(intent);
+
+                look_tab.setVisibility(View.GONE);
+                bottomnav.setVisibility(View.VISIBLE);
 
 
             }
@@ -677,6 +684,8 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         flgold = (ImageView) v.findViewById(R.id.goldsq);
         flpink = (ImageView) v.findViewById(R.id.pinksq);
         flpurple = (ImageView) v.findViewById(R.id.purplesq);
+
+
 
 
         flmblack = (ImageView) v.findViewById(R.id.blacksqtck);
@@ -1445,6 +1454,12 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         mfootwearadapter.notifyDataSetChanged();
 
 
+
+
+
+
+
+
         if (mtopadapter.getItemCount() == 1 && mbottomadapter.getItemCount() == 1){
 
             boolean firstcreatelook = sharedPreferences.getBoolean("firstcreatelook",true);
@@ -1470,6 +1485,8 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
+        look_tab.setVisibility(View.GONE);
+        bottomnav.setVisibility(View.VISIBLE);
 
     }
 
@@ -1479,8 +1496,13 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
         View adapterv = Objects.requireNonNull(toprecycler.getLayoutManager()).findViewByPosition(0);
         View adapterview = Objects.requireNonNull(bottomrecycler.getLayoutManager()).findViewByPosition(0);
 
+
+
         CardView card = (CardView) toprecycler.getLayoutManager().getChildAt(0);
         CardView cardView1 = (CardView) bottomrecycler.getLayoutManager().getChildAt(0);
+
+
+
 
 
 
@@ -1536,7 +1558,7 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
 
                                                    // sampleimg.setVisibility(View.VISIBLE);
 
-                                                    new MaterialTapTargetPrompt.Builder(Objects.requireNonNull(getActivity()),R.style.MaterialTapTargetPromptTheme_MaterialTapTargetSimple)
+                                                    new MaterialTapTargetPrompt.Builder(Objects.requireNonNull(getActivity()),R.style.MaterialTapTargetPromptTheme_MaterialTapTargetSimpleSecond)
                                                             .setTarget(look_tab)
                                                             .setAutoDismiss(false)
                                                             .setCaptureTouchEventOutsidePrompt(false)
@@ -1921,7 +1943,9 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.scrnshot:
-                mixpanelAPI.track("ScreenShot Icon Clicked");
+
+                mixpanelAPI.track("SamplePics Icon Clicked");
+
                 Intent intent1 = new Intent(getActivity(), SamplePicsActivity.class);
                 startActivity(intent1);
                 add_layout.setVisibility(View.GONE);
@@ -1965,11 +1989,11 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
 
             byteArrayOutputStream = new ByteArrayOutputStream();
             bmp.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
-            byte[] bytes = byteArrayOutputStream.toByteArray();
-            Intent intent = new Intent(getContext(), Crop.class);
+
+           /* Intent intent = new Intent(getContext(), Crop.class);
             intent.putExtra("bytearray", bytes);
             startActivity(intent);
-            bmp.recycle();
+            bmp.recycle(); */
 
 
         } else {
@@ -2194,5 +2218,16 @@ public class ClosetFragment extends Fragment implements View.OnClickListener {
                 bottomnav.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    public View createChildView(int imageId,String tip){
+        CircleImageView imageView = new CircleImageView(getActivity());
+        imageView.setBorderWidth(0);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView.setFillColor(getResources().getColor(R.color.colorAccent));
+        imageView.setImageResource(imageId);
+        //just for save Menu item tips
+        imageView.setTag(tip);
+        return imageView;
     }
 }

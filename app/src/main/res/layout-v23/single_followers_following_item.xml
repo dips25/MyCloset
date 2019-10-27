@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:weightSum="3"
+    android:layout_margin="10dp"
+    android:layout_marginTop="10dp"
+    android:foreground="?attr/selectableItemBackground"
+    android:baselineAligned="false">
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/follower_following_image"
+        android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.5"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_centerInParent="true"
+            android:layout_marginStart="20dp"
+            android:textSize="16dp"
+            android:id="@+id/list_user_name"
+            android:textColor="@color/colorAccent"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center">
+
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/follow_button_square"
+            android:text="Follow"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:id="@+id/list_followers_button"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            tools:targetApi="m" />
+    </RelativeLayout>
+
+    </LinearLayout>
+

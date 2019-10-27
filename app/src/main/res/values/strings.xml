@@ -112,6 +112,32 @@
 
     <string name="facebook_app_id">979389419115381</string>
     <string name="fb_login_protocol_scheme">fb979389419115381</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="login">Login</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="signup">SignUp</string>
+    <string name="phone_login">Phone Login</string>
+    <string name="invalidemailtext">Please enter valid email to continue</string>
+    <string name="passwordresetlink">Password reset link sent</string>
+    <string name="enteremail">Enter Email</string>
+    <string name="enterpassword">Enter Password</string>
+    <string name="verifyemail">Verify Email to Login</string>
+    <string name="cnfpassword">Please confirm Password</string>
+    <string name="passwordmismatch">Passwords don\'t match</string>
+    <string name="verificationlinksent">Verification Link Sent</string>
+    <string name="profilesaved">Profile Saved</string>
+    <string name="addsuername">Please add UserName</string>
+    <string name="postdelete">Deleted</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="matching_clothes_from_your_closet">Matching Clothes From Your Closet</string>
+    <string name="bottom_colors">Bottom Colors</string>
+    <string name="top_colors">Top Colors</string>
+    <string name="footwear_colors">FootWear Colors</string>
+    <string name="accessories_color">Accessories Color</string>
+    <string name="cutouttut">Click on Background to remove</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,7 @@ public class SampleFootwearAdapter extends ArrayAdapter {
     private ArrayList<SamplePics> samplefootwear;
     Context context;
     private RequestOptions requestOptions;
+    private MixpanelAPI mixpanelAPI;
 
     public SampleFootwearAdapter( Context context, int resource, ArrayList<SamplePics> samplefootwear) {
         super(context, resource, samplefootwear);
@@ -40,6 +42,7 @@ public class SampleFootwearAdapter extends ArrayAdapter {
         View view = convertView;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.card_accessories,parent,false);
+        mixpanelAPI= MixpanelAPI.getInstance(context,"257c7d2e1c44d7d1ab6105af372f65a6");
 
         requestOptions = new RequestOptions()
                 .fitCenter()
@@ -47,14 +50,16 @@ public class SampleFootwearAdapter extends ArrayAdapter {
                 .placeholder(R.drawable.white_border);
 
         ImageView img = (ImageView) view.findViewById(R.id.img);
-        ImageView tut_clicker = (ImageView) view.findViewById(R.id.tut_clicker);
-        tut_clicker.setVisibility(View.GONE);
+
+
 
         Glide.with(context).load(samplefootwear.get(position).getImgurl()).apply(requestOptions).into(img);
 
         img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                mixpanelAPI.track("SampleFootwear Clicked");
 
                 SamplePics samplePics = (SamplePics) getItem(position);
 

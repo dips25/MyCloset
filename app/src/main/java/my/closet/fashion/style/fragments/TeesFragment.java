@@ -1,7 +1,6 @@
 package my.closet.fashion.style.fragments;
 
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,6 +27,8 @@ import my.closet.fashion.style.Utilities;
 import my.closet.fashion.style.adapters.SampleAccAdapter;
 import my.closet.fashion.style.modesl.SamplePics;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -50,12 +51,14 @@ public class TeesFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_tees,container,false);
         gridview = (GridView) v.findViewById(R.id.tees_gridview);
 
-        SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("prefs", MODE_PRIVATE);
         boolean firstsampletop = sharedPreferences.getBoolean("firstsampletop",true);
 
         if(firstsampletop){
 
             Utilities.showToast(getActivity(),"Select a Top");
+
+
 
         }
 

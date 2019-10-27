@@ -51,13 +51,17 @@ public class SkirtsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_skirts, container, false);
 
         SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        boolean firstsampletop = sharedPreferences.getBoolean("firstsampletop",true);
         boolean firstsamplebottom = sharedPreferences.getBoolean("firstsamplebottom",true);
         gridView = (GridView) v.findViewById(R.id.skirts_gridview);
 
 
-        if (firstsamplebottom && !sharedPreferences.getBoolean("firstsampletop",true)){
+        if (firstsamplebottom && !firstsampletop){
 
             Utilities.showToast(getActivity(),"Select a Bottom");
+
+
+
 
 
         }

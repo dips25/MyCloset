@@ -77,6 +77,31 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.ViewHo
 
         final FollowerFollowing following = followerFollowings.get(position);
 
+        FirebaseFirestore.getInstance().collection("UsersList").whereEqualTo("Email",following.getEmail()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
+
+                if (e != null) {
+
+                    return;
+                }
+
+                if (!queryDocumentSnapshots.isEmpty()) {
+
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
+
+                        holder.textView.setText(documentSnapshot.get("Pen_Name").toString());
+                        Glide.with(context).load(documentSnapshot.get("Profile_Pic")).apply(requestOptions).into(holder.imageView);
+
+
+                    }
+                }
+
+
+
+            }
+        });
+
         FirebaseFirestore.getInstance().collection("UsersList").document(My_DbKey).collection("Followee").document(following.getEmail()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
 
             @Override
@@ -108,7 +133,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.ViewHo
         String username = following.getName();
         String imgname = following.getImgname();
 
-        if (username!=null) {
+       /* if (username!=null) {
 
             holder.textView.setText(username);
         }else {
@@ -125,7 +150,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.ViewHo
             holder.imageView.setBackgroundResource(R.drawable.ic_user_profile);
 
 
-        }
+        } */
 
         if (following.getEmail().equals(myemail)){
 

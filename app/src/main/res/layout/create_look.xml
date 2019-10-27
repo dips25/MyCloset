@@ -1,25 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="2">
+
+
+
+
+
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/frame1"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:layout_above="@id/looklay">
 
     <com.shashi.mysticker.StickerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="54dp"
         android:id="@+id/frame"
-        >
+        app:showIcons="true"
+        app:showBorder="true">
 
     </com.shashi.mysticker.StickerView>
+
+</FrameLayout>
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="2dp"
 
         android:id="@+id/looklay">
 
@@ -46,10 +62,8 @@
 
     </RelativeLayout>
 
-    <nl.dionsegijn.konfetti.KonfettiView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/custom_konfetti"
-        android:visibility="gone"/>
 
-</FrameLayout>
+
+
+
+</RelativeLayout>

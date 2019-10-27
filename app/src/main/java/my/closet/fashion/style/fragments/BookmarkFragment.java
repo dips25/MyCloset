@@ -161,10 +161,17 @@ public class BookmarkFragment extends Fragment {
                         public void onClick(View v) {
 
                             Intent textint = new Intent(getActivity(), PictureDeletingActivity.class);
+                           // ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(Objects.requireNonNull(getActivity()),holder.picture,"image");
                             Utilities.MyTab=false;
                             textint.putExtra("bookmark", model);
-                            getActivity().startActivity(textint);
-                            getActivity().overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
+                            startActivity(textint);
+
+                            Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+
+
+
+                          //  Objects.requireNonNull(getActivity()).startActivity(textint,activityOptionsCompat.toBundle());
+
                         }
                     });
 

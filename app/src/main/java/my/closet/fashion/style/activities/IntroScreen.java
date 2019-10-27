@@ -19,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.customs.SavePreferenceManager;
 
@@ -32,11 +34,14 @@ public class IntroScreen extends AppCompatActivity {
     private Button btnSkip, btnNext;
     private SavePreferenceManager prefManager;
     TextView textView, textView2, textView3;
+    private MixpanelAPI mixpanelAPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro_screen);
+        mixpanelAPI= MixpanelAPI.getInstance(IntroScreen.this,"257c7d2e1c44d7d1ab6105af372f65a6");
+        mixpanelAPI.track("IntroScreen 1st Screen Started");
         prefManager = new SavePreferenceManager(IntroScreen.this);
         if (!prefManager.isFirstTimeLaunch()) {
             launchHomeScreen();
@@ -91,6 +96,7 @@ public class IntroScreen extends AppCompatActivity {
                     // move to next screen
                     viewPager.setCurrentItem(current);
                 } else {
+                    mixpanelAPI.track("IntroScreen 2nd Screen Started");
                     launchHomeScreen();
                 }
             }

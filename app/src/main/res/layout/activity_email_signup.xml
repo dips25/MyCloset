@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/alldress"
+
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="3dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_centerInParent="true">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/black"
+            android:id="@+id/signupinputemail">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+
+            android:hint="@string/email"
+            android:id="@+id/lemail_edittext"
+            android:textSize="@dimen/user_text"
+            app:backgroundTint="@android:color/black"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/selected_tab"
+            android:inputType="text"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/black"
+            android:id="@+id/signupinputpassword"
+            android:layout_below="@id/signupinputemail">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+
+            android:hint="@string/password"
+            android:id="@+id/lpassword_edittext"
+            android:textSize="@dimen/user_text"
+            app:backgroundTint="@android:color/black"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/selected_tab"
+            android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/black"
+            android:id="@+id/signupinputcnfpassword"
+            android:layout_below="@id/signupinputpassword">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:padding="10dp"
+
+            android:hint="@string/confirm_password"
+            android:id="@+id/lcnf_password_edittext"
+            app:backgroundTint="@android:color/black"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/selected_tab"
+            android:textSize="@dimen/user_text"
+            android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/signup"
+            android:layout_below="@id/signupinputcnfpassword"
+            android:layout_centerHorizontal="true"
+            android:paddingStart="50dp"
+            android:paddingEnd="50dp"
+            android:background="@drawable/follow_button_square"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:layout_marginTop="10dp"
+            android:id="@+id/lemailloginbutton"
+            android:foreground="?attr/selectableItemBackgroundBorderless"/>
+
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

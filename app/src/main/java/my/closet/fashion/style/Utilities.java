@@ -87,7 +87,7 @@ public class Utilities {
 
         Toast toast = new Toast(context);
         toast.setDuration(Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 250);
+        toast.setGravity(Gravity.CENTER, 0, 250);
         toast.setView(child);
         toast.show();
     }

@@ -29,7 +29,8 @@
                 android:contentDescription="Image"
                 android:scaleType="fitXY"
                 app:srcCompat="@drawable/sample_pic"
-                android:foreground="?attr/selectableItemBackground"
+
+                android:transitionName="image"
 
 
                  />

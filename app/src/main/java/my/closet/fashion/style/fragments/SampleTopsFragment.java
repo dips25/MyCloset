@@ -2,6 +2,7 @@ package my.closet.fashion.style.fragments;
 
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +12,25 @@ import android.widget.GridView;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 import my.closet.fashion.style.R;
-import my.closet.fashion.style.adapters.TabsAdapter;
+import my.closet.fashion.style.Utilities;
+import my.closet.fashion.style.adapters.SampleAccAdapter;
 import my.closet.fashion.style.extra.SlidingTabLayout;
-import my.closet.fashion.style.modesl.MyTabItem;
+import my.closet.fashion.style.modesl.SamplePics;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,7 +42,7 @@ public class SampleTopsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    ArrayList<MyTabItem> tabItems;
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
@@ -43,12 +54,11 @@ public class SampleTopsFragment extends Fragment {
     private Query query;
     private SlidingTabLayout slidingTabLayout;
     private ViewPager viewPager;
+    private List<SamplePics> samplePicsArrayList;
 
 
     public SampleTopsFragment() {
-        tabItems = new ArrayList<>();
-        tabItems.add(new MyTabItem("Tees",TeesFragment.class));
-        tabItems.add(new MyTabItem("Shirts",ShirtsFragment.class));
+
     }
 
     /**
@@ -83,13 +93,48 @@ public class SampleTopsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_sample_tops, container, false);
-        slidingTabLayout = (SlidingTabLayout) v.findViewById(R.id.tops_slidingtab);
-        viewPager = (ViewPager) v.findViewById(R.id.tops_viewpager);
-        viewPager.setAdapter(new TabsAdapter(getChildFragmentManager(),tabItems));
-        slidingTabLayout.setViewPager(viewPager);
+        gridview = (GridView) v.findViewById(R.id.tees_gridview);
+
+        SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("prefs", MODE_PRIVATE);
+        boolean firstsampletop = sharedPreferences.getBoolean("firstsampletop",true);
+
+        if(firstsampletop){
+
+            Utilities.showToast(getActivity(),"Select a Top");
+
+
+
+        }
+
+        query = FirebaseFirestore.getInstance().collection("Sample Pics").whereEqualTo("category","Tops");
+        getclothes();
+
 
         return v;
 
+
+    }
+
+    private void getclothes() {
+
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                if (e!=null){
+
+                    return;
+                }
+
+                if (queryDocumentSnapshots != null) {
+                    samplePicsArrayList =  queryDocumentSnapshots.toObjects(SamplePics.class);
+
+                    SampleAccAdapter sampleAccAdapter = new SampleAccAdapter(Objects.requireNonNull(getContext()), R.layout.card_accessories, (ArrayList<SamplePics>) samplePicsArrayList);
+                    gridview.setAdapter(sampleAccAdapter);
+
+                }
+            }
+        });
 
     }
 

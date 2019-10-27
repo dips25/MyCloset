@@ -7,12 +7,8 @@
         android:title="@string/delete"
         app:showAsAction="never"/>
 
-  <item android:id="@+id/edit_lookbook"
-         android:title="@string/edit"
-         app:showAsAction="never"/>
-
   <item android:id="@+id/post"
-        android:title="@string/post"
+        android:title="POST"
         android:iconTint="@color/colorAccent"
         app:showAsAction="always"
         />

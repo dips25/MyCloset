@@ -17,7 +17,14 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowContentTransitions">true</item>
         <item name="colorControlHighlight">@color/cardviewheadingtext</item>
+        <item name="android:windowEnterTransition">@transition/explode_normal</item>
+
+        <item name="android:windowSharedElementEnterTransition">@transition/changebounds</item>
+        <item name="android:windowSharedElementExitTransition">@transition/changebounds</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
 
     <style name="AppTheme.Toolbar" parent="AppTheme">
@@ -78,6 +85,22 @@
 
         <item name="mttp_backgroundColour">@color/pinktrans</item>
         <item name="mttp_focalColour">@color/pinktrans</item>
+        <item name="mttp_focalRadius">20dp</item>
+        <item name="mttp_primaryTextSize">10sp</item>
+        <item name="mttp_secondaryTextColour">@color/colorAccent</item>
+        <item name="mttp_secondaryTextSize">0dp</item>
+        <item name="mttp_maxTextWidth">600dp</item>
+        <item name="mttp_textPadding">0dp</item>
+        <item name="mttp_focalToTextPadding">0dp</item>
+        <item name="mttp_textSeparation">0dp</item>
+        <item name="mttp_primaryTextTypeface">serif</item>
+        <item name="mttp_secondaryTextTypeface">monospace</item>
+    </style>
+
+    <style name="MaterialTapTargetPromptTheme.MaterialTapTargetSimpleSecond">
+
+        <item name="mttp_backgroundColour">@color/transparent</item>
+        <item name="mttp_focalColour">@color/colorAccent</item>
         <item name="mttp_focalRadius">20dp</item>
         <item name="mttp_primaryTextSize">10sp</item>
         <item name="mttp_secondaryTextColour">@color/colorAccent</item>

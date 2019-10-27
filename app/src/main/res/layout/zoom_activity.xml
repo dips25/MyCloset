@@ -1,4 +1,296 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
+    android:fitsSystemWindows="true"
+    android:background="@color/whitepink">
+
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="240dp"
+                            android:layout_height="350dp"
+                            app:cardCornerRadius="10dp"
+                            android:layout_centerHorizontal="true"
+                            android:id="@+id/full_card"
+                            android:layout_marginTop="10dp">
+
+                            <ImageView
+                                android:id="@+id/zoomimage"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/sample_pic"
+                                android:transitionName="image"
+                                android:adjustViewBounds="true"
+                                android:scaleType="fitXY"/>
+
+                        </androidx.cardview.widget.CardView>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/like_layout"
+                            android:layout_alignStart="@id/full_card"
+
+
+
+                            android:layout_below="@id/full_card"
+                            >
+
+                            <xyz.hanks.library.bang.SmallBangView
+                                android:id="@+id/like_heart"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+
+                                app:circle_end_color="#fedbd0"
+                                app:circle_start_color="#fedbd0"
+                                app:dots_primary_color="#fedbd0"
+                                app:dots_secondary_color="#fedbd0"
+                                android:visibility="gone">
+
+
+                                <!---
+                                  app:circle_end_color="#f0616d"
+                                  app:circle_start_color="#EF505d"
+                                  app:dots_primary_color="#EF505d"
+                                  app:dots_secondary_color="#f0616d"
+                                  >
+                                  -->
+
+
+                                <ImageView
+                                    android:id="@+id/blog_like_btn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    app:srcCompat="@drawable/like_selector"
+                                    android:background="?attr/selectableItemBackgroundBorderless"/>
+                            </xyz.hanks.library.bang.SmallBangView>
+
+                            <LinearLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:gravity="center"
+                                android:visibility="gone">
+
+                                <ImageView
+                                    android:id="@+id/blog_comment_btn"
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+
+                                    app:srcCompat="@drawable/ic_baseline_share"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    />
+
+
+                            </LinearLayout>
+
+
+                            <xyz.hanks.library.bang.SmallBangView
+                                android:id="@+id/bookmark_anim"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+
+                                app:circle_end_color="#60b4fe"
+                                app:circle_start_color="#4facfe"
+                                app:dots_primary_color="#4facfe"
+                                app:dots_secondary_color="#60b4fe"
+                                android:visibility="gone"
+
+                                >
+
+                                <ImageView
+                                    android:id="@+id/blog_bookmark_btn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+
+
+
+                                    app:srcCompat="@drawable/bookmark_selector"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    tools:targetApi="m" />
+                            </xyz.hanks.library.bang.SmallBangView>
+
+                        </LinearLayout>
+
+
+
+
+
+                    </RelativeLayout>
+
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+
+                        android:id="@+id/look_profile_layout">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/imageholder"
+                            android:layout_marginStart="8dp">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/look_profile_pic"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:src="@drawable/ic_user_profile"
+                                />
+
+
+                        </LinearLayout>
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Dipanjan Biswas"
+                            android:textSize="12dp"
+                            android:textColor="@color/colorAccent"
+                            android:textStyle="bold"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="5dp"
+                            android:id="@+id/look_username_txt"
+                            android:layout_toEndOf="@id/imageholder"
+                            />
+
+                    </RelativeLayout>
+
+
+
+                    <TextView
+                        android:id="@+id/look_edit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
+                        android:maxLines="5"
+
+
+                        android:textColor="@color/colorAccent"
+                        android:textSize="12dp"
+
+
+                        />
+
+                    <TextView
+                        android:id="@+id/matching_clothes_heading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Matching Clothes From Your Closet"
+                        android:layout_marginTop="20dp"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+
+
+                        />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/matching_recycler"
+                        android:layout_margin="5dp"
+                        android:visibility="gone" >
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+
+                    <TextView
+                        android:id="@+id/tags_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:padding="5dp"
+                        android:textAllCaps="false"
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/title_size"
+                        android:visibility="gone"/>
+
+
+                    <co.lujun.androidtagview.TagContainerLayout
+                        android:id="@+id/selectedTags"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="15dp"
+                        app:container_background_color="#00000000"
+                        app:container_border_color="#33666666"
+                        app:container_border_radius="0dp"
+                        app:container_gravity="left"
+                        app:horizontal_interval="4dp"
+                        app:tag_background_color="#00000000"
+                        app:tag_border_color="#FFFFFF"
+                        app:tag_border_width="1dp"
+                        app:tag_clickable="false"
+                        app:tag_corner_radius="6dp"
+                        app:tag_enable_cross="false"
+                        app:tag_horizontal_padding="0dp"
+                        app:tag_max_length="18"
+                        app:tag_text_color="@color/blue"
+                        app:tag_text_size="@dimen/text_small_size"
+                        app:tag_theme="none"
+                        app:vertical_interval="2dp"
+                        android:visibility="gone"/>
+
+
+
+                </LinearLayout>
+
+            </ScrollView>
+
+
+        </LinearLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+<!--
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -17,7 +309,7 @@
        android:layout_width="match_parent"
        android:layout_height="50dp"
        android:layout_margin="5dp"
-       android:background="@drawable/hint_text_border"
+
        android:padding="5dp"
        android:layout_marginTop="15dp"
        android:id="@+id/look_edit"
@@ -70,3 +362,5 @@
         android:layout_above="@id/infoholder"
         android:id="@+id/zoom_image"/>
 </RelativeLayout>
+
+-->

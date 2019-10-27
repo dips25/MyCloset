@@ -103,6 +103,34 @@
     <string name="first_celebration">축하합니다! 당신은 당신의 첫번째 의류를 추가 한</string>
     <string name="second_celebration">둘째 의류는 이제 모양을 만들 수 있습니다 추가</string>
     <string name="post_celeb">만세! 당신은 당신의 첫번째 포스트를 게시</string>
+    <string name="cnfpassword">비밀번호 확인</string>
+    <string name="enteremail">이메일 주소를 입력</string>
+    <string name="enterpassword">비밀번호를 입력 해주세요</string>
+    <string name="forgot_password">비밀번호를 잊으 셨나요</string>
+    <string name="invalidemailtext">유효한 메일 ID를 입력하세요</string>
+    <string name="login">로그인</string>
+    <string name="password">암호</string>
+    <string name="passwordmismatch">암호가 일치하지 말아</string>
+    <string name="verifyemail">메일 확인</string>
+    <string name="verificationlinksent">확인 링크가 전송</string>
+    <string name="signup">가입하기</string>
+    <string name="addsuername">사용자 이름을 추가하십시오</string>
+    <string name="followers">팔로워</string>
+    <string name="following">수행원</string>
+    <string name="confirm_password">비밀번호 확인</string>
+    <string name="postdelete">삭제</string>
+    <string name="profilesaved">저장된 프로필</string>
+    <string name="outfits">의상</string>
+    <string name="email">이메일</string>
+    <string name="sample_pics">샘플 갤러리</string>
+    <string name="sample_pics_heading">샘플 갤러리</string>
+    <string name="phone_login">전화 로그인</string>
+    <string name="passwordresetlink">비밀번호 재설정 링크가 발송</string>
+    <string name="accessories_color">선택 액세서리</string>
+    <string name="bottom_colors">선택 탑스</string>
+    <string name="footwear_colors">선택 바지</string>
+    <string name="top_colors">선택 탑스</string>
+    <string name="cutouttut">제거하는 배경을 클릭</string>
 
 
 </resources>

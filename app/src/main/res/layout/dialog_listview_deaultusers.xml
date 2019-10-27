@@ -30,7 +30,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Follow All"
+        android:text="OK"
         android:textSize="18dp"
         android:textColor="@color/white"
         android:textStyle="bold"

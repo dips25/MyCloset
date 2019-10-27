@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
@@ -36,6 +36,7 @@ import javax.annotation.Nonnull;
 import my.closet.fashion.style.BitmapUtility;
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.SaveDrawingTask;
+import my.closet.fashion.style.Utilities;
 import my.closet.fashion.style.customs.CutOut;
 import my.closet.fashion.style.customs.DrawView;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
@@ -70,10 +71,39 @@ public class CutOutActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_photo_edit);
 
+        SharedPreferences sharedPreferences = getSharedPreferences("prefs",MODE_PRIVATE);
+        boolean post_tut = sharedPreferences.getBoolean("cutout",true);
+
+        if (post_tut){
+
+            Utilities.showToast(CutOutActivity.this,getResources().getString(R.string.cutouttut));
+            SharedPreferences preferences = getSharedPreferences("prefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean("cutout", false);
+            editor.apply();
+
+
+        }
+
         Toolbar toolbar = findViewById(R.id.photo_edit_toolbar);
        // toolbar.setBackgroundColor(Color.BLACK);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.colorAccent));
-        setSupportActionBar(toolbar);
+       setSupportActionBar(toolbar);
+       getSupportActionBar().setTitle("");
+
+
+
+        ImageView backutton = (ImageView) findViewById(R.id.backeraser);
+        backutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(CutOutActivity.this,HomeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+            }
+        });
+
 
         FrameLayout drawViewLayout = findViewById(R.id.drawViewLayout);
 
@@ -124,16 +154,6 @@ public class CutOutActivity extends AppCompatActivity {
         setUndoRedo();
         initializeActionButtons();
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-            if (toolbar.getNavigationIcon() != null) {
-                toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
-            }
-
-        }
 
      /*   new MaterialTapTargetSequence()
                 .addPrompt(new MaterialTapTargetPrompt.Builder(CutOutActivity.this,R.style.MaterialTapTargetPromptTheme_FabTarget)
@@ -181,9 +201,20 @@ public class CutOutActivity extends AppCompatActivity {
 
                 .show(); */
 
+
         ImageButton doneButton = findViewById(R.id.done);
 
-        doneButton.setOnClickListener(v -> startSaveDrawingTask());
+        //RelativeLayout donelayout = (RelativeLayout) findViewById(R.id.donelayout);
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startSaveDrawingTask();
+
+            }
+        });
+
+        //doneButton.setOnClickListener(v -> startSaveDrawingTask());
 
         if (getIntent().getBooleanExtra(CUTOUT_EXTRA_INTRO, false) && !getPreferences(Context.MODE_PRIVATE).getBoolean(INTRO_SHOWN, false)) {
            // Intent intent = new Intent(this, IntroActivity.class);
@@ -303,11 +334,12 @@ public class CutOutActivity extends AppCompatActivity {
     }
 
     private void initializeActionButtons() {
-        ImageButton autoClearButton = findViewById(R.id.auto_clear_button);
-        ImageButton manualClearButton = findViewById(R.id.manual_clear_button);
-        ImageButton zoomButton = findViewById(R.id.zoom_button);
+        ImageButton autoClearButton = (ImageButton) findViewById(R.id.auto_clear_button);
+        ImageButton manualClearButton = (ImageButton) findViewById(R.id.manual_clear_button);
+        ImageButton zoomButton = (ImageButton)findViewById(R.id.zoom_button);
 
-        autoClearButton.setActivated(false);
+        autoClearButton.setActivated(true);
+        drawView.setAction(DrawView.DrawViewAction.AUTO_CLEAR);
         autoClearButton.setOnClickListener((buttonView) -> {
             if (!autoClearButton.isActivated()) {
                 drawView.setAction(DrawView.DrawViewAction.AUTO_CLEAR);
@@ -319,9 +351,9 @@ public class CutOutActivity extends AppCompatActivity {
             }
         });
 
-        manualClearButton.setActivated(true);
-        manualClearSettingsLayout.setVisibility(VISIBLE);
-        drawView.setAction(DrawView.DrawViewAction.MANUAL_CLEAR);
+        manualClearButton.setActivated(false);
+        manualClearSettingsLayout.setVisibility(INVISIBLE);
+      //  drawView.setAction(DrawView.DrawViewAction.MANUAL_CLEAR);
         manualClearButton.setOnClickListener((buttonView) -> {
             if (!manualClearButton.isActivated()) {
                 drawView.setAction(DrawView.DrawViewAction.MANUAL_CLEAR);
@@ -350,6 +382,10 @@ public class CutOutActivity extends AppCompatActivity {
     }
 
     private void setUndoRedo() {
+     //   RelativeLayout undolayout = (RelativeLayout) findViewById(R.id.undolayout);
+      //  RelativeLayout redolayout = (RelativeLayout) findViewById(R.id.redolayout);
+      //  RelativeLayout donelayout = (RelativeLayout) findViewById(R.id.donelayout);
+
         ImageButton undoButton = findViewById(R.id.undo);
         undoButton.setEnabled(false);
         undoButton.setOnClickListener(v -> undo());
@@ -379,6 +415,7 @@ public class CutOutActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
 
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
@@ -433,4 +470,12 @@ public class CutOutActivity extends AppCompatActivity {
         drawView.redo();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(CutOutActivity.this,HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+    }
 }

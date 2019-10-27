@@ -6,14 +6,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.github.chrisbanes.photoview.PhotoView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.io.File;
@@ -25,17 +26,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import my.closet.fashion.style.activities.PostFeedActivity;
 import my.closet.fashion.style.adapters.Lookbookadapter;
 import my.closet.fashion.style.customs.ImageSaver;
+import my.closet.fashion.style.fragments.LookbookFragment;
 import my.closet.fashion.style.modesl.Looks;
 
 public class ZoomImage extends AppCompatActivity {
 
-    PhotoView photoView;
+    ImageView photoView;
     String finalname;
     String edtlook;
     TextView lookedit;
@@ -46,10 +49,14 @@ public class ZoomImage extends AppCompatActivity {
     Realm realm;
     ImageView lookupdt;
 
+
     RelativeLayout looksvbttn;
     ArrayList<Looks> looksArrayList=new ArrayList<>();
     MixpanelAPI mixpanelAPI;
     private int lookid;
+    private RequestOptions requestOptions;
+    TextView lookusername;
+    private CircleImageView profile_pic;
 
 
     @Override
@@ -62,16 +69,43 @@ public class ZoomImage extends AppCompatActivity {
         Realm.init(this);
         realm=Realm.getDefaultInstance();
 
-        photoView=(PhotoView) findViewById(R.id.zoom_image);
+        requestOptions = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
+                .placeholder(R.drawable.white_border);
+
+        photoView=(ImageView) findViewById(R.id.zoomimage);
+        profile_pic = (CircleImageView) findViewById(R.id.look_profile_pic);
+        lookusername = (TextView) findViewById(R.id.look_username_txt);
+
+        String name = Utilities.loadPref(ZoomImage.this,"Pen_Name","");
+
+        if (name!=null && !name.equals("")){
+
+            lookusername.setText(name);
+
+        } else {
+
+            lookusername.setText("You");
+        }
 
 
-        looksvbttn=(RelativeLayout) findViewById(R.id.looksvbttn);
-        looksvbttn.setVisibility(View.INVISIBLE);
+
+        String image = Utilities.loadPref(ZoomImage.this,"Profile_Pic","");
+
+        if (image!=null && !image.equals("")){
+
+            Glide.with(ZoomImage.this).load(image).apply(requestOptions).into(profile_pic);
+        }
+
+
+       // looksvbttn=(RelativeLayout) findViewById(R.id.looksvbttn);
+       // looksvbttn.setVisibility(View.INVISIBLE);
 
         lookedit=(TextView) findViewById(R.id.look_edit);
        // lookedit.setVisibility(View.INVISIBLE);
 
-        lookupdt=(ImageView) findViewById(R.id.look_updt);
+        //lookupdt=(ImageView) findViewById(R.id.look_updt);
         finalname= Objects.requireNonNull(getIntent().getExtras()).getString("imgname");
 
         edtlook=getIntent().getExtras().getString("stylename");
@@ -81,11 +115,11 @@ public class ZoomImage extends AppCompatActivity {
 
         lookedit.setText(edtlook);
 
-        photoView.setImageBitmap(bitmap);
+       photoView.setImageBitmap(bitmap);
 
 
 
-                lookupdt.setOnClickListener(new View.OnClickListener() {
+             /*   lookupdt.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //Looks looks = new Looks();
@@ -115,7 +149,7 @@ public class ZoomImage extends AppCompatActivity {
                         finish();
 
                     }
-                });
+                }); */
 
 
 
@@ -131,7 +165,7 @@ public class ZoomImage extends AppCompatActivity {
 
 
         Lookbookadapter lookbookadapter=new Lookbookadapter(getApplicationContext(),R.layout.single_gridview,looksArrayList);
-       // LookbookFragment.gridView.setAdapter(lookbookadapter);
+        LookbookFragment.gridView.setAdapter(lookbookadapter);
         lookbookadapter.notifyDataSetChanged();
 
     }
@@ -162,14 +196,6 @@ public class ZoomImage extends AppCompatActivity {
                 finish();
                 return true;
 
-            case R.id.edit_lookbook:
-
-                mixpanelAPI.track("ZoomActivity Edit");
-
-                //lookedit.setVisibility(View.VISIBLE);
-                //lookedit.setText(edtlook);
-                looksvbttn.setVisibility(View.VISIBLE);
-                return true;
 
 
             case R.id.post:
@@ -222,6 +248,9 @@ public class ZoomImage extends AppCompatActivity {
 
     }
 
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+    }
 }

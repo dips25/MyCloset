@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "121115420809-5qs3b0mbvlfva4uhihilkc83ee6mfkf7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "my.closet.fashion.style",
+            "certificate_hash": "ec49203d072b39bbedf4d2a1fde7ca9eb18cb197"
+          }
+        },
+        {
           "client_id": "121115420809-m6o98098pd3n5954nocg4b8i9m8c72st.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

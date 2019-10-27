@@ -97,7 +97,7 @@ public class BottomAdapter extends RecyclerView.Adapter<BottomAdapter.ViewHolder
         final Dresses dresses=mdresses.get(position);
         bitmap=new ImageSaver(mbcontext).setFileName(dresses.getImagename()).setDirectoryName("mycloset").load();
         holder.imageview.setImageBitmap(bitmap);
-        holder.tut_clicker.setVisibility(View.GONE);
+
 
         realm=Realm.getDefaultInstance();
         Realm.init(mbcontext);
@@ -145,7 +145,7 @@ public class BottomAdapter extends RecyclerView.Adapter<BottomAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        public ImageView tut_clicker;
+
         CardView cardView;
         public ImageView imageview;
 
@@ -154,7 +154,7 @@ public class BottomAdapter extends RecyclerView.Adapter<BottomAdapter.ViewHolder
             super(card);
             cardView=card;
             imageview=(ImageView)card.findViewById(R.id.img);
-            tut_clicker = (ImageView) card.findViewById(R.id.tut_clicker);
+
             mbcontext=card.getContext();
 
             imageview.setOnLongClickListener(new View.OnLongClickListener() {

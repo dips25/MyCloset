@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.algolia.search.saas.CompletionHandler;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -25,9 +26,12 @@ import my.closet.fashion.style.modesl.FeedResponse;
 public class FeedsAdapter extends RecyclerView.Adapter<FeedsAdapter.ViewHolder> {
 
      ImageView picture;
-     android.content.Context context;
-    List<FeedResponse> feedResponses;
-    private RequestOptions requestOptions;
+     Context context;
+     List<FeedResponse> feedResponses;
+     private RequestOptions requestOptions;
+
+    CompletionHandler completionHandler;
+
 
     public FeedsAdapter(Context context, List<FeedResponse> feedResponses){
 
@@ -35,6 +39,8 @@ public class FeedsAdapter extends RecyclerView.Adapter<FeedsAdapter.ViewHolder> 
         this.feedResponses = feedResponses;
 
     }
+
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

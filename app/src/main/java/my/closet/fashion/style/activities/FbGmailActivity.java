@@ -3,12 +3,15 @@ package my.closet.fashion.style.activities;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,8 +22,9 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
+import com.firebase.client.utilities.Base64;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -40,6 +44,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Objects;
 
 import io.fabric.sdk.android.Fabric;
@@ -51,10 +58,10 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
 
     private static final int PERMISSION_ALL = 1111;
     private CallbackManager callbackManager;
-    private FrameLayout google_lyt;
+    private FrameLayout google_lyt,phn_no;
     private FrameLayout facebook_lyt;
     private SignInButton gmail_login;
-    private LoginButton loginButton;
+    private FrameLayout loginButton;
     private GoogleSignInClient mGoogleApiClient;
     private static final String TAG = FbGmailActivity.class.getSimpleName();
     private static final int RC_SIGN_IN = 007;
@@ -66,6 +73,11 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
     private String name;
     private String email;
     private static final String EMAIL = "email";
+    PackageInfo info;
+    private FrameLayout email_layout;
+    private LinearLayout email_signup_button;
+    private LinearLayout email_login_button;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +86,70 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_fb_gmail);
         mixpanelAPI= MixpanelAPI.getInstance(FbGmailActivity.this,"257c7d2e1c44d7d1ab6105af372f65a6");
 
+        try {
+
+
+
+            info = getPackageManager().getPackageInfo("com.you.name",PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures){
+
+                MessageDigest md;
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+
+                String s = new String(Base64.encodeBytes(md.digest()));
+                Log.d(TAG,s);
+
+
+
+
+            }
+
+
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+
+        phn_no = (FrameLayout) findViewById(R.id.phn_no);
+        email_signup_button = (LinearLayout) findViewById(R.id.email_signup_button);
+        email_login_button = (LinearLayout) findViewById(R.id.email_login_button);
+        phn_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(FbGmailActivity.this,PhoneLoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        email_signup_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(FbGmailActivity.this,EmailLoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        email_login_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(FbGmailActivity.this,EmailSignUpActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+
+
         callbackManager = CallbackManager.Factory.create();
 
-        loginButton = (LoginButton) findViewById(R.id.facebook_lyt);
-        loginButton.setReadPermissions("email", "public_profile");
+
 
         authStateListener = new FirebaseAuth.AuthStateListener(){
             @Override
@@ -109,11 +181,7 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         } */
 
-       /* callbackManager = CallbackManager.Factory.create();
-        if (BuildConfig.DEBUG) {
-            FacebookSdk.setIsDebugEnabled(true);
-            FacebookSdk.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
-        }*/
+
 
         String[] PERMISSIONS = {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -131,35 +199,47 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
        findViews();
     }
 
+
+
     private void findViews() {
 
         google_lyt = (FrameLayout) findViewById(R.id.google_lyt);
         google_lyt.setOnClickListener(this);
 
-       /* facebook_lyt = (FrameLayout) findViewById(R.id.facebook_lyt);
-        facebook_lyt.setOnClickListener(this);*/
+
 
         gmail_login = (SignInButton) findViewById(R.id.google_login);
-       // FBloginButton = (LoginButton) findViewById(R.id.facebook_login);
-    /*    FBloginButton.setReadPermissions("email");
-        FBloginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        loginButton = (FrameLayout) findViewById(R.id.fb_lyt);
+        loginButton.setOnClickListener(this);
+
+
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                getUserDetails(loginResult);
+                Log.d(TAG, "facebook:onSuccess:" + loginResult);
+                handleFacebookAccessToken(loginResult.getAccessToken());
+               // setResult(RESULT_OK);
             }
 
             @Override
             public void onCancel() {
-                Log.d("onCancel", "onCancel");
+                Log.d(TAG, "facebook:onCancel");
+
+                updateUI(null);
+               // setResult(RESULT_CANCELED);
+
             }
 
             @Override
-            public void onError(FacebookException exception) {
-                Log.d("onError", "onError");
-                Log.d("FBandGoogleActivity", exception.getCause().getMessage());
-            }
+            public void onError(FacebookException error) {
+                Log.d(TAG, "facebook:onError", error);
 
-        });*/
+                updateUI(null);
+
+            }
+        });
+
+
 
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -179,82 +259,37 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
         gmail_login.setScopes(gso.getScopeArray());
     }
 
-  /*  private void getUserDetails(LoginResult loginResult) {
-
-        GraphRequest data_request = GraphRequest.newMeRequest(
-                loginResult.getAccessToken(),
-                new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject json_object, GraphResponse response) {
-
-                        if (json_object != null) {
-
-                            FBGmailData fbGmailData = new FBGmailData();
-                            try {
-                                fbGmailData.setEmail(json_object.get("email").toString());
-                                fbGmailData.setName(json_object.get("name").toString());
-                                fbGmailData.setPicture(json_object.get("picture").toString());
-                                fbGmailData.setId(json_object.get("id").toString());
-
-                                Utilities.savePref(FbGmailActivity.this, "LoggedInWith", "Facebook");
-
-                                Intent fromFacebook_Intent = new Intent(FbGmailActivity.this, UserProfileActivity.class);
-                                fromFacebook_Intent.putExtra("LoginData", fbGmailData);
-                                startActivity(fromFacebook_Intent);
-                                finish();
-                                overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                });
-        Bundle permission_param = new Bundle();
-        permission_param.putString("fields", "id,name,email, picture.width(120).height(120)");
-        data_request.setParameters(permission_param);
-        data_request.executeAsync();
-    }
-*/
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+
+            case R.id.fb_lyt:
+                mixpanelAPI.track("FaceBook Login");
+                LoginManager.getInstance().logInWithReadPermissions(
+                        this,
+                        Arrays.asList("email"));
+
+
+                break;
+
+
+
             case R.id.google_lyt:
                 mixpanelAPI.track("Gmail Login");
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
                 startActivityForResult(signInIntent, RC_SIGN_IN);
                 break;
 
-            case R.id.facebook_lyt:
-
-                loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-
-                        handleFacebookAccessToken(loginResult.getAccessToken());
-
-
-                        // App code
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        // App code
-                    }
-
-                    @Override
-                    public void onError(FacebookException exception) {
-                        // App code
-                    }
-                });
-
-                break;
 
 
         }
     }
 
+
+
     private void handleFacebookAccessToken(AccessToken accessToken) {
+
+        Utilities.showLoading(FbGmailActivity.this,"Logging In..");
 
 
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
@@ -265,7 +300,7 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mauth.getCurrentUser();
+                            FirebaseUser user = task.getResult().getUser();
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -273,25 +308,17 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
                             Toast.makeText(FbGmailActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
+                            Utilities.hideLoading();
                         }
 
-                        // ...
+
                     }
                 });
-
-
     }
 
     private void handleSignInResult(GoogleSignInResult task) {
 
-       /* try {
 
-            GoogleSignInAccount googleSignInAccount = task.getResult(ApiException.class);
-            updateUI(googleSignInAccount,true);
-
-        } catch (ApiException e) {
-            e.printStackTrace();
-        } */
 
         if (task.isSuccess()) {
             GoogleSignInAccount user = task.getSignInAccount();
@@ -299,7 +326,7 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
             idToken = Objects.requireNonNull(user).getIdToken();
             name = user.getDisplayName();
             email = user.getEmail();
-           // prof = Objects.requireNonNull(acct.getPhotoUrl()).toString();
+
 
             FBGmailData fbGmailData=new FBGmailData();
 
@@ -314,9 +341,9 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
                 fbGmailData.setId(user.getId().toString());
             }
 
-            if(user.getPhotoUrl()!=null ) {
+          /*  if(user.getPhotoUrl()!=null ) {
                 fbGmailData.setPicture(user.getPhotoUrl().toString());
-            }
+            } */
 
             Utilities.savePref(FbGmailActivity.this, "LoggedInWith", "Gmail");
 
@@ -330,10 +357,10 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "signInWithCredential:success");
-                                FirebaseUser user = mauth.getCurrentUser();
+                                FirebaseUser user = Objects.requireNonNull(task.getResult()).getUser();
 
                                 Intent fromFacebook_Intent = new Intent(FbGmailActivity.this, UserProfileActivity.class);
-                                fromFacebook_Intent.putExtra("LoginData", fbGmailData);
+                               // fromFacebook_Intent.putExtra("LoginData", fbGmailData);
                                 startActivity(fromFacebook_Intent);
                                 finish();
                                 overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
@@ -367,31 +394,11 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
             handleSignInResult(result);
 
 
-         /*   Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-
-            try {
-
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                if (account != null) {
-                    firebaseAuthWithGoogle(account);
-                }
-            } catch (ApiException e) {
-                e.printStackTrace();
-            } */
-
-            //handleSignInResult(task);
 
         }
     }
 
-    private void firebaseAuthWithGoogle(AuthCredential account) {
 
-
-
-       // AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-
-
-    }
 
 
     @Override
@@ -402,35 +409,14 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
 
         if (cuser!=null){
 
+
+
             Intent intent = new Intent(this,HomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
 
 
-
-
-   /*     GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
-        if (googleSignInAccount!=null){
-
-            updateUI(googleSignInAccount,true);
-        }
-       /* mGoogleApiClient.connect();
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (opr.isDone()) {
-            Log.d(TAG, "Got cached sign-in");
-            GoogleSignInResult result = opr.get();
-            handleSignInResult(result);
-        } else {
-            Utilities.showLoading(FbGmailActivity.this,"Loading...");
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(GoogleSignInResult googleSignInResult) {
-                    Utilities.hideLoading();
-                    handleSignInResult(googleSignInResult);
-                }
-            });
-        } */
     }
 
     @Override
@@ -449,8 +435,6 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
             if (user != null) {
 
                 //will get retrive all the details from gmail
-
-              //  Utilities.showToast(FbGmailActivity.this,accdetails.getDisplayName().toString());
 
                 FBGmailData fbGmailData=new FBGmailData();
 
@@ -477,6 +461,8 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
                 startActivity(fromFacebook_Intent);
                 finish();
                 overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
+
+                Utilities.hideLoading();
 
 
             }
@@ -515,4 +501,6 @@ public class FbGmailActivity extends AppCompatActivity implements View.OnClickLi
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
+
+
 }

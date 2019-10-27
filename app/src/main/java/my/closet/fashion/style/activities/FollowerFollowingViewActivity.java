@@ -2,6 +2,7 @@ package my.closet.fashion.style.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,6 +48,15 @@ public class FollowerFollowingViewActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(null);
         toolbar.isTitleTruncated();
 
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }
+        });
+
 
 
 
@@ -63,8 +73,8 @@ public class FollowerFollowingViewActivity extends AppCompatActivity {
         FollowerFollowingViewPagerAdapter followerFollowingViewPagerAdapter =
                 new FollowerFollowingViewPagerAdapter(getSupportFragmentManager());
 
-        followerFollowingViewPagerAdapter.addFragment(new FollowersFragment(key),"Followers");
-        followerFollowingViewPagerAdapter.addFragment(new FollowingFragment(key),"Following");
+        followerFollowingViewPagerAdapter.addFragment(new FollowersFragment(key),getResources().getString(R.string.followers));
+        followerFollowingViewPagerAdapter.addFragment(new FollowingFragment(key),getResources().getString(R.string.following));
 
         viewPager.setAdapter(followerFollowingViewPagerAdapter);
     }

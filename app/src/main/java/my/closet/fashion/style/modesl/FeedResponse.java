@@ -22,26 +22,18 @@ public class FeedResponse extends BlogPostId implements Serializable{
     private String languages;
     private String like;
     String dbkey;
+    ArrayList<String> followers;
+
+
+
+    String description;
 
 
     public FeedResponse() {
 
     }
 
-    public FeedResponse(String id,String image, ArrayList<String> text, String timestamp,String profile,
-                        String penname,String email,String caption,String bywhom,String languages,String like) {
-        this.image = image;
-        this.text = text;
-        this.timestamp = timestamp;
-        this.profile=profile;
-        this.penname=penname;
-        this.email=email;
-        this.caption=caption;
-        this.bywhom=bywhom;
-        this.languages=languages;
-        this.like=like;
 
-    }
 
     public String getDocumentId() {
         return DocumentId;
@@ -155,5 +147,19 @@ public class FeedResponse extends BlogPostId implements Serializable{
         this.dbkey = dbkey;
     }
 
+    public String getDescription() {
+        return description;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public ArrayList<String> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(ArrayList<String> followers) {
+        this.followers = followers;
+    }
 }

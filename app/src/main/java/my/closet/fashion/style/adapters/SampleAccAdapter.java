@@ -1,10 +1,8 @@
 package my.closet.fashion.style.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +19,6 @@ import java.util.List;
 import my.closet.fashion.style.Pic_info;
 import my.closet.fashion.style.R;
 import my.closet.fashion.style.modesl.SamplePics;
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
-import uk.co.samuelwall.materialtaptargetprompt.extras.backgrounds.RectanglePromptBackground;
-import uk.co.samuelwall.materialtaptargetprompt.extras.focals.RectanglePromptFocal;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -63,58 +58,11 @@ public class SampleAccAdapter extends ArrayAdapter {
         view = inflater.inflate(R.layout.card_accessories,parent,false);
 
         ImageView img = view.findViewById(R.id.img);
-        ImageView tut_clicker = (ImageView) view.findViewById(R.id.tut_clicker);
-        tut_clicker.setVisibility(View.GONE);
+
+
 
         Glide.with(context).load(sampleacc.get(position).getImgurl()).apply(requestOptions).into(img);
 
-        if (firstsampletop) {
-
-
-            View v = parent.getChildAt(0);
-
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-
-                    new MaterialTapTargetPrompt.Builder((Activity) getContext(),R.style.MaterialTapTargetPromptTheme_MaterialTapTargetSimple)
-                            .setTarget(v)
-                            .setSecondaryText("")
-
-                            .setPromptBackground(new RectanglePromptBackground())
-                            .setPromptFocal(new RectanglePromptFocal())
-
-                            .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
-                                @Override
-                                public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
-
-                                    if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED){
-
-                                        if (mixpanelAPI!=null){
-
-                                            mixpanelAPI.track("SampleTopTutorialClicked");
-                                        }
-
-                                        SharedPreferences preferences = context.getSharedPreferences("prefs",MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = preferences.edit();
-                                        editor.putBoolean("firstsampletop",false);
-                                        editor.apply();
-
-                                        prompt.finish();
-
-
-                                    }
-                                }
-                            })
-                            .show();
-
-                }
-            });
-
-
-
-
-        }
 
 
 
@@ -124,12 +72,21 @@ public class SampleAccAdapter extends ArrayAdapter {
             @Override
             public void onClick(View v) {
 
+                mixpanelAPI.track("SampleTops Clicked");
+
                 SamplePics samplePics = (SamplePics) getItem(position);
 
                 Intent intent = new Intent(getContext(), Pic_info.class);
                 intent.putExtra("source","sample");
                 intent.putExtra("sampleobject", samplePics);
                 getContext().startActivity(intent);
+
+                SharedPreferences preferences = context.getSharedPreferences("prefs",MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("firstsampletop",false);
+                editor.apply();
+
+
             }
         });
         return view;

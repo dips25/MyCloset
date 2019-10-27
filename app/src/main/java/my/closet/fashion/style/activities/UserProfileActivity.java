@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -47,6 +48,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.facebook.FacebookSdk;
 import com.facebook.LoggingBehavior;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -58,6 +60,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -92,7 +95,7 @@ import my.closet.fashion.style.modesl.DefaultFollowers;
 import my.closet.fashion.style.modesl.FBGmailData;
 
 public class UserProfileActivity extends AppCompatActivity implements
-        View.OnClickListener, GoogleApiClient.OnConnectionFailedListener  {
+        View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     FirebaseFirestore profCollection;
     List<DefaultFollowers> defaultFollowers;
@@ -108,14 +111,14 @@ public class UserProfileActivity extends AppCompatActivity implements
     private CircleImageView profile_image;
     private TextView username_txt;
     private EditText penname_edittext;
-    private EditText email_edittext;
+    private TextView email_edittext;
     private EditText link_edittext;
     private EditText bio_edittext;
     private ImageView menu;
     private Button login_btn;
     private RelativeLayout edit_profile_pic;
     private FusedLocationProviderClient mFusedLocationClient;
-    private ArrayList<String> langlist=new ArrayList<>();
+    private ArrayList<String> langlist = new ArrayList<>();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     protected Location mLastLocation;
     private static final int CAMERA_PIC_REQUEST = 1;
@@ -125,9 +128,9 @@ public class UserProfileActivity extends AppCompatActivity implements
     private String location = "";
     private File destination;
     private Uri selectedImageUri;
-    private String update_key="";
+    private String update_key = "";
     private UploadTask uploadTask;
-    private String downloaded_url="";
+    private String downloaded_url = "";
     private Dialog cam_dialog;
     private ImageButton close_btn;
     private Button camera_button;
@@ -141,9 +144,9 @@ public class UserProfileActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-         profCollection = FirebaseFirestore.getInstance();
+        profCollection = FirebaseFirestore.getInstance();
 
-        mixpanelAPI= MixpanelAPI.getInstance(UserProfileActivity.this,"257c7d2e1c44d7d1ab6105af372f65a6 ");
+        mixpanelAPI = MixpanelAPI.getInstance(UserProfileActivity.this, "257c7d2e1c44d7d1ab6105af372f65a6 ");
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReferenceFromUrl("gs://my-closet-fashion-style.appspot.com/");
 
@@ -158,19 +161,76 @@ public class UserProfileActivity extends AppCompatActivity implements
 
         findView();
 
-        i = getIntent();
-        if (i != null) {
-            fBGmailData_obj = (FBGmailData) i.getSerializableExtra("LoginData");
-            fetchingData();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (firebaseUser!=null){
+
+            if (Utilities.loadPref(UserProfileActivity.this,"LoggedInWith","").equalsIgnoreCase("Gmail")){
+
+                email_edittext.setText(firebaseUser.getEmail());
+                LoginUsingEmail();
+
+
+
+            }else if (Utilities.loadPref(UserProfileActivity.this,"LoggedInWith","").equalsIgnoreCase("Email")){
+
+                email_edittext.setText(firebaseUser.getEmail());
+                LoginUsingEmail();
+
+            }else if (Utilities.loadPref(UserProfileActivity.this,"LoggedInWith","").equalsIgnoreCase("Mobile")){
+
+                email_edittext.setText(firebaseUser.getPhoneNumber());
+                LoginUsingEmail();
+
+            }
         }
 
 
+     /*  i = getIntent();
+        Bundle bundle = i.getExtras();
+        if (i != null && bundle != null) {
+
+            if (bundle.containsKey("LoginData")) {
+
+                fBGmailData_obj = (FBGmailData) i.getSerializableExtra("LoginData");
+                fetchingData();
+
+
+            } else if (bundle.containsKey("mob")) {
+
+                String mob = i.getExtras().getString("mob");
+                email_edittext.setText(mob.toString());
+                LoginUsingEmail();
+
+
+            }
+
+        } else {
+
+            String s = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail().toString();
+            if (s != null) {
+
+                email_edittext.setText(s);
+                LoginUsingEmail();
+
+
+            } else {
+
+                 email_edittext.setText(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+                LoginUsingEmail();
+            }
+
+
+        } */
     }
 
 
     @Override
     public void onStart() {
         super.onStart();
+
+
+
 /*
         if (!checkPermissions()) {
             requestPermissions();
@@ -285,7 +345,7 @@ public class UserProfileActivity extends AppCompatActivity implements
         profile_image = findViewById(R.id.profile_image);
         username_txt = findViewById(R.id.username_txt);
         penname_edittext = findViewById(R.id.penname_edittext);
-        email_edittext = findViewById(R.id.email_edittext);
+        email_edittext = (TextView) findViewById(R.id.email_edittext);
         link_edittext = findViewById(R.id.link_edittext);
         bio_edittext = findViewById(R.id.bio_edittext);
 
@@ -304,27 +364,73 @@ public class UserProfileActivity extends AppCompatActivity implements
 
     private void fetchingData() {
 
-        if (fBGmailData_obj.getEmail() != null && !fBGmailData_obj.getEmail().equalsIgnoreCase("")) {
-            email_edittext.setText(fBGmailData_obj.getEmail());
-            Utilities.savePref(UserProfileActivity.this, "email", fBGmailData_obj.getEmail());
+        if (fBGmailData_obj!=null) {
 
-            LoginUsingEmail();
-        }
+            if (fBGmailData_obj.getEmail() != null && !fBGmailData_obj.getEmail().equalsIgnoreCase("")) {
+                email_edittext.setText(fBGmailData_obj.getEmail());
+                Utilities.savePref(UserProfileActivity.this, "email", fBGmailData_obj.getEmail());
 
-        if (fBGmailData_obj.getName() != null && !fBGmailData_obj.getName().equalsIgnoreCase("")) {
-            username_txt.setText(fBGmailData_obj.getName());
-        }
+                LoginUsingEmail();
+            }
 
-        if (fBGmailData_obj.getPicture() != null && !fBGmailData_obj.getPicture().equalsIgnoreCase("")) {
+            if (fBGmailData_obj.getName() != null && !fBGmailData_obj.getName().equalsIgnoreCase("")) {
+                username_txt.setText(fBGmailData_obj.getName());
+            }
 
-            if (Utilities.loadPref(UserProfileActivity.this, "LoggedInWith", "")
-                    .equalsIgnoreCase("Facebook")) {
-                try {
-                    URL profile_pic = new URL("http://graph.facebook.com/" + fBGmailData_obj.getId() + "/picture?type=large");
+            if (fBGmailData_obj.getPicture() != null && !fBGmailData_obj.getPicture().equalsIgnoreCase("")) {
 
-                    Glide.with(UserProfileActivity.this).asBitmap().load(profile_pic.toString()).into(new SimpleTarget<Bitmap>() {
+                if (Utilities.loadPref(UserProfileActivity.this, "LoggedInWith", "")
+                        .equalsIgnoreCase("Facebook")) {
+                    try {
+                        URL profile_pic = new URL("http://graph.facebook.com/" + fBGmailData_obj.getId() + "/picture?type=large");
+
+                        Glide.with(UserProfileActivity.this).asBitmap().load(profile_pic.toString()).into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                String root = Environment.getExternalStorageDirectory().toString();
+                                File myDir = new File(root + "/req_images");
+                                myDir.mkdirs();
+                                Random generator = new Random();
+                                int n = 10000;
+                                n = generator.nextInt(n);
+                                String fname = "Image-" + n + ".jpg";
+                                File file = new File(myDir, fname);
+                                Log.i(TAG, "" + file);
+                                deletePath(file);
+
+                                try {
+                                    FileOutputStream out = new FileOutputStream(file);
+                                    resource.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                                    out.flush();
+                                    out.close();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                selectedImageUri = FileProvider.getUriForFile(UserProfileActivity.this,
+                                        "my.closet.fashion.style.FileProvider",
+                                        file);
+
+                                Glide.with(UserProfileActivity.this)
+                                        .load(selectedImageUri).apply(requestOptions)
+                                        .into(profile_image);
+                            }
+                        });
+
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+
+                    // profile_image.setBackgroundResource(R.drawable.ic_user_profile);
+
+
+                    Glide.with(UserProfileActivity.this)
+                            .asBitmap()
+                            .load(R.drawable.ic_user_profile).into(new SimpleTarget<Bitmap>() {
                         @Override
-                        public void onResourceReady( Bitmap resource, Transition<? super Bitmap> transition) {
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+
+
                             String root = Environment.getExternalStorageDirectory().toString();
                             File myDir = new File(root + "/req_images");
                             myDir.mkdirs();
@@ -334,7 +440,7 @@ public class UserProfileActivity extends AppCompatActivity implements
                             String fname = "Image-" + n + ".jpg";
                             File file = new File(myDir, fname);
                             Log.i(TAG, "" + file);
-                            deletePath(file);
+
 
                             try {
                                 FileOutputStream out = new FileOutputStream(file);
@@ -347,58 +453,21 @@ public class UserProfileActivity extends AppCompatActivity implements
                             selectedImageUri = FileProvider.getUriForFile(UserProfileActivity.this,
                                     "my.closet.fashion.style.FileProvider",
                                     file);
+                            deletePath(file);
 
-                            Glide.with(UserProfileActivity.this)
-                                    .load(selectedImageUri).apply(requestOptions)
-                                    .into(profile_image);
                         }
                     });
 
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
                 }
             } else {
 
-                profile_image.setBackgroundResource(R.drawable.ic_user_profile);
-
-
-                Glide.with(UserProfileActivity.this)
-                        .asBitmap()
-                        .load(R.drawable.ic_user_profile).into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-
-
-                        String root = Environment.getExternalStorageDirectory().toString();
-                        File myDir = new File(root + "/req_images");
-                        myDir.mkdirs();
-                        Random generator = new Random();
-                        int n = 10000;
-                        n = generator.nextInt(n);
-                        String fname = "Image-" + n + ".jpg";
-                        File file = new File(myDir, fname);
-                        Log.i(TAG, "" + file);
-
-
-                        try {
-                            FileOutputStream out = new FileOutputStream(file);
-                            resource.compress(Bitmap.CompressFormat.JPEG, 90, out);
-                            out.flush();
-                            out.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        selectedImageUri = FileProvider.getUriForFile(UserProfileActivity.this,
-                                "my.closet.fashion.style.FileProvider",
-                                file);
-                        deletePath(file);
-
-                    }
-                });
+                //profile_image.setBackgroundResource(R.drawable.ic_user_profile);
 
             }
+
         } else {
-            profile_image.setBackgroundResource(R.drawable.ic_user_profile);
+
+
         }
     }
 
@@ -505,6 +574,8 @@ public class UserProfileActivity extends AppCompatActivity implements
 
     }
 
+
+
     public void Logout_Popup(View v) {
         popup = new IconizedMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
@@ -518,13 +589,64 @@ public class UserProfileActivity extends AppCompatActivity implements
                     case R.id.profile_edit:
                         mixpanelAPI.track("Logout");
                         if (Utilities.loadPref(UserProfileActivity.this, "LoggedInWith", "").equalsIgnoreCase("Facebook")) {
-                           // disconnectFromFacebook();
+                            disconnectFromFacebook();
 
                         } else if (Utilities.loadPref(UserProfileActivity.this, "LoggedInWith", "").equalsIgnoreCase("Gmail")) {
 
                             gmailLogoutCall();
 
-                        } else {
+                        } else if (Utilities.loadPref(UserProfileActivity.this,"LoggedInWith","").equalsIgnoreCase("Mobile")){
+
+                            FirebaseAuth.getInstance().signOut();
+
+                            Utilities.savebooleanPref(getApplicationContext(), "HasLogged_In", false);
+                            Utilities.savePref(UserProfileActivity.this, "email", "");
+                            Utilities.savePref(UserProfileActivity.this, "Profile_Pic", "");
+                            Utilities.savePref(UserProfileActivity.this, "Display_Name", "");
+                            Utilities.savePref(UserProfileActivity.this, "Pen_Name", "");
+
+                            SharedPreferences preferences = getSharedPreferences("preference",MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putBoolean("dialog",true);
+                            editor.apply();
+
+
+                            Intent returnTOLogin = new Intent(getApplicationContext(), FbGmailActivity.class);
+                            returnTOLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            returnTOLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            returnTOLogin.putExtra("position",2);
+                            startActivity(returnTOLogin);
+                            finish();
+                            overridePendingTransition(R.anim.fade_in, R.anim.slide_out_down);
+
+
+                        } else if (Utilities.loadPref(UserProfileActivity.this,"LoggedInWith","").equalsIgnoreCase("Email")){
+
+                            FirebaseAuth.getInstance().signOut();
+
+                            Utilities.savebooleanPref(getApplicationContext(), "HasLogged_In", false);
+                            Utilities.savePref(UserProfileActivity.this, "email", "");
+                            Utilities.savePref(UserProfileActivity.this, "Profile_Pic", "");
+                            Utilities.savePref(UserProfileActivity.this, "Display_Name", "");
+                            Utilities.savePref(UserProfileActivity.this, "Pen_Name", "");
+
+                            SharedPreferences preferences = getSharedPreferences("preference",MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putBoolean("dialog",true);
+                            editor.apply();
+
+
+                            Intent returnTOLogin = new Intent(getApplicationContext(), FbGmailActivity.class);
+                            returnTOLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            returnTOLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(returnTOLogin);
+                            finish();
+                            overridePendingTransition(R.anim.fade_in, R.anim.slide_out_down);
+
+
+
+                        }
+                        else {
 
                             Utilities.savePref(UserProfileActivity.this, "email", "");
                             Utilities.savePref(UserProfileActivity.this, "Profile_Pic", "");
@@ -549,30 +671,28 @@ public class UserProfileActivity extends AppCompatActivity implements
         popup.show();
     }
 
+    private void disconnectFromFacebook() {
+
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
+
+
+    }
+
     private void gmailLogoutCall() {
 
         FirebaseAuth.getInstance().signOut();
-       /* final GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage((FragmentActivity) getApplicationContext(), UserProfileActivity.this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API)
-                .build();  */
 
-       /* final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage("Please wait...");
-        dialog.show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                        new ResultCallback<Status>() {
-                            @Override
-                            public void onResult(Status status) {
-                                dialog.dismiss(); */
                                 Utilities.savebooleanPref(getApplicationContext(), "HasLogged_In", false);
                                 Utilities.savePref(UserProfileActivity.this, "email", "");
                                 Utilities.savePref(UserProfileActivity.this, "Profile_Pic", "");
                                 Utilities.savePref(UserProfileActivity.this, "Display_Name", "");
                                 Utilities.savePref(UserProfileActivity.this, "Pen_Name", "");
+
+        SharedPreferences preferences = getSharedPreferences("preference",MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("dialog",true);
+        editor.apply();
 
 
                                 Intent returnTOLogin = new Intent(getApplicationContext(), FbGmailActivity.class);
@@ -598,7 +718,7 @@ public class UserProfileActivity extends AppCompatActivity implements
                 image = BitmapFactory.decodeFile(selectedImagePath);
 
             } else {
-                image = (Bitmap) data.getExtras().get("data");
+                image = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             }
             Bitmap finalBitmap = Bitmap.createBitmap(image.getWidth(), image.getHeight(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(finalBitmap);
@@ -659,27 +779,29 @@ public class UserProfileActivity extends AppCompatActivity implements
 
         Utilities.showLoading(UserProfileActivity.this, "Loading...");
 
-        profCollection.collection("UsersList")
-                .whereEqualTo("Email", fBGmailData_obj.getEmail())
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
+        if (fBGmailData_obj!=null){
 
-                    for (DocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+            profCollection.collection("UsersList")
+                    .whereEqualTo("Email", fBGmailData_obj.getEmail())
+                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
 
-                        Utilities.hideLoading();
-                        update_key = document.getId();
+                        for (DocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
 
-                        Utilities.savePref(UserProfileActivity.this, "My_DbKey",update_key);
-                       // Utilities.savePref(UserProfileActivity.this,"email", Objects.requireNonNull(document.get("Email")).toString());
-                        penname_edittext.setText(Objects.requireNonNull(document.get("Pen_Name")).toString());
-                        email_edittext.setText(Objects.requireNonNull(document.get("Email")).toString());
-                        link_edittext.setText(Objects.requireNonNull(document.get("Website")).toString());
-                        bio_edittext.setText(Objects.requireNonNull(document.get("Bio")).toString());
-                        username_txt.setText(Objects.requireNonNull(document.get("Display_Name")).toString());
+                            Utilities.hideLoading();
+                            update_key = document.getId();
 
-                        // TODO for retriving languages .not require now
+                            Utilities.savePref(UserProfileActivity.this, "My_DbKey",update_key);
+                            // Utilities.savePref(UserProfileActivity.this,"email", Objects.requireNonNull(document.get("Email")).toString());
+                            penname_edittext.setText(Objects.requireNonNull(document.get("Pen_Name")).toString());
+                            email_edittext.setText(Objects.requireNonNull(document.get("Email")).toString());
+                            link_edittext.setText(Objects.requireNonNull(document.get("Website")).toString());
+                            bio_edittext.setText(Objects.requireNonNull(document.get("Bio")).toString());
+                            username_txt.setText(Objects.requireNonNull(document.get("Display_Name")).toString());
+
+                            // TODO for retriving languages .not require now
 
                        /* if (!document.get("Language").toString().equalsIgnoreCase("")) {
                             langlist= (ArrayList<String>) document.get("Language");
@@ -689,25 +811,97 @@ public class UserProfileActivity extends AppCompatActivity implements
                         } else {
                             language_Text.setTags("Select Languages");
                         }*/
-                        selectedImageUri = Uri.parse(Objects.requireNonNull(document.get("Profile_Pic")).toString());
+                            selectedImageUri = Uri.parse(Objects.requireNonNull(document.get("Profile_Pic")).toString());
 
-                        Glide.with(UserProfileActivity.this)
-                                .load(selectedImageUri).apply(requestOptions)
-                                .into(profile_image);
+                            if (selectedImageUri!=null && !selectedImageUri.toString().equalsIgnoreCase("")){
+
+                                Glide.with(UserProfileActivity.this)
+                                        .load(selectedImageUri).apply(requestOptions)
+                                        .into(profile_image);
+
+
+                            }
+
+
+                        }
+                        Utilities.hideLoading();
+                    } else {
+                        Utilities.hideLoading();
+                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-                    Utilities.hideLoading();
-                } else {
-                    Utilities.hideLoading();
-                    Log.d(TAG, "Error getting documents: ", task.getException());
                 }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(Exception e) {
-                Utilities.hideLoading();
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception e) {
+                    Utilities.hideLoading();
 
-            }
-        });
+                }
+            });
+
+        } else {
+
+
+            profCollection.collection("UsersList")
+                    .whereEqualTo("Email", email_edittext.getText().toString())
+                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+
+                        for (DocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+
+                            Utilities.hideLoading();
+                            update_key = document.getId();
+
+                            Utilities.savePref(UserProfileActivity.this, "My_DbKey",update_key);
+                            // Utilities.savePref(UserProfileActivity.this,"email", Objects.requireNonNull(document.get("Email")).toString());
+                            penname_edittext.setText(Objects.requireNonNull(document.get("Pen_Name")).toString());
+                            email_edittext.setText(Objects.requireNonNull(document.get("Email")).toString());
+                            link_edittext.setText(Objects.requireNonNull(document.get("Website")).toString());
+                            bio_edittext.setText(Objects.requireNonNull(document.get("Bio")).toString());
+                            username_txt.setText(Objects.requireNonNull(document.get("Display_Name")).toString());
+
+                            // TODO for retriving languages .not require now
+
+                       /* if (!document.get("Language").toString().equalsIgnoreCase("")) {
+                            langlist= (ArrayList<String>) document.get("Language");
+                            if (langlist != null && langlist.size() > 0) {
+                                language_Text.setTags(langlist);
+                            }
+                        } else {
+                            language_Text.setTags("Select Languages");
+                        }*/
+                            selectedImageUri = Uri.parse(Objects.requireNonNull(document.get("Profile_Pic")).toString());
+
+                            if (selectedImageUri!=null && !selectedImageUri.toString().equalsIgnoreCase("")){
+
+                                Glide.with(UserProfileActivity.this)
+                                        .load(selectedImageUri).apply(requestOptions)
+                                        .into(profile_image);
+
+
+                            }
+
+
+                        }
+                        Utilities.hideLoading();
+                    } else {
+                        Utilities.hideLoading();
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception e) {
+                    Utilities.hideLoading();
+
+                }
+            });
+
+
+        }
+
+
     }
 
     private void saveUserProfilepath() {
@@ -755,7 +949,7 @@ public class UserProfileActivity extends AppCompatActivity implements
             }
         } else {
             Utilities.hideLoading();
-            Utilities.showToast(UserProfileActivity.this, "Please fill Email and Pen name");
+            Utilities.showToast(UserProfileActivity.this, getResources().getString(R.string.addsuername));
         }
     }
 
@@ -794,10 +988,12 @@ public class UserProfileActivity extends AppCompatActivity implements
                                         Utilities.showToast(UserProfileActivity.this, getString(R.string.profile_updated));
                                         Utilities.savebooleanPref(UserProfileActivity.this, "HasLogged_In", true);
                                         Utilities.savePref(UserProfileActivity.this, "Profile_Pic", url);
+                                        Utilities.savePref(UserProfileActivity.this, "Pen_Name", penname_edittext.getText().toString());
                                         Utilities.savePref(UserProfileActivity.this, "email", email_edittext.getText().toString());
 
 
                                         Intent login_Intent = new Intent(UserProfileActivity.this, HomeActivity.class);
+                                       // login_Intent.putExtra("position",2);
                                         startActivity(login_Intent);
                                         finish();
                                         overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
@@ -823,12 +1019,13 @@ public class UserProfileActivity extends AppCompatActivity implements
                             Utilities.savePref(UserProfileActivity.this,"My_DbKey", uid);
 
                             Utilities.hideLoading();
-                            Utilities.showToast(UserProfileActivity.this, "Profile Saved");
+                            Utilities.showToast(UserProfileActivity.this, getResources().getString(R.string.profilesaved));
                             Intent login_Intent = new Intent(UserProfileActivity.this, HomeActivity.class);
+                           // login_Intent.putExtra("position",2);
                             startActivity(login_Intent);
                             finish();
                             overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_right);
-                            Toast.makeText(UserProfileActivity.this, "key:" + dbid, Toast.LENGTH_SHORT).show();
+
 
 
                         }
@@ -837,7 +1034,7 @@ public class UserProfileActivity extends AppCompatActivity implements
                 }
 
             }else {
-                Utilities.showToast(UserProfileActivity.this, "Please fill Email and Pen name");
+                Utilities.showToast(UserProfileActivity.this, getResources().getString(R.string.addsuername));
             }
     }
 
@@ -891,4 +1088,10 @@ public class UserProfileActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+
+    }
 }

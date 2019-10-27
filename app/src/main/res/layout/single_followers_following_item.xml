@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:weightSum="3"
     android:layout_margin="10dp"
     android:layout_marginTop="10dp"
-    >
+    android:foreground="?attr/selectableItemBackground">
 
     <RelativeLayout
         android:layout_width="0dp"
@@ -31,7 +32,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dipanjan"
+
             android:layout_centerInParent="true"
             android:layout_marginStart="20dp"
             android:textSize="16dp"
@@ -58,7 +59,8 @@
             android:id="@+id/list_followers_button"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            />
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            tools:targetApi="m" />
     </RelativeLayout>
 
     </LinearLayout>
